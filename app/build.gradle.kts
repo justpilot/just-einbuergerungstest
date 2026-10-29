@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -17,13 +19,30 @@ android {
         minSdk = 31
         targetSdk = 37
         versionCode = 1
-        versionName = "1.0"
+        // SemVer; releases are tagged vX.Y.Z on main.
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Release signing is local only: keystore.properties (git-ignored) next to settings.gradle.kts.
+    // Without it, release builds stay unsigned, which is what F-Droid expects.
+    val keystoreFile = rootProject.file("keystore.properties")
+    val releaseSigning = if (keystoreFile.exists()) {
+        val keystore = Properties().apply { keystoreFile.inputStream().use(::load) }
+        signingConfigs.create("release") {
+            storeFile = rootProject.file(keystore.getProperty("storeFile"))
+            storePassword = keystore.getProperty("storePassword")
+            keyAlias = keystore.getProperty("keyAlias")
+            keyPassword = keystore.getProperty("keyPassword")
+        }
+    } else {
+        null
+    }
+
     buildTypes {
         release {
+            signingConfig = releaseSigning
             optimization {
                 enable = true
                 packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
@@ -37,6 +56,11 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
+    }
+    dependenciesInfo {
+        // F-Droid rejects the encrypted dependency block in APKs; Play reads it from the bundle.
+        includeInApk = false
+        includeInBundle = true
     }
     sourceSets {
         // Room migration tests read the exported schemas.
