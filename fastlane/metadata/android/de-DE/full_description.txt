@@ -1,0 +1,31 @@
+Just Einbürgerungstest bereitet dich auf den Einbürgerungstest und den Test „Leben in Deutschland“ vor – kostenlos, ohne Werbung, ohne Tracking und komplett offline.
+
+<b>Alle Fragen auf dem Gerät</b>
+Alle 300 allgemeinen Fragen und die 10 Fragen deines Bundeslandes aus dem amtlichen Fragenkatalog. Das Bundesland wählst du beim ersten Start und kannst es jederzeit ändern.
+
+<b>Daily 10</b>
+Zehn Fragen am Tag, in etwa drei Minuten: fällige Wiederholungen und neue Fragen gemischt. Falsch beantwortete Fragen kommen am Ende der Runde noch einmal.
+
+<b>Lernen mit Kästen</b>
+Ein Leitner-System mit drei Kästen wiederholt Fehler sofort und Gelerntes seltener. Auf der Startseite siehst du, wie viele Fragen in jedem Kasten liegen, und kannst jeden Kasten gezielt üben.
+
+<b>Katalog</b>
+Übe nach Themen (Politik, Geschichte, Gesellschaft, dein Bundesland), mit dem Fehlerkasten oder mit deiner Merkliste.
+
+<b>Prüfungssimulation</b>
+33 Fragen in 60 Minuten wie in der echten Prüfung: 30 allgemeine und 3 Landesfragen. Antworten lassen sich bis zur Abgabe ändern und Fragen markieren. Danach siehst du dein Ergebnis und alle Fehler; frühere Ergebnisse bleiben gespeichert.
+
+<b>Fortschritt</b>
+Tagesserie, Antworten der letzten sieben Tage und dein nächstes Ziel auf einen Blick.
+
+<b>Übersetzungen</b>
+Fragen und Antworten lassen sich auf Englisch oder Ukrainisch einblenden. In der Prüfungssimulation gibt es nur Deutsch – wie in der echten Prüfung.
+
+<b>Privatsphäre</b>
+Die App hat keine Internet-Berechtigung. Dein Lernfortschritt bleibt auf deinem Gerät.
+
+<b>Open Source</b>
+Der Quellcode steht unter der Apache-Lizenz 2.0: https://github.com/justpilot/just-einbuergerungstest
+
+<b>Hinweis</b>
+Diese App ist kein Angebot des Bundesamts für Migration und Flüchtlinge (BAMF) oder einer anderen Behörde. Die Fragen stammen aus dem amtlichen Fragenkatalog (Anlage 1 der Einbürgerungstestverordnung), veröffentlicht vom BAMF: https://oet.bamf.de/ords/oetut/f?p=534:1::::::

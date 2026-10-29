@@ -183,6 +183,8 @@
     <string name="settings_reset_confirm">Zurücksetzen</string>
     <string name="settings_reset_done">Lernfortschritt wurde zurückgesetzt.</string>
     <string name="settings_about">Über die App</string>
-    <string name="settings_about_text">Version %s · Open Source (Apache 2.0) · ohne Werbung, ohne Tracking, komplett offline. Fragen: Bundesamt für Migration und Flüchtlinge (BAMF).</string>
+    <string name="settings_about_text">Version %1$s · Open Source (Apache 2.0) · ohne Werbung, ohne Tracking, komplett offline.\nQuellcode: %2$s</string>
+    <string name="settings_sources">Quellen</string>
+    <string name="settings_sources_text">Die Fragen, Antworten und Bilder stammen aus dem amtlichen Fragenkatalog (Anlage 1 der Einbürgerungstestverordnung) des Bundesamts für Migration und Flüchtlinge (BAMF). Diese App ist kein Angebot des BAMF oder einer anderen Behörde. Die Übersetzungen sind eine Lernhilfe; maßgeblich ist der deutsche Text.</string>
     <string name="cancel">Abbrechen</string>
 </resources>

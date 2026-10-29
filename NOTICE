@@ -1,0 +1,27 @@
+Just Einbürgerungstest
+Copyright 2026 Dimitri Dovgan
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Question catalog
+----------------
+The questions, answer options and pictures in app/src/main/assets/ are taken
+from the official catalog of test questions, published as Anlage 1 of the
+Verordnung zu Einbürgerungstest und Einbürgerungskurs (Einbürgerungstest-
+verordnung, EinbTestV, BGBl. I 2008 S. 1649, as amended) and provided by the
+Bundesamt für Migration und Flüchtlinge (BAMF) at
+https://oet.bamf.de/ords/oetut/f?p=534:1::::::
+
+As part of a German federal regulation, the catalog is an official work
+without copyright protection under § 5 (1) of the German Copyright Act (UrhG).
+Its text has been transcribed with OCR and corrected by hand; the pictures
+have been cropped from the portal's question images.
+
+This app is not affiliated with or endorsed by the BAMF or any other
+government agency. The English and Ukrainian translations are learning aids
+created for this project; only the German text is authoritative.
+
+Third-party software
+--------------------
+The app uses AndroidX (Jetpack Compose, Room, DataStore, Navigation, Lifecycle),
+Kotlin and kotlinx libraries, all licensed under the Apache License 2.0.

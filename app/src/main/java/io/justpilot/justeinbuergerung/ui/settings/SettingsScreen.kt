@@ -46,6 +46,9 @@ import io.justpilot.justeinbuergerung.ui.common.federalStatesByName
 import io.justpilot.justeinbuergerung.ui.common.title
 import kotlinx.coroutines.launch
 
+/** Shown as plain text: the app has no network access and links nowhere by itself. */
+private const val SOURCE_URL = "github.com/justpilot/just-einbuergerungstest"
+
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel = viewModel(factory = ViewModels.factory)) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
@@ -118,7 +121,11 @@ fun SettingsContent(
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_about)) },
-                supportingContent = { Text(stringResource(R.string.settings_about_text, BuildConfig.VERSION_NAME)) },
+                supportingContent = { Text(stringResource(R.string.settings_about_text, BuildConfig.VERSION_NAME, SOURCE_URL)) },
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(R.string.settings_sources)) },
+                supportingContent = { Text(stringResource(R.string.settings_sources_text)) },
             )
         }
     }

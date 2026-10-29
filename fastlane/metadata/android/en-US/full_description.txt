@@ -1,0 +1,31 @@
+Just Einbürgerungstest helps you prepare for the German citizenship test (Einbürgerungstest) and the “Leben in Deutschland” test – free, without ads, without tracking and fully offline.
+
+<b>All questions on your device</b>
+All 300 general questions plus the 10 questions for your federal state from the official catalog. You choose your state on first launch and can change it at any time.
+
+<b>Daily 10</b>
+Ten questions a day in about three minutes, mixing due reviews with new questions. Questions you got wrong come back at the end of the round.
+
+<b>Learning with boxes</b>
+A three-box Leitner system repeats mistakes right away and known questions less often. The home screen shows how many questions are in each box, and you can practise any box directly.
+
+<b>Catalog</b>
+Practise by topic (politics, history, society, your federal state), your mistakes or your bookmarks.
+
+<b>Exam simulation</b>
+33 questions in 60 minutes, like the real test: 30 general and 3 state questions. You can change answers and flag questions until you submit. Afterwards you see your score and every mistake; past results are kept.
+
+<b>Progress</b>
+Your daily streak, answers over the last seven days and your next goal at a glance.
+
+<b>Translations</b>
+Questions and answers can be shown in English or Ukrainian. The app itself is in German, the language of the test, and the exam simulation is German only.
+
+<b>Privacy</b>
+The app has no internet permission. Your progress stays on your device.
+
+<b>Open source</b>
+The source code is available under the Apache License 2.0: https://github.com/justpilot/just-einbuergerungstest
+
+<b>Disclaimer</b>
+This app is not affiliated with the Federal Office for Migration and Refugees (BAMF) or any other government agency. The questions come from the official catalog (Annex 1 of the Einbürgerungstestverordnung) published by the BAMF: https://oet.bamf.de/ords/oetut/f?p=534:1::::::

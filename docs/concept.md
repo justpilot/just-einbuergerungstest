@@ -16,7 +16,7 @@ Aktuelle Prüfungstrainer im Google Play Store sind überwiegend von aggressiver
 * **Fokus & Ruhe:** Modernes, reduziertes Material-3-Design ohne visuellen Lärm.
 * **Privatsphäre & Offline-First:** Der gesamte Fragenkatalog (300 bundesweite Fragen + je 10 landesspezifische Fragen für alle 16 Bundesländer) liegt vollständig lokal auf dem Gerät. Null Internet-Berechtigungen (`android.permission.INTERNET` wird im Manifest gar nicht angefordert).
 * **Didaktische Unterstützung:** Optionale, zuschaltbare Übersetzungen (Englisch, Ukrainisch) direkt für Fragen und Antworten, um Sprachbarrieren bei behördlichen Formulierungen abzubauen.
-* **Intelligente Wiederholung:** Spaced-Repetition-System (5 Kästen), das Fehler automatisch priorisiert und beherrschte Inhalte seltener abfragt.
+* **Intelligente Wiederholung:** Spaced-Repetition-System (3 Kästen), das Fehler automatisch priorisiert und beherrschte Inhalte seltener abfragt.
 
 ---
 
