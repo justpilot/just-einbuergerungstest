@@ -1,0 +1,32 @@
+{
+  "103": {
+    "question": "Was wird in Deutschland als „Ampelkoalition“ bezeichnet? Die Zusammenarbeit …",
+    "_reason": "the portal image cuts off the end of the first line"
+  },
+  "132": {
+    "question": "Viele Menschen in Deutschland arbeiten in ihrer Freizeit ehrenamtlich. Was bedeutet das?"
+  },
+  "230": {
+    "question": "Das Europäische Parlament wird regelmäßig gewählt, nämlich alle …",
+    "image": false,
+    "_reason": "the ellipsis on its own line was detected as a picture"
+  },
+  "232": {
+    "question": "Wer wird bei der Europawahl gewählt?"
+  },
+  "268": {
+    "question": "Eine junge Frau will den Führerschein machen. Sie hat Angst vor der Prüfung, weil ihre Muttersprache nicht Deutsch ist. Was ist richtig?"
+  },
+  "281": {
+    "question": "Zwei Freunde wollen in ein öffentliches Schwimmbad in Deutschland. Beide haben eine dunkle Hautfarbe und werden deshalb nicht hineingelassen. Welches Recht wird in dieser Situation verletzt? Das Recht auf …",
+    "_reason": "missing full stop in the source"
+  },
+  "285": {
+    "question": "Frau Frost arbeitet als fest angestellte Mitarbeiterin in einem Büro. Was muss sie nicht von ihrem Gehalt bezahlen?"
+  },
+  "296": {
+    "question": "In Deutschland nennt man die letzten vier Wochen vor Weihnachten …",
+    "image": false,
+    "_reason": "the ellipsis on its own line was detected as a picture"
+  }
+}

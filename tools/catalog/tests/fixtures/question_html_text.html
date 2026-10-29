@@ -1,0 +1,647 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"        "http://www.w3.org/TR/html4/strict.dtd">
+<meta http-equiv="x-ua-compatible" content="IE=edge" />
+<html lang="de" xmlns:htmldb="http://htmldb.oracle.com">
+  <head>
+<link rel="icon" type="image/vnd.microsoft.icon" href="/i22/bamf_inge/images/favicon.ico" />
+<link rel="shortcut icon" type="image/x-icon" href="/i22/bamf_inge/images/favicon.ico" />
+    <title>
+      Testdurchführung
+    </title>    <link rel="stylesheet" href="/i22/app_ui/css/Core.min.css?v=22.1.3" type="text/css" />
+<link rel="stylesheet" href="/i22/app_ui/css/Theme-Standard.min.css?v=22.1.3" type="text/css" />
+
+<link rel="stylesheet" href="/i22/legacy_ui/css/5.0.min.css?v=22.1.3" type="text/css" />
+
+
+
+
+
+
+<script>
+var apex_img_dir = "\u002Fi22\u002F";
+var apex = {env: {APP_USER: "APEX_PUBLIC_USER",APP_ID: "534",APP_PAGE_ID: "30",APP_SESSION: "14633738583024",APP_FILES: "r\u002Foetut\u002F534\u002Ffiles\u002Fstatic\u002Fv1Y\u002F",WORKSPACE_FILES: "r\u002Foetut\u002Ffiles\u002Fstatic\u002Fv1Y\u002F",APEX_VERSION: "22.1.3",APEX_BASE_VERSION: "22.1"},
+libVersions:{ckeditor5:"32.0.0",cropperJs:"1.5.12",domPurify:"2.3.1",hammer:"2.0.8",jquery:"3.6.0",jqueryUi:"1.13.1",maplibre:"1.15.2",markedJs:"4.0.12",prismJs:"1.26.0",oraclejet:"12.0.0",monacoEditor:"0.32.1",lessJs:"4.1.1"}};
+</script>
+<script src="/i22/libraries/apex/minified/desktop_all.min.js?v=22.1.3"></script>
+<script src="wwv_flow.js_messages?p_app_id=534&p_lang=de&p_version=22.1.3-8733186317"></script>
+<script src="/i22/libraries/apex/minified/legacy_pre18.min.js?v=22.1.3"></script>
+<script src="/i22/libraries/apex/minified/legacy_18.min.js?v=22.1.3"></script>
+<script src="/i22/libraries/jquery-migrate/3.3.2/jquery-migrate-3.3.2.min.js?v=22.1.3"></script>
+
+
+
+
+
+<script language="JavaScript" type="text/javascript">
+<!--
+
+ htmldb_ch_message='Are you sure you want to leave this page without saving?';
+
+function ShowText () {
+  document.getElementById('1').style.visibility = 'visible';
+  document.getElementById('2').style.visibility = 'visible';
+  document.getElementById('3').style.visibility = 'visible';
+  document.getElementById('4').style.visibility = 'visible';
+}
+
+//-->
+</script>
+<script language="JavaScript" type="text/javascript">
+<!--
+ 
+  htmldb_finish_message='Wollen Sie den Mustertest wirklich beenden und auswerten?';
+
+//-->
+</script>
+
+
+  <style> 
+<!--
+ .nonvisited {width:2em;
+              border:1px solid #000000; 
+              background-color:#FFFFFF;
+              color:#ffffff;     
+              margin:2px; }                                         
+
+ .visited    {width:2em; 
+              border:1px solid #000000; 
+              background-color:#408080; 
+              color:#ffffff; 
+              margin:2px;}
+
+ .nonvisited_31 {width:2em;
+              border:3px solid red; 
+              background-color:#FFFFFF;
+              color:#ffffff;     
+              margin:2px; }                                         
+
+ .visited_31    {width:2em; 
+              border:3px solid red;
+              background-color:#408080; 
+              color:#ffffff; 
+              margin:2px;}
+
+ .current_nonvisited {width:2em; 
+                      border:3px solid #000000; 
+                      background-color:#FFFFFF; 
+                      color:#ffffff; 
+                      margin:2px;}
+
+ .current_visited    {width:2em; 
+                      border:3px solid #000000; 
+                      background-color:#408080; 
+                      color:#ffffff; 
+                      margin:2px;}
+
+ .ok_nonvisited {width:2em; 
+                      border:1px solid #000000; 
+                      background-color:#FFFFFF; 
+                      color:#ffffff; 
+                      margin:2px;}
+
+ .ok_visited    {width:2em; 
+                      border:1px solid #000000; 
+                      background-color:#408080; 
+                      color:#ffffff; 
+                      margin:2px;}
+-->
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" href="/i22/bamf_inge/css/bamf_inge_theme_V3.css" type="text/css" />
+  </head>
+<body >    <form action="wwv_flow.accept?p_context=534:30:14633738583024" method="post" name="wwv_flow" id="wwvFlowForm" data-oj-binding-provider="none" novalidate >
+<input type="hidden" name="p_flow_id" value="534" id="pFlowId" /><input type="hidden" name="p_flow_step_id" value="30" id="pFlowStepId" /><input type="hidden" name="p_instance" value="14633738583024" id="pInstance" /><input type="hidden" name="p_page_submission_id" value="234708026663085967373482866933241282011" id="pPageSubmissionId" /><input type="hidden" name="p_request" value="" id="pRequest" /><input type="hidden" name="p_reload_on_submit" value="A" id="pReloadOnSubmit" /><input type="hidden" value="534&#x3A;30&#x3A;14633738583024" id="pContext" /><input type="hidden" value="234708026663085967373482866933241282011" id="pSalt" />
+    <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td>
+            <img id="Logo" src="/i22/bamf_inge/images/BAMFlogo.gif"/>
+        </td>
+        <td class="Banner">
+          <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr>
+          <td>
+          <div class="NavBar">
+             &nbsp; 
+          </div>
+          </td>
+          </tr>
+          </table>
+          <div class="AppTitel">Test "Leben in Deutschland"<br><span style="margin-top:100px; font-size:90%">Fragenkatalog zur Testvorbereitung</span></div> 
+        </td>
+      </tr>
+    </table>
+    <br style="clear:both;"/>
+
+    <table width="100%" summary="" height="70%" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td valign="top">
+
+         <table cellspacing="0" cellpadding="0" border="0"  style="width:100%;" summary="">
+           <tr>
+             <td class="t3PageBody">
+           
+            <div class="t3Messages" align="center">
+              <span id="APEX_ERROR_MESSAGE" data-template-id="275656371807529262_E" class="apex-page-error u-hidden"></span><span id="APEX_SUCCESS_MESSAGE" data-template-id="275656371807529262_S" class="apex-page-success u-hidden"></span>
+            </div>
+                 
+          </td>
+          </tr>
+          <tr>
+
+          <td align="right" valign="top">
+            <img src="/i22/f_spacer.gif" width="1" height="15" alt="" />
+          </td>
+          </tr>
+          <tr>
+          <td class="t3PageBody" align="center" style="vertical-align:top;">
+<table class="regionlayout" width="100%"  summary="" role="presentation"><tr><td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0" id="R306374338456395486" class="t3ReportsRegion" summary="">
+<tr>
+<td valign="bottom" class="RegionHeader">Aufgabe 14 von 310</td>
+</tr>
+<tr class="t3instructiontext">
+<td colspan="1" valign="top" class="t3Body"><p><i>Bitte kreuzen Sie an. Es gibt nur eine richtige Antwort.</i></P><table  id="apex_layout_306374338456395486" border="0" class="formlayout"  role="presentation"><tr><td nowrap="nowrap" align="right"><span class="t3NoLabel"></span></td><td style="font-size:large; font-weight:bold;" align="left"><span id="P30_AUFGABENSTELLUNG"  class="display_only&#x20;apex-item-display-only" data-escape="true">Meinungsfreiheit in Deutschland heißt zum Beispiel, dass ich</span></td></tr><tr><td nowrap="nowrap" align="right"><a class="t3optionalwithhelp" href="javascript:popupFieldHelp('304507424232882656','14633738583024')" tabindex="999">&nbsp;</a></td><td  align="left"><span id="P30_LEERZEILE"  class="display_only&#x20;apex-item-display-only" ></span></td></tr></table><table  id="report_R306374338456395486"  style="padding-left:20px; margin-bottom:1em;" cellpadding="0" border="0" cellspacing="0" summary=""><tr><td></td></tr>
+<tr><td><table class="t3borderless" cellpadding="0" border="0" cellspacing="0" summary="">
+<!-- <tr class="highlight-row"> -->
+<tr>
+<td headers="RICHTIGE_ANTWORT" class="t3data"><span id="1" style="font-weight:bold; color:red; visibility:hidden;">falsche Antwort =></span></td><td headers="CHECKBOX" class="t3data"><input type="radio" name="f20" value="18485"   onclick="ShowText();document.getElementById('HINWEIS').style.visibility = 'hidden';
+this.parentNode.style.backgroundColor = 'red';
+document.getElementById('FARBE').parentNode.style.backgroundColor = 'green';" /></td><td headers="ANTWORT" class="t3data">Passanten auf der Straße beschimpfen darf</td></tr>
+<!-- <tr class="highlight-row"> -->
+<tr>
+<td headers="RICHTIGE_ANTWORT" class="t3data" name="FARBE"><span id="2" style="font-weight:bold; color:green; visibility:hidden;">richtige Antwort =></span></td><td headers="CHECKBOX" class="t3data" name="FARBE"><input type="radio" name="f20" value="18486"  id="FARBE"  onclick="ShowText();document.getElementById('HINWEIS').style.visibility = 'hidden';
+this.parentNode.style.backgroundColor = 'red';
+document.getElementById('FARBE').parentNode.style.backgroundColor = 'green';" /></td><td headers="ANTWORT" class="t3data" name="FARBE">meine Meinung im Internet äußern kann</td></tr>
+<!-- <tr class="highlight-row"> -->
+<tr>
+<td headers="RICHTIGE_ANTWORT" class="t3data"><span id="3" style="font-weight:bold; color:red; visibility:hidden;">falsche Antwort =></span></td><td headers="CHECKBOX" class="t3data"><input type="radio" name="f20" value="18487"   onclick="ShowText();document.getElementById('HINWEIS').style.visibility = 'hidden';
+this.parentNode.style.backgroundColor = 'red';
+document.getElementById('FARBE').parentNode.style.backgroundColor = 'green';" /></td><td headers="ANTWORT" class="t3data">Nazi-, Hamas- oder Islamischer Staat-Symbole öffentlich tragen darf</td></tr>
+<!-- <tr class="highlight-row"> -->
+<tr>
+<td headers="RICHTIGE_ANTWORT" class="t3data"><span id="4" style="font-weight:bold; color:red; visibility:hidden;">falsche Antwort =></span></td><td headers="CHECKBOX" class="t3data"><input type="radio" name="f20" value="18488"   onclick="ShowText();document.getElementById('HINWEIS').style.visibility = 'hidden';
+this.parentNode.style.backgroundColor = 'red';
+document.getElementById('FARBE').parentNode.style.backgroundColor = 'green';" /></td><td headers="ANTWORT" class="t3data">meine Meinung nur dann äußern darf, solange ich der Regierung nicht widerspreche</td></tr>
+
+</table><span class="left"></span></td></tr></table></td>
+</tr>
+</table></td><td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0" id="HINWEIS" class="t3ReportsRegion" summary="" style="visibility:hidden;">
+<tr>
+<td valign="bottom" class="RegionHeader">Erläuterung</td>
+</tr>
+<tr class="t3instructiontext">
+<td colspan="1" valign="top" class="t3Body"><table  id="apex_layout_275617293492851361" border="0" class="formlayout"  role="presentation"><tr><td  align="left"><span class="t3NoLabel"></span><br /><span id="P30_BESCHREIBUNG"  class="display_only&#x20;apex-item-display-only" >LD2021a_Meinungsfreiheit</span></td></tr></table></td>
+</tr>
+</table></td></tr></table><table cellspacing="0" border="0" summary="" class="t3ButtonRegionwithoutTitle" id="R306192131972523083">
+<tr>
+<td class="t3ButtonHolder">&nbsp;&nbsp;&nbsp;</td></tr>
+</table>
+<table  id="apex_layout_306192131972523083" border="0" class="formlayout"  role="presentation"><tr><td nowrap style="padding:2em 0 2em 0;" align="right"><a class="t3optionalwithhelp" href="javascript:popupFieldHelp('273294857882045008','14633738583024')" tabindex="999">Gehe zu Aufgabe Nr.&nbsp;&nbsp;</a></td><td style="padding:2em 0 2em 0;" align="left"><select  id="P30_ROWNUM" name="P30_ROWNUM" class="selectlist&#x20;apex-item-select" data-native-menu="false" size="1" onchange="apex.submit&#x28;&#x27;P30_ROWNUM&#x27;&#x29;&#x3B;" ><option value="&#x25;null&#x25;">-- wählen Sie eine Aufgaben-Nr --</option>
+<option value="4619">1</option>
+<option value="4618">2</option>
+<option value="4611">3</option>
+<option value="4628">4</option>
+<option value="4733">5</option>
+<option value="4614">6</option>
+<option value="4626">7</option>
+<option value="4627">8</option>
+<option value="4616">9</option>
+<option value="4624">10</option>
+<option value="4625">11</option>
+<option value="4612">12</option>
+<option value="4681">13</option>
+<option value="4622" selected="selected" >14</option>
+<option value="4621">15</option>
+<option value="4613">16</option>
+<option value="4615">17</option>
+<option value="4623">18</option>
+<option value="4620">19</option>
+<option value="4617">20</option>
+<option value="4660">21</option>
+<option value="4647">22</option>
+<option value="4320">23</option>
+<option value="4646">24</option>
+<option value="4645">25</option>
+<option value="4661">26</option>
+<option value="4643">27</option>
+<option value="4655">28</option>
+<option value="4669">29</option>
+<option value="4671">30</option>
+<option value="4638">31</option>
+<option value="4637">32</option>
+<option value="4636">33</option>
+<option value="4653">34</option>
+<option value="4665">35</option>
+<option value="4674">36</option>
+<option value="4644">37</option>
+<option value="4668">38</option>
+<option value="4673">39</option>
+<option value="4680">40</option>
+<option value="4678">41</option>
+<option value="4642">42</option>
+<option value="4676">43</option>
+<option value="4629">44</option>
+<option value="4672">45</option>
+<option value="4652">46</option>
+<option value="4632">47</option>
+<option value="4631">48</option>
+<option value="4654">49</option>
+<option value="4666">50</option>
+<option value="4670">51</option>
+<option value="4667">52</option>
+<option value="4675">53</option>
+<option value="4679">54</option>
+<option value="4677">55</option>
+<option value="4663">56</option>
+<option value="4639">57</option>
+<option value="4641">58</option>
+<option value="4648">59</option>
+<option value="4651">60</option>
+<option value="4649">61</option>
+<option value="4664">62</option>
+<option value="4650">63</option>
+<option value="4662">64</option>
+<option value="4640">65</option>
+<option value="4659">66</option>
+<option value="4657">67</option>
+<option value="4630">68</option>
+<option value="4656">69</option>
+<option value="4658">70</option>
+<option value="4714">71</option>
+<option value="4710">72</option>
+<option value="4702">73</option>
+<option value="4708">74</option>
+<option value="4682">75</option>
+<option value="4717">76</option>
+<option value="4719">77</option>
+<option value="4716">78</option>
+<option value="4701">79</option>
+<option value="4712">80</option>
+<option value="4707">81</option>
+<option value="4721">82</option>
+<option value="4706">83</option>
+<option value="4703">84</option>
+<option value="4720">85</option>
+<option value="4705">86</option>
+<option value="4709">87</option>
+<option value="4713">88</option>
+<option value="4715">89</option>
+<option value="4704">90</option>
+<option value="4711">91</option>
+<option value="4718">92</option>
+<option value="4749">93</option>
+<option value="4732">94</option>
+<option value="4722">95</option>
+<option value="4727">96</option>
+<option value="4728">97</option>
+<option value="4633">98</option>
+<option value="4729">99</option>
+<option value="4635">100</option>
+<option value="4730">101</option>
+<option value="4700">102</option>
+<option value="4634">103</option>
+<option value="4731">104</option>
+<option value="4726">105</option>
+<option value="4725">106</option>
+<option value="4751">107</option>
+<option value="4739">108</option>
+<option value="4753">109</option>
+<option value="4752">110</option>
+<option value="4743">111</option>
+<option value="4756">112</option>
+<option value="4754">113</option>
+<option value="4737">114</option>
+<option value="4755">115</option>
+<option value="4735">116</option>
+<option value="4746">117</option>
+<option value="4741">118</option>
+<option value="4742">119</option>
+<option value="4748">120</option>
+<option value="4736">121</option>
+<option value="4744">122</option>
+<option value="4745">123</option>
+<option value="4738">124</option>
+<option value="4747">125</option>
+<option value="4740">126</option>
+<option value="4734">127</option>
+<option value="4750">128</option>
+<option value="4757">129</option>
+<option value="4758">130</option>
+<option value="4764">131</option>
+<option value="4761">132</option>
+<option value="4759">133</option>
+<option value="4762">134</option>
+<option value="4763">135</option>
+<option value="4777">136</option>
+<option value="4776">137</option>
+<option value="4775">138</option>
+<option value="4768">139</option>
+<option value="4769">140</option>
+<option value="4778">141</option>
+<option value="4770">142</option>
+<option value="4766">143</option>
+<option value="4765">144</option>
+<option value="4771">145</option>
+<option value="4779">146</option>
+<option value="4767">147</option>
+<option value="4774">148</option>
+<option value="4772">149</option>
+<option value="4773">150</option>
+<option value="4557">151</option>
+<option value="4534">152</option>
+<option value="4532">153</option>
+<option value="4530">154</option>
+<option value="4533">155</option>
+<option value="4528">156</option>
+<option value="4522">157</option>
+<option value="4525">158</option>
+<option value="4531">159</option>
+<option value="4526">160</option>
+<option value="4535">161</option>
+<option value="4524">162</option>
+<option value="4529">163</option>
+<option value="4527">164</option>
+<option value="4549">165</option>
+<option value="4560">166</option>
+<option value="4536">167</option>
+<option value="4548">168</option>
+<option value="4538">169</option>
+<option value="4523">170</option>
+<option value="4543">171</option>
+<option value="4545">172</option>
+<option value="4553">173</option>
+<option value="4554">174</option>
+<option value="4556">175</option>
+<option value="4550">176</option>
+<option value="4539">177</option>
+<option value="4544">178</option>
+<option value="4551">179</option>
+<option value="4541">180</option>
+<option value="4552">181</option>
+<option value="4547">182</option>
+<option value="4540">183</option>
+<option value="4555">184</option>
+<option value="4546">185</option>
+<option value="4542">186</option>
+<option value="4579">187</option>
+<option value="4562">188</option>
+<option value="4576">189</option>
+<option value="4566">190</option>
+<option value="4565">191</option>
+<option value="4578">192</option>
+<option value="4561">193</option>
+<option value="4564">194</option>
+<option value="4572">195</option>
+<option value="4558">196</option>
+<option value="4577">197</option>
+<option value="4574">198</option>
+<option value="4582">199</option>
+<option value="4573">200</option>
+<option value="4569">201</option>
+<option value="4580">202</option>
+<option value="4583">203</option>
+<option value="4584">204</option>
+<option value="4567">205</option>
+<option value="4568">206</option>
+<option value="4571">207</option>
+<option value="4570">208</option>
+<option value="4575">209</option>
+<option value="4581">210</option>
+<option value="4563">211</option>
+<option value="4588">212</option>
+<option value="4585">213</option>
+<option value="4590">214</option>
+<option value="4591">215</option>
+<option value="4699">216</option>
+<option value="4537">217</option>
+<option value="4587">218</option>
+<option value="4589">219</option>
+<option value="4586">220</option>
+<option value="4609">221</option>
+<option value="4596">222</option>
+<option value="4608">223</option>
+<option value="4600">224</option>
+<option value="4610">225</option>
+<option value="4597">226</option>
+<option value="4595">227</option>
+<option value="4559">228</option>
+<option value="4607">229</option>
+<option value="4602">230</option>
+<option value="4592">231</option>
+<option value="4605">232</option>
+<option value="4606">233</option>
+<option value="4598">234</option>
+<option value="4601">235</option>
+<option value="4599">236</option>
+<option value="4603">237</option>
+<option value="4593">238</option>
+<option value="4604">239</option>
+<option value="4594">240</option>
+<option value="4359">241</option>
+<option value="4360">242</option>
+<option value="4723">243</option>
+<option value="4349">244</option>
+<option value="4356">245</option>
+<option value="4341">246</option>
+<option value="4344">247</option>
+<option value="4351">248</option>
+<option value="4352">249</option>
+<option value="4350">250</option>
+<option value="4338">251</option>
+<option value="4326">252</option>
+<option value="4327">253</option>
+<option value="4332">254</option>
+<option value="4355">255</option>
+<option value="4333">256</option>
+<option value="4346">257</option>
+<option value="4328">258</option>
+<option value="4353">259</option>
+<option value="4347">260</option>
+<option value="4345">261</option>
+<option value="4342">262</option>
+<option value="4337">263</option>
+<option value="4513">264</option>
+<option value="4330">265</option>
+<option value="4321">266</option>
+<option value="4336">267</option>
+<option value="4358">268</option>
+<option value="4357">269</option>
+<option value="4354">270</option>
+<option value="4515">271</option>
+<option value="4334">272</option>
+<option value="4335">273</option>
+<option value="4364">274</option>
+<option value="4329">275</option>
+<option value="4361">276</option>
+<option value="4323">277</option>
+<option value="4343">278</option>
+<option value="4365">279</option>
+<option value="4362">280</option>
+<option value="4339">281</option>
+<option value="4760">282</option>
+<option value="4325">283</option>
+<option value="4348">284</option>
+<option value="4724">285</option>
+<option value="4331">286</option>
+<option value="4322">287</option>
+<option value="4324">288</option>
+<option value="4340">289</option>
+<option value="4363">290</option>
+<option value="4516">291</option>
+<option value="4366">292</option>
+<option value="4512">293</option>
+<option value="4511">294</option>
+<option value="4517">295</option>
+<option value="4514">296</option>
+<option value="4519">297</option>
+<option value="4518">298</option>
+<option value="4521">299</option>
+<option value="4520">300</option>
+<option value="4467">301</option>
+<option value="4452">302</option>
+<option value="4502">303</option>
+<option value="4422">304</option>
+<option value="4419">305</option>
+<option value="4440">306</option>
+<option value="4510">307</option>
+<option value="4408">308</option>
+<option value="4385">309</option>
+<option value="4691">310</option>
+</select></td></tr></table><table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"><tr><td align="left"><input type="button" name="GET_PREVIOUS_ID"  value="&lt; vorherige Aufgabe" onClick="javascript:htmldb_goSubmit(&#x27;GET_PREVIOUS_ID&#x27;);" class="button"  /><input type="button" name="GET_NEXT_ID"  value="nächste Aufgabe &gt;" onClick="javascript:htmldb_goSubmit(&#x27;GET_NEXT_ID&#x27;);" class="button"  /></td><td align="right"><input type="button"   value="zur Startseite" onClick="javascript:apex.navigation.redirect(&#x27;f?p=534:1::::::&#x27;);;" class="button"  /></td></tr></table><br />
+          </td>
+
+         </tr>
+         </table>
+        </td>
+      </tr>
+    </table><!--    <div class="t3TabForegroundColor">
+      <img src="/i22/f_spacer.gif" width="1" height="3" alt="" />
+    </div>
+    <div class="t3customize">
+      
+    </div>
+-->    
+   <p id="Fusszeile">
+    <!--  Copyright &copy; 2008 Bundesamt f&uuml;r Migration und Fl&uuml;chtlinge -->
+   </p> <!-- Ende #Fusszeile -->
+     <table cellpadding="0" cellspacing="0" border="0" summary="" width="100%" class="t3ReportsRegion100Width" id="R111124081690398779">
+<tr>
+<td class="t3RegionHeader">&nbsp;</td>
+<td class="t3ButtonHolder">&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr>
+<td class="t3Body" colspan="2">  <style>
+
+  body {
+  margin: 0;
+  border: 0px;
+  padding: 0;
+  }  
+  
+
+ 
+   ul.footer {
+    margin: 0px;
+    padding: 0px;
+    border:  0px;    
+  } 
+  
+	li.footer {
+		margin: 0;
+		padding: 0;
+    border:  0px;
+	}
+	li.footer {
+		display: inline;
+		list-style-type: none;
+	}
+    li.footer:not(:first-child)::before {
+		content: " ";
+		margin: 0 1em;
+	}
+  
+   a.footer {
+    color: #FFFFFF; 
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  a.footer:hover {
+    text-decoration: underline;
+  }
+  
+  
+.footer_tab {
+  width: 100%; 
+  background-color: #464E50;
+  color: #FFFFFF;    
+}  
+  
+.footer_row {
+  height: 50px;
+  border: 0px solid red;
+  padding: 12px;
+  margin:  0px;
+ 
+}  
+  
+.left {
+  border:  opx solid red;
+  margin:  0px;
+  padding: 0px;
+  padding-left: 60px;
+  }
+  
+.right {
+  border:  opx solid red;
+  margin:  0px;
+  padding: 0px;
+  padding-right:60px;
+  text-align: right;
+  	min-width: 360px;
+  }
+  
+  </style>
+
+    <table class="footer_tab">
+  <tr class="footer_row"">
+    <td class="left">
+      <ul class="footer">
+  			<li class="footer"><a class="footer" href="f?p=534:90:::::P90_CALLED_FROM:30&cs=1E32160148A199222C4DDAB9C885FC03C">Impressum</a></li>
+  			<li class="footer"><a class="footer" href="f?p=534:91:::::P91_CALLED_FROM:30&cs=1563E6B9945580B7C6F19C2265D0234EC">Barrierefreiheit</a></li>
+  		</ul>
+    </td><td class="right">Copyright &copy; 2008 Bundesamt f&uuml;r Migration und Fl&uuml;chtlinge</td>
+  <tr>
+  </table></td>
+</tr>
+</table>    <input type="hidden" id="pPageFormRegionChecksums" value="&#x5B;&#x5D;">
+<input type="hidden" id="pPageItemsRowVersion" value="" /><input type="hidden" id="pPageItemsProtected" value="&#x2F;6DEQ9AI4e-iH84Qa9OZchxT-oWzmFn8y2s-QiJO6o3oixL5cFwt6m2kRsh7q1_63XSDL7WmT-RkBELbGOluusA" /></form>
+  
+
+
+
+
+
+
+<script src="/i22/libraries/apex/minified/widget.report.min.js?v=22.1.3"></script>
+<script type="text/javascript">
+apex.jQuery( function() {
+apex.page.init( this, function() {
+try {
+(function(){apex.widget.report.init("R306374338456395486","UkVHSU9OIFRZUEV-fjMwNjM3NDMzODQ1NjM5NTQ4Ng\u002F0KJASmlZp8l4UOO1YQdjRi5FhnAHeOHDbkUvvKoJVG2MuZLGes8rZ5a3Iw4YksBEqSBjk9O56DrZdhmKGyOGIg",{"lazyLoading":false,"internalRegionId":"306374338456395486"});})();
+(function(){apex.widget.selectList("#P30_ROWNUM",{"nullValue":"\u0025null\u0025","ajaxIdentifier":"SVRFTSBUWVBFfjUxMjB-MjczMjk0ODU3ODgyMDQ1MDA4\u002Fo047Yj4owTu5ApMb3Xjbi8cSR5bPl0fw8IoRoFJBqPKiY8LdC2La28uFEZ2eLRYgjM_W5AKUd_L-OzWmU-fmnA"});})();
+} catch(e) {apex.debug.error(e)};
+apex.item.waitForDelayLoadItems().done(function() {
+try {
+
+
+} finally {
+apex.event.trigger(apex.gPageContext$,'apexreadyend');
+};
+});
+});
+});apex.pwa.cleanup();
+</script>
+
+</body>
+</html>
