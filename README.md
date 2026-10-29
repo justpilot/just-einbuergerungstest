@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="art/icon/icon-512.png" alt="" width="112">
+
 # Just Einbürgerungstest
 
 **Prepare for the German citizenship test – free, ad-free and fully offline.**
