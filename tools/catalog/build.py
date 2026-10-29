@@ -137,6 +137,11 @@ OCR_RULES = [
 ]
 
 
+def german_quotes(text):
+    """Straight double quotes from the portal become German ones: "Drittes Reich" → „Drittes Reich“."""
+    return re.sub(r'"([^"]*)"', "\u201e\\1\u201c", text)
+
+
 def fix_ocr(text, word_fixes):
     for pattern, replacement in OCR_RULES:
         text = re.sub(pattern, replacement, text)
@@ -185,9 +190,9 @@ def build():
             "state": raw["state"],
             "category": "state" if raw["state"] else override.get("category", categories.get(question_id)),
             "image": f"images/{question_id}.png" if picture else None,
-            "question": {"de": override.get("question", text)},
+            "question": {"de": german_quotes(override.get("question", text))},
             "options": [
-                {"id": option_id, "text": {"de": text}}
+                {"id": option_id, "text": {"de": german_quotes(text)}}
                 for option_id, text in zip(OPTION_IDS, override.get("options", raw["answers"]))
             ],
             "correct_option": OPTION_IDS[raw["correct"]],

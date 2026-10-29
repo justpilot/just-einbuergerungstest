@@ -69,6 +69,11 @@ class FixOcrTest(unittest.TestCase):
         self.assertEqual(self.fix("von 1939 bis 194527"), "von 1939 bis 1945?")
         self.assertEqual(self.fix("„Wir sind das Volk“2"), "„Wir sind das Volk“?")
 
+    def test_german_quotes(self):
+        self.assertEqual(build.german_quotes('durch die "Römischen Verträge"'), "durch die „Römischen Verträge“")
+        self.assertEqual(build.german_quotes('"Drittes Reich" und "Wende"'), "„Drittes Reich“ und „Wende“")
+        self.assertEqual(build.german_quotes("„schon richtig“"), "„schon richtig“")
+
     def test_slash_spacing(self):
         self.assertEqual(self.fix("Präsidenten/ zur Präsidentin"), "Präsidenten / zur Präsidentin")
         self.assertEqual(self.fix("ist er/sie"), "ist er/sie")
