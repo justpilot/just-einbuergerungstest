@@ -104,6 +104,7 @@ Die Benutzeroberfläche verzichtet auf laute Gamification-Elemente und setzt auf
    * Bundesland festlegen.
    * Übersetzungssprache auswählen (`en` / `uk` / `tr`).
    * Haptisches Feedback aktivieren/deaktivieren.
+   * Darstellung: Hell/Dunkel/System sowie Material You (Dynamic Color) oder eigene App-Farben.
    * Daten-Reset (Lernfortschritt zurücksetzen).
 
 ---

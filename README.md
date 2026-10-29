@@ -34,10 +34,10 @@ on your device and teaches it with spaced repetition, in short daily sessions.
 | ⏱️ **Daily 10** | Ten questions in about three minutes: due reviews and new questions mixed, with a retry round for mistakes. |
 | 🗃️ **Leitner boxes** | Three boxes repeat mistakes right away and known questions less often. Practise any box straight from the home screen. |
 | 🎯 **Targeted practice** | By topic (politics, history, society, your state), by mistakes or by bookmarks. |
-| 📝 **Exam simulation** | 33 questions in 60 minutes, like the real test. Change answers and flag questions until you submit; past results are kept. |
+| 📝 **Exam simulation** | 33 questions in 60 minutes, like the real test. Change answers and flag questions until you submit, then practise your mistakes; past results are kept. |
 | 🔥 **Progress** | Daily streak, answers over the last seven days and your next goal. |
 | 🌍 **Translations** | Optional English, Ukrainian and Turkish for questions and answers. The exam simulation stays German, like the real test. |
-| 🎨 **Material You** | Material 3 with dynamic colour, dark mode and edge-to-edge layout. |
+| 🎨 **Material You** | Light, dark or system mode, with dynamic colour from your wallpaper or the app's own palette. Edge-to-edge layout. |
 
 > [!NOTE]
 > The app is in German, the language of the test. Only the German text is authoritative; the
