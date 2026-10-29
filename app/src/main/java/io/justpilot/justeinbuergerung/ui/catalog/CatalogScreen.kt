@@ -4,13 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,6 +27,7 @@ import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
 import io.justpilot.justeinbuergerung.ui.ViewModels
 import io.justpilot.justeinbuergerung.ui.common.LargeTitleScaffold
+import io.justpilot.justeinbuergerung.ui.common.StackedBoxBar
 import io.justpilot.justeinbuergerung.ui.common.title
 
 @Composable
@@ -49,13 +48,11 @@ fun CatalogContent(state: CatalogUiState, onStartSession: (SessionSelection) -> 
                 state.topics.forEach { (category, overview) ->
                     ListItem(
                         headlineContent = { Text(category.title(state.state)) },
+                        // Same segments as on Home, so box 2 shows as progress before anything is mastered.
                         supportingContent = {
                             Column {
-                                Text(stringResource(R.string.catalog_topic_progress, overview.mastered, overview.total))
-                                LinearProgressIndicator(
-                                    progress = { overview.mastered / overview.total.toFloat() },
-                                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                                )
+                                Text(stringResource(R.string.catalog_topic_progress, overview.learned, overview.total, overview.mastered))
+                                StackedBoxBar(overview, Modifier.padding(top = 8.dp))
                             }
                         },
                         modifier = Modifier.clickable { onStartSession(SessionSelection.Topic(category)) },

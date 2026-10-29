@@ -65,8 +65,10 @@ class OverviewViewModelsTest {
         val viewModel = HomeViewModel(questions, progress, settings, clock)
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
 
-        val activity = (viewModel.uiState.value as HomeUiState.Ready).activity
+        val ready = viewModel.uiState.value as HomeUiState.Ready
+        val activity = ready.activity
         assertEquals(listOf(0, 0, 0, 0, 0, 3, 7), activity.days.map { it.answers })
+        assertEquals("the newest exam is offered on Home", 20, ready.lastExam?.correct)
         assertEquals("exams do not count for the streak", 2, activity.streak)
         assertFalse(activity.dailyDoneToday)
     }

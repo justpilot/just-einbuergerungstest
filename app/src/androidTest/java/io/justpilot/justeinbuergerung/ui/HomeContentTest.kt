@@ -11,6 +11,8 @@ import io.justpilot.justeinbuergerung.domain.learning.Activity
 import io.justpilot.justeinbuergerung.domain.learning.LearningOverview
 import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
 import io.justpilot.justeinbuergerung.domain.model.FederalState
+import io.justpilot.justeinbuergerung.domain.model.SessionKind
+import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.ui.home.Greeting
 import io.justpilot.justeinbuergerung.ui.home.HomeContent
 import io.justpilot.justeinbuergerung.ui.home.HomeUiState
@@ -19,6 +21,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.Instant
 import java.time.LocalDate
 
 @RunWith(AndroidJUnit4::class)
@@ -31,10 +34,16 @@ class HomeContentTest {
     private val noActivity = Activity.of(emptyMap(), emptySet(), today)
     private val started = mutableListOf<SessionSelection>()
 
-    private fun show(overview: LearningOverview, activity: Activity = noActivity) {
+    private var examsStarted = 0
+
+    private fun show(overview: LearningOverview, activity: Activity = noActivity, lastExam: SessionResult? = null) {
         compose.setContent {
             JustEinbürgerungstestTheme(dynamicColor = false) {
-                HomeContent(HomeUiState.Ready(overview, activity, FederalState.BAVARIA, Greeting.EVENING), onStartSession = { started += it })
+                HomeContent(
+                    HomeUiState.Ready(overview, activity, FederalState.BAVARIA, Greeting.EVENING, lastExam),
+                    onStartSession = { started += it },
+                    onStartExam = { examsStarted++ },
+                )
             }
         }
     }
@@ -65,6 +74,16 @@ class HomeContentTest {
         compose.onNodeWithText("Noch eine Runde").performClick()
 
         assertEquals(listOf(SessionSelection.Daily), started)
+    }
+
+    @Test
+    fun theExamCanBeStartedFromHomeWithTheLastResult() {
+        val exam = SessionResult(SessionKind.EXAM, Instant.parse("2026-10-28T18:00:00Z"), today.minusDays(1), correct = 21, total = 33)
+        show(LearningOverview(total = 310, new = 310, perBox = listOf(0, 0, 0), due = 0, readyToMaster = 0, readySoon = 0, readySoonInDays = 0, bookmarked = 0), lastExam = exam)
+
+        compose.onNodeWithText("Zuletzt 21 von 33 richtig · bestanden").performScrollTo().assertExists()
+        compose.onNodeWithText("Starten").performScrollTo().performClick()
+        assertEquals(1, examsStarted)
     }
 
     @Test
