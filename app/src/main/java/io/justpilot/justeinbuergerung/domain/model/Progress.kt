@@ -45,6 +45,21 @@ data class Settings(
     val federalState: FederalState?,
     val translationLanguage: Language,
     val hapticsEnabled: Boolean,
-    /** Material You colours from the wallpaper instead of the app's own colours. */
-    val dynamicColor: Boolean = false,
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val palette: Palette = Palette.DYNAMIC,
 )
+
+/** Light or dark appearance, or whatever the phone uses. */
+enum class ThemeMode {
+    SYSTEM,
+    LIGHT,
+    DARK,
+}
+
+enum class Palette {
+    /** Material You: colours taken from the wallpaper. */
+    DYNAMIC,
+
+    /** The app's own calm blue-teal colours. */
+    BLUE,
+}

@@ -16,7 +16,7 @@ import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.ui.home.Greeting
 import io.justpilot.justeinbuergerung.ui.home.HomeContent
 import io.justpilot.justeinbuergerung.ui.home.HomeUiState
-import io.justpilot.justeinbuergerung.ui.theme.JustEinbürgerungstestTheme
+import io.justpilot.justeinbuergerung.ui.theme.JustEinbuergerungstestTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -38,7 +38,7 @@ class HomeContentTest {
 
     private fun show(overview: LearningOverview, activity: Activity = noActivity, lastExam: SessionResult? = null) {
         compose.setContent {
-            JustEinbürgerungstestTheme(dynamicColor = false) {
+            JustEinbuergerungstestTheme(dynamicColor = false) {
                 HomeContent(
                     HomeUiState.Ready(overview, activity, FederalState.BAVARIA, Greeting.EVENING, lastExam),
                     onStartSession = { started += it },

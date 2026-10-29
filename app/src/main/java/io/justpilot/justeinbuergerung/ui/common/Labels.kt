@@ -6,7 +6,9 @@ import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.domain.model.Category
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Language
+import io.justpilot.justeinbuergerung.domain.model.Palette
 import io.justpilot.justeinbuergerung.domain.model.Question
+import io.justpilot.justeinbuergerung.domain.model.ThemeMode
 
 @Composable
 fun Category.title(state: FederalState): String = when (this) {
@@ -28,4 +30,23 @@ fun Language.title(): String = when (this) {
     Language.ENGLISH -> stringResource(R.string.language_en)
     Language.UKRAINIAN -> stringResource(R.string.language_uk)
     Language.TURKISH -> stringResource(R.string.language_tr)
+}
+
+@Composable
+fun ThemeMode.title(): String = when (this) {
+    ThemeMode.SYSTEM -> stringResource(R.string.theme_system)
+    ThemeMode.LIGHT -> stringResource(R.string.theme_light)
+    ThemeMode.DARK -> stringResource(R.string.theme_dark)
+}
+
+@Composable
+fun Palette.title(): String = when (this) {
+    Palette.DYNAMIC -> stringResource(R.string.palette_dynamic)
+    Palette.BLUE -> stringResource(R.string.palette_blue)
+}
+
+@Composable
+fun Palette.hint(): String = when (this) {
+    Palette.DYNAMIC -> stringResource(R.string.palette_dynamic_hint)
+    Palette.BLUE -> stringResource(R.string.palette_blue_hint)
 }

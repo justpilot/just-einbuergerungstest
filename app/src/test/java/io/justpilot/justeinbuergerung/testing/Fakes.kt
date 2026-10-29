@@ -4,11 +4,13 @@ import io.justpilot.justeinbuergerung.domain.exam.ExamResult
 import io.justpilot.justeinbuergerung.domain.model.AnswerSource
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Language
+import io.justpilot.justeinbuergerung.domain.model.Palette
 import io.justpilot.justeinbuergerung.domain.model.Progress
 import io.justpilot.justeinbuergerung.domain.model.Question
 import io.justpilot.justeinbuergerung.domain.model.SessionKind
 import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.domain.model.Settings
+import io.justpilot.justeinbuergerung.domain.model.ThemeMode
 import io.justpilot.justeinbuergerung.domain.repository.ProgressRepository
 import io.justpilot.justeinbuergerung.domain.repository.QuestionRepository
 import io.justpilot.justeinbuergerung.domain.repository.SettingsRepository
@@ -83,5 +85,7 @@ class FakeSettingsRepository(
 
     override suspend fun setHapticsEnabled(enabled: Boolean) = settings.update { it.copy(hapticsEnabled = enabled) }
 
-    override suspend fun setDynamicColor(enabled: Boolean) = settings.update { it.copy(dynamicColor = enabled) }
+    override suspend fun setThemeMode(mode: ThemeMode) = settings.update { it.copy(themeMode = mode) }
+
+    override suspend fun setPalette(palette: Palette) = settings.update { it.copy(palette = palette) }
 }

@@ -20,7 +20,7 @@ import io.justpilot.justeinbuergerung.domain.model.LocalizedText
 import io.justpilot.justeinbuergerung.domain.model.Question
 import io.justpilot.justeinbuergerung.ui.exam.ExamContent
 import io.justpilot.justeinbuergerung.ui.exam.ExamUiState
-import io.justpilot.justeinbuergerung.ui.theme.JustEinbürgerungstestTheme
+import io.justpilot.justeinbuergerung.ui.theme.JustEinbuergerungstestTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -58,7 +58,7 @@ class ExamContentTest {
     private fun show(initial: ExamUiState, onSubmit: () -> Unit = {}, onClose: () -> Unit = {}) {
         compose.setContent {
             var state by remember { mutableStateOf(initial) }
-            JustEinbürgerungstestTheme(dynamicColor = false) {
+            JustEinbuergerungstestTheme(dynamicColor = false) {
                 ExamContent(
                     state = state,
                     onAnswer = { option -> state = (state as ExamUiState.Running).copy(selectedOptionId = option) },

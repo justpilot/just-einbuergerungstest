@@ -157,7 +157,7 @@ private fun AppMark() {
     }
 }
 
-/** The app name with its first word ("Just") in the brand colour. */
+/** The app name with its first word ("Just") in the primary colour. */
 @Composable
 private fun Wordmark() {
     val name = stringResource(R.string.app_name)
@@ -188,8 +188,8 @@ private fun InfoPill(@DrawableRes icon: Int, text: String, tint: Color) {
 }
 
 /**
- * The main call to action, styled like the passport of the app icon: a deep primary card with a
- * gold button. A light theme's primary container is too pale for that, so it uses primary itself.
+ * The main call to action: a deep primary card with a button in the paired tone. A light theme's
+ * primary container is too pale for the card, so it uses primary itself.
  */
 @Composable
 private fun DailyCard(overview: LearningOverview, activity: Activity, onStart: () -> Unit) {
@@ -197,9 +197,9 @@ private fun DailyCard(overview: LearningOverview, activity: Activity, onStart: (
     val light = colors.surface.luminance() > 0.5f
     val container = if (light) colors.primary else colors.primaryContainer
     val content = if (light) colors.onPrimary else colors.onPrimaryContainer
-    val gold = ButtonDefaults.buttonColors(
-        containerColor = if (light) colors.tertiaryContainer else colors.tertiary,
-        contentColor = if (light) colors.onTertiaryContainer else colors.onTertiary,
+    val button = ButtonDefaults.buttonColors(
+        containerColor = if (light) colors.primaryContainer else colors.primary,
+        contentColor = if (light) colors.onPrimaryContainer else colors.onPrimary,
     )
     Card(colors = CardDefaults.cardColors(containerColor = container, contentColor = content)) {
         Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -236,7 +236,7 @@ private fun DailyCard(overview: LearningOverview, activity: Activity, onStart: (
                 if (activity.streak > 0) {
                     Text(stringResource(R.string.home_streak_keep), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
                 }
-                Button(onClick = onStart, colors = gold, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                Button(onClick = onStart, colors = button, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
                     Icon(painterResource(R.drawable.ic_play_arrow_filled), contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
                     Text(stringResource(R.string.home_daily_start), modifier = Modifier.padding(start = ButtonDefaults.IconSpacing))
                 }
