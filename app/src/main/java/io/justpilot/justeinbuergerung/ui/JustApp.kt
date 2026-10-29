@@ -89,7 +89,12 @@ private fun MainNavigation() {
                 ExamHistoryScreen(onStartExam = { navController.navigate(ExamSessionRoute) })
             }
             composable<SettingsRoute> { SettingsScreen() }
-            composable<ExamSessionRoute> { ExamScreen(onClose = { navController.popBackStack() }) }
+            composable<ExamSessionRoute> {
+                ExamScreen(
+                    onClose = { navController.popBackStack() },
+                    onPractice = { navController.navigate(SessionRoute(it.key)) { popUpTo<ExamSessionRoute> { inclusive = true } } },
+                )
+            }
             composable<SessionRoute> { entry ->
                 val route = entry.toRoute<SessionRoute>()
                 SessionScreen(

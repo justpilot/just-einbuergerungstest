@@ -1,5 +1,6 @@
 package io.justpilot.justeinbuergerung.ui.exam
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.justpilot.justeinbuergerung.domain.exam.Exam
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -43,13 +45,20 @@ sealed interface ExamUiState {
         val isLast: Boolean get() = position == total
     }
 
-    data class Finished(val result: ExamResult) : ExamUiState
+    /** @param bookmarked ids of the bookmarked questions, so mistakes can be bookmarked from the result */
+    data class Finished(val result: ExamResult, val bookmarked: Set<String> = emptySet()) : ExamUiState
 
     data class QuestionStatus(val answered: Boolean, val flagged: Boolean)
 }
 
-/** Runs one exam simulation; the exam is submitted automatically when the time is up. */
+/**
+ * Runs one exam simulation; the exam is submitted automatically when the time is up.
+ *
+ * The exam lives in [savedState], so it survives the system ending the process while the app is
+ * in the background. The deadline is stored too: the time keeps running meanwhile, as in a real test.
+ */
 class ExamViewModel(
+    private val savedState: SavedStateHandle,
     private val questionRepository: QuestionRepository,
     private val progressRepository: ProgressRepository,
     private val settingsRepository: SettingsRepository,
@@ -61,9 +70,11 @@ class ExamViewModel(
     private val remaining = MutableStateFlow(Exam.DURATION)
     private var timer: Job? = null
 
-    val uiState: StateFlow<ExamUiState> = combine(exam, result, remaining) { exam, result, remaining ->
+    private val bookmarked = progressRepository.progress().map { progress -> progress.filterValues { it.bookmarked }.keys }
+
+    val uiState: StateFlow<ExamUiState> = combine(exam, result, remaining, bookmarked) { exam, result, remaining, bookmarked ->
         when {
-            result != null -> ExamUiState.Finished(result)
+            result != null -> ExamUiState.Finished(result, bookmarked)
             exam == null -> ExamUiState.Loading
             else -> ExamUiState.Running(
                 question = exam.current,
@@ -80,8 +91,19 @@ class ExamViewModel(
         viewModelScope.launch {
             val state = settingsRepository.settings.first().federalState
             val pool = state?.let { questionRepository.questionPool(it).first() }.orEmpty()
-            exam.value = Exam.generate(pool, random)
-            timer = launch { countDown(deadline = clock.instant() + Exam.DURATION) }
+            val restored = restore(pool)
+            val started = restored ?: Exam.generate(pool, random)
+            val deadline = savedState.get<Long>(DEADLINE)?.takeIf { restored != null }?.let(Instant::ofEpochMilli)
+                ?: (clock.instant() + Exam.DURATION)
+            savedState[DEADLINE] = deadline.toEpochMilli()
+            exam.value = started
+            save(started)
+            if (savedState.get<Boolean>(SUBMITTED) == true) {
+                // Already scored and recorded before the process ended; only show the result again.
+                result.value = started.result()
+            } else {
+                timer = launch { countDown(deadline) }
+            }
         }
     }
 
@@ -112,12 +134,49 @@ class ExamViewModel(
         if (result.value != null) return
         val scored = current.result()
         result.value = scored
+        savedState[SUBMITTED] = true
         timer?.cancel()
         viewModelScope.launch { progressRepository.recordExam(scored) }
+    }
+
+    fun toggleBookmark(questionId: String) {
+        val finished = uiState.value as? ExamUiState.Finished ?: return
+        viewModelScope.launch { progressRepository.setBookmarked(questionId, questionId !in finished.bookmarked) }
     }
 
     private fun update(change: (Exam) -> Exam) {
         if (result.value != null) return
         exam.update { it?.let(change) }
+        exam.value?.let(::save)
+    }
+
+    private fun save(exam: Exam) {
+        savedState[QUESTIONS] = ArrayList(exam.questions.map { it.id })
+        savedState[ANSWERS] = ArrayList(exam.answers.map { (id, option) -> "$id=$option" })
+        savedState[FLAGGED] = ArrayList(exam.flagged)
+        savedState[POSITION] = exam.position
+    }
+
+    /** The saved exam, or null if there is none or its questions are no longer in the pool. */
+    private fun restore(pool: List<Question>): Exam? {
+        val ids = savedState.get<List<String>>(QUESTIONS) ?: return null
+        val byId = pool.associateBy { it.id }
+        val questions = ids.map { byId[it] ?: return null }
+        if (questions.isEmpty()) return null
+        return Exam(
+            questions = questions,
+            position = (savedState.get<Int>(POSITION) ?: 0).coerceIn(questions.indices),
+            answers = savedState.get<List<String>>(ANSWERS).orEmpty().associate { it.substringBefore('=') to it.substringAfter('=') },
+            flagged = savedState.get<List<String>>(FLAGGED).orEmpty().toSet(),
+        )
+    }
+
+    private companion object {
+        const val QUESTIONS = "exam_questions"
+        const val ANSWERS = "exam_answers"
+        const val FLAGGED = "exam_flagged"
+        const val POSITION = "exam_position"
+        const val DEADLINE = "exam_deadline"
+        const val SUBMITTED = "exam_submitted"
     }
 }

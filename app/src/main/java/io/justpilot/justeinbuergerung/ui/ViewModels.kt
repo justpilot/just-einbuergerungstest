@@ -25,7 +25,13 @@ object ViewModels {
         initializer { SettingsViewModel(container.settingsRepository, container.progressRepository) }
         initializer { ExamHistoryViewModel(container.progressRepository) }
         initializer {
-            ExamViewModel(container.questionRepository, container.progressRepository, container.settingsRepository, container.clock)
+            ExamViewModel(
+                createSavedStateHandle(),
+                container.questionRepository,
+                container.progressRepository,
+                container.settingsRepository,
+                container.clock,
+            )
         }
         initializer {
             SessionViewModel(
