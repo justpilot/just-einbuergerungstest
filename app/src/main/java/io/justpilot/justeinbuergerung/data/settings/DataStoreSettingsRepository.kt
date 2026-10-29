@@ -7,7 +7,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Language
+import io.justpilot.justeinbuergerung.domain.model.Palette
 import io.justpilot.justeinbuergerung.domain.model.Settings
+import io.justpilot.justeinbuergerung.domain.model.ThemeMode
 import io.justpilot.justeinbuergerung.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -21,7 +23,8 @@ class DataStoreSettingsRepository(private val dataStore: DataStore<Preferences>)
                 ?.let { code -> Language.translations.firstOrNull { it.code == code } }
                 ?: DEFAULT_TRANSLATION_LANGUAGE,
             hapticsEnabled = preferences[HAPTICS_ENABLED] ?: true,
-            dynamicColor = preferences[DYNAMIC_COLOR] ?: false,
+            themeMode = preferences[THEME_MODE]?.let { name -> ThemeMode.entries.firstOrNull { it.name == name } } ?: ThemeMode.SYSTEM,
+            palette = preferences[PALETTE]?.let { name -> Palette.entries.firstOrNull { it.name == name } } ?: Palette.DYNAMIC,
         )
     }
 
@@ -38,15 +41,20 @@ class DataStoreSettingsRepository(private val dataStore: DataStore<Preferences>)
         dataStore.edit { it[HAPTICS_ENABLED] = enabled }
     }
 
-    override suspend fun setDynamicColor(enabled: Boolean) {
-        dataStore.edit { it[DYNAMIC_COLOR] = enabled }
+    override suspend fun setThemeMode(mode: ThemeMode) {
+        dataStore.edit { it[THEME_MODE] = mode.name }
+    }
+
+    override suspend fun setPalette(palette: Palette) {
+        dataStore.edit { it[PALETTE] = palette.name }
     }
 
     private companion object {
         val FEDERAL_STATE = stringPreferencesKey("federal_state")
         val TRANSLATION_LANGUAGE = stringPreferencesKey("translation_language")
         val HAPTICS_ENABLED = booleanPreferencesKey("haptics_enabled")
-        val DYNAMIC_COLOR = booleanPreferencesKey("dynamic_color")
+        val THEME_MODE = stringPreferencesKey("theme_mode")
+        val PALETTE = stringPreferencesKey("palette")
         val DEFAULT_TRANSLATION_LANGUAGE = Language.ENGLISH
     }
 }

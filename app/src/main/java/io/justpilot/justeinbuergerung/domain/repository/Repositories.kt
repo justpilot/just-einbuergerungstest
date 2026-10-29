@@ -4,11 +4,13 @@ import io.justpilot.justeinbuergerung.domain.exam.ExamResult
 import io.justpilot.justeinbuergerung.domain.model.AnswerSource
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Language
+import io.justpilot.justeinbuergerung.domain.model.Palette
 import io.justpilot.justeinbuergerung.domain.model.Progress
 import io.justpilot.justeinbuergerung.domain.model.Question
 import io.justpilot.justeinbuergerung.domain.model.SessionKind
 import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.domain.model.Settings
+import io.justpilot.justeinbuergerung.domain.model.ThemeMode
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -56,5 +58,7 @@ interface SettingsRepository {
 
     suspend fun setHapticsEnabled(enabled: Boolean)
 
-    suspend fun setDynamicColor(enabled: Boolean)
+    suspend fun setThemeMode(mode: ThemeMode)
+
+    suspend fun setPalette(palette: Palette)
 }

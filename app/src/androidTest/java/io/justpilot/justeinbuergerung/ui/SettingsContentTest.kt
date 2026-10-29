@@ -1,6 +1,7 @@
 package io.justpilot.justeinbuergerung.ui
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -8,9 +9,12 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Language
+import io.justpilot.justeinbuergerung.domain.model.Palette
 import io.justpilot.justeinbuergerung.domain.model.Settings
+import io.justpilot.justeinbuergerung.domain.model.ThemeMode
 import io.justpilot.justeinbuergerung.ui.settings.SettingsContent
-import io.justpilot.justeinbuergerung.ui.theme.JustEinbürgerungstestTheme
+import io.justpilot.justeinbuergerung.ui.theme.JustEinbuergerungstestTheme
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,14 +27,15 @@ class SettingsContentTest {
     @Test
     fun aboutNamesTheSourceCodeAndTheOfficialCatalogWithoutClaimingToBeOfficial() {
         compose.setContent {
-            JustEinbürgerungstestTheme(dynamicColor = false) {
+            JustEinbuergerungstestTheme(dynamicColor = false) {
                 SettingsContent(
                     settings = Settings(FederalState.BAVARIA, Language.ENGLISH, hapticsEnabled = true),
                     snackbar = SnackbarHostState(),
                     onFederalState = {},
                     onTranslationLanguage = {},
                     onHaptics = {},
-                    onDynamicColor = {},
+                    onThemeMode = {},
+                    onPalette = {},
                     onReset = {},
                 )
             }
@@ -44,14 +49,15 @@ class SettingsContentTest {
     @Test
     fun theLicensesOfTheBundledLibrariesCanBeShown() {
         compose.setContent {
-            JustEinbürgerungstestTheme(dynamicColor = false) {
+            JustEinbuergerungstestTheme(dynamicColor = false) {
                 SettingsContent(
                     settings = Settings(FederalState.BAVARIA, Language.ENGLISH, hapticsEnabled = true),
                     snackbar = SnackbarHostState(),
                     onFederalState = {},
                     onTranslationLanguage = {},
                     onHaptics = {},
-                    onDynamicColor = {},
+                    onThemeMode = {},
+                    onPalette = {},
                     onReset = {},
                 )
             }
@@ -61,5 +67,31 @@ class SettingsContentTest {
         compose.onNodeWithText("Apache License 2.0", substring = true).assertExists()
         compose.onNodeWithText("Schließen").performClick()
         compose.onNodeWithText("Apache License 2.0", substring = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun lightOrDarkAndThePaletteCanBeChosen() {
+        var mode: ThemeMode? = null
+        var palette: Palette? = null
+        compose.setContent {
+            JustEinbuergerungstestTheme(dynamicColor = false) {
+                SettingsContent(
+                    settings = Settings(FederalState.BAVARIA, Language.ENGLISH, hapticsEnabled = true),
+                    snackbar = SnackbarHostState(),
+                    onFederalState = {},
+                    onTranslationLanguage = {},
+                    onHaptics = {},
+                    onThemeMode = { mode = it },
+                    onPalette = { palette = it },
+                    onReset = {},
+                )
+            }
+        }
+
+        compose.onNodeWithText("System").performScrollTo().assertIsSelected()
+        compose.onNodeWithText("Dunkel").performClick()
+        assertEquals(ThemeMode.DARK, mode)
+        compose.onNodeWithText("Blau").performScrollTo().performClick()
+        assertEquals(Palette.BLUE, palette)
     }
 }

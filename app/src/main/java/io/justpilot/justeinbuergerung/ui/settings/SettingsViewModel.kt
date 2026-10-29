@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Language
+import io.justpilot.justeinbuergerung.domain.model.Palette
 import io.justpilot.justeinbuergerung.domain.model.Settings
+import io.justpilot.justeinbuergerung.domain.model.ThemeMode
 import io.justpilot.justeinbuergerung.domain.repository.ProgressRepository
 import io.justpilot.justeinbuergerung.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,8 +34,12 @@ class SettingsViewModel(
         viewModelScope.launch { settingsRepository.setHapticsEnabled(enabled) }
     }
 
-    fun setDynamicColor(enabled: Boolean) {
-        viewModelScope.launch { settingsRepository.setDynamicColor(enabled) }
+    fun setThemeMode(mode: ThemeMode) {
+        viewModelScope.launch { settingsRepository.setThemeMode(mode) }
+    }
+
+    fun setPalette(palette: Palette) {
+        viewModelScope.launch { settingsRepository.setPalette(palette) }
     }
 
     /** Deletes all learning progress; [onDone] runs once it is gone. */

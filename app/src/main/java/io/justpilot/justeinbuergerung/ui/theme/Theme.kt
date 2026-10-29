@@ -1,6 +1,7 @@
 package io.justpilot.justeinbuergerung.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -13,22 +14,24 @@ import androidx.compose.ui.platform.LocalContext
 private val LocalFeedbackColors = staticCompositionLocalOf { LightFeedbackColors }
 
 @Composable
-fun JustEinbürgerungstestTheme(
+fun JustEinbuergerungstestTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Off by default: the brand colours match the launcher icon. Every supported version
-    // (minSdk 31) can turn on Material You colours in the settings.
-    dynamicColor: Boolean = false,
+    // Material You is available on every supported version (minSdk 31).
+    dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
-        dynamicColor -> dynamicLightColorScheme(LocalContext.current)
-        darkTheme -> DarkColors
-        else -> LightColors
-    }
     CompositionLocalProvider(LocalFeedbackColors provides if (darkTheme) DarkFeedbackColors else LightFeedbackColors) {
-        MaterialTheme(colorScheme = colorScheme, content = content)
+        MaterialTheme(colorScheme = colorScheme(darkTheme, dynamicColor), content = content)
     }
+}
+
+/** The colours of the theme; the settings also use them to preview each palette. */
+@Composable
+fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean): ColorScheme = when {
+    dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
+    dynamicColor -> dynamicLightColorScheme(LocalContext.current)
+    darkTheme -> DarkColors
+    else -> LightColors
 }
 
 /** Extra colour roles of the app, next to [MaterialTheme.colorScheme]. */

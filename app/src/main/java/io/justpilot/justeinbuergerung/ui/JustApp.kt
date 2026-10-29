@@ -1,7 +1,9 @@
 package io.justpilot.justeinbuergerung.ui
 
+import android.app.UiModeManager
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,8 +14,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,6 +32,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import io.justpilot.justeinbuergerung.R
+import io.justpilot.justeinbuergerung.domain.model.Palette
+import io.justpilot.justeinbuergerung.domain.model.ThemeMode
 import io.justpilot.justeinbuergerung.ui.catalog.CatalogScreen
 import io.justpilot.justeinbuergerung.ui.exam.ExamHistoryScreen
 import io.justpilot.justeinbuergerung.ui.exam.ExamScreen
@@ -35,20 +41,44 @@ import io.justpilot.justeinbuergerung.ui.home.HomeScreen
 import io.justpilot.justeinbuergerung.ui.onboarding.OnboardingScreen
 import io.justpilot.justeinbuergerung.ui.session.SessionScreen
 import io.justpilot.justeinbuergerung.ui.settings.SettingsScreen
-import io.justpilot.justeinbuergerung.ui.theme.JustEinbürgerungstestTheme
+import io.justpilot.justeinbuergerung.ui.theme.JustEinbuergerungstestTheme
 import kotlin.reflect.KClass
 
 @Composable
 fun JustApp(viewModel: AppViewModel = viewModel(factory = ViewModels.factory)) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val dynamicColor by viewModel.dynamicColor.collectAsStateWithLifecycle()
-    JustEinbürgerungstestTheme(dynamicColor = dynamicColor) {
+    val appearance by viewModel.appearance.collectAsStateWithLifecycle()
+    appearance?.let { ApplicationNightMode(it.themeMode) }
+    val darkTheme = when (appearance?.themeMode) {
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+        ThemeMode.SYSTEM, null -> isSystemInDarkTheme()
+    }
+    JustEinbuergerungstestTheme(darkTheme = darkTheme, dynamicColor = appearance?.palette != Palette.BLUE) {
         when (state) {
             // Reading the settings takes a few milliseconds; show the plain background meanwhile.
             AppUiState.Loading -> Surface(Modifier.fillMaxSize()) {}
             AppUiState.Onboarding -> OnboardingScreen(onSelect = viewModel::selectFederalState)
             AppUiState.Ready -> MainNavigation()
         }
+    }
+}
+
+/**
+ * Hands a chosen light or dark mode to the system, which keeps it across starts and also uses it
+ * for the splash screen and the system bars. Changing it recreates the activity.
+ */
+@Composable
+private fun ApplicationNightMode(mode: ThemeMode) {
+    val context = LocalContext.current
+    LaunchedEffect(mode) {
+        context.getSystemService(UiModeManager::class.java).setApplicationNightMode(
+            when (mode) {
+                ThemeMode.SYSTEM -> UiModeManager.MODE_NIGHT_AUTO
+                ThemeMode.LIGHT -> UiModeManager.MODE_NIGHT_NO
+                ThemeMode.DARK -> UiModeManager.MODE_NIGHT_YES
+            },
+        )
     }
 }
 

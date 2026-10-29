@@ -5,7 +5,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Language
+import io.justpilot.justeinbuergerung.domain.model.Palette
 import io.justpilot.justeinbuergerung.domain.model.Settings
+import io.justpilot.justeinbuergerung.domain.model.ThemeMode
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -28,7 +30,7 @@ class DataStoreSettingsRepositoryTest {
 
     @Test
     fun `defaults before onboarding`() = scope.runTest {
-        assertEquals(Settings(federalState = null, translationLanguage = Language.ENGLISH, hapticsEnabled = true, dynamicColor = false), repository.settings.first())
+        assertEquals(Settings(federalState = null, translationLanguage = Language.ENGLISH, hapticsEnabled = true, themeMode = ThemeMode.SYSTEM, palette = Palette.DYNAMIC), repository.settings.first())
     }
 
     @Test
@@ -36,10 +38,11 @@ class DataStoreSettingsRepositoryTest {
         repository.setFederalState(FederalState.RHINELAND_PALATINATE)
         repository.setTranslationLanguage(Language.TURKISH)
         repository.setHapticsEnabled(false)
-        repository.setDynamicColor(true)
+        repository.setThemeMode(ThemeMode.DARK)
+        repository.setPalette(Palette.BLUE)
 
         assertEquals(
-            Settings(FederalState.RHINELAND_PALATINATE, Language.TURKISH, hapticsEnabled = false, dynamicColor = true),
+            Settings(FederalState.RHINELAND_PALATINATE, Language.TURKISH, hapticsEnabled = false, ThemeMode.DARK, Palette.BLUE),
             repository.settings.first(),
         )
     }
@@ -55,10 +58,14 @@ class DataStoreSettingsRepositoryTest {
         dataStore.edit {
             it[stringPreferencesKey("federal_state")] = "XX"
             it[stringPreferencesKey("translation_language")] = "fr"
+            it[stringPreferencesKey("theme_mode")] = "SEPIA"
+            it[stringPreferencesKey("palette")] = "RAINBOW"
         }
 
         val settings = repository.settings.first()
         assertEquals(null, settings.federalState)
         assertEquals(Language.ENGLISH, settings.translationLanguage)
+        assertEquals(ThemeMode.SYSTEM, settings.themeMode)
+        assertEquals(Palette.DYNAMIC, settings.palette)
     }
 }

@@ -21,7 +21,7 @@ import io.justpilot.justeinbuergerung.domain.model.Question
 import io.justpilot.justeinbuergerung.ui.onboarding.OnboardingScreen
 import io.justpilot.justeinbuergerung.ui.session.SessionContent
 import io.justpilot.justeinbuergerung.ui.session.SessionUiState
-import io.justpilot.justeinbuergerung.ui.theme.JustEinbürgerungstestTheme
+import io.justpilot.justeinbuergerung.ui.theme.JustEinbuergerungstestTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -60,7 +60,7 @@ class SessionContentTest {
     private fun show(initial: SessionUiState.Asking, onNext: () -> Unit = {}, onClose: () -> Unit = {}) {
         compose.setContent {
             var state by remember { mutableStateOf(initial) }
-            JustEinbürgerungstestTheme(dynamicColor = false) {
+            JustEinbuergerungstestTheme(dynamicColor = false) {
                 SessionContent(
                     state = state,
                     onAnswer = { state = state.copy(selectedOptionId = it) },
@@ -76,7 +76,7 @@ class SessionContentTest {
 
     private fun showFinished(finished: SessionUiState.Finished, onClose: () -> Unit = {}, onRestart: () -> Unit = {}) {
         compose.setContent {
-            JustEinbürgerungstestTheme(dynamicColor = false) {
+            JustEinbuergerungstestTheme(dynamicColor = false) {
                 SessionContent(
                     state = finished,
                     onAnswer = {},
@@ -170,7 +170,7 @@ class SessionContentTest {
     @Test
     fun summaryShowsOnlyTheBoxMovesThatHappened() {
         compose.setContent {
-            JustEinbürgerungstestTheme(dynamicColor = false) {
+            JustEinbuergerungstestTheme(dynamicColor = false) {
                 SessionContent(
                     state = SessionUiState.Finished(correctFirstTime = 8, total = 10, SessionBalance(advanced = 5, mastered = 3)),
                     onAnswer = {},
@@ -191,7 +191,7 @@ class SessionContentTest {
     @Test
     fun onboardingReportsThePickedState() {
         var picked: FederalState? = null
-        compose.setContent { JustEinbürgerungstestTheme(dynamicColor = false) { OnboardingScreen(onSelect = { picked = it }) } }
+        compose.setContent { JustEinbuergerungstestTheme(dynamicColor = false) { OnboardingScreen(onSelect = { picked = it }) } }
 
         compose.onNodeWithText("Bayern").performClick()
         assertEquals(FederalState.BAVARIA, picked)
