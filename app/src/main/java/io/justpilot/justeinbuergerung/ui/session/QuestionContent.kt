@@ -104,7 +104,7 @@ private fun AnswerCard(
         when (state) {
             AnswerState.Correct -> feedback.correctContainer
             AnswerState.Wrong -> colors.errorContainer
-            AnswerState.Selected -> colors.primaryContainer
+            AnswerState.Selected -> colors.tertiaryContainer
             else -> colors.surfaceContainerLow
         },
         label = "answer container",
@@ -112,14 +112,14 @@ private fun AnswerCard(
     val content = when (state) {
         AnswerState.Correct -> feedback.onCorrectContainer
         AnswerState.Wrong -> colors.onErrorContainer
-        AnswerState.Selected -> colors.onPrimaryContainer
+        AnswerState.Selected -> colors.onTertiaryContainer
         AnswerState.Other -> colors.onSurface.copy(alpha = 0.6f)
         AnswerState.Open -> colors.onSurface
     }
     val border = when (state) {
         AnswerState.Correct -> feedback.correct
         AnswerState.Wrong -> colors.error
-        AnswerState.Selected -> colors.primary
+        AnswerState.Selected -> colors.tertiary
         else -> colors.outlineVariant
     }
     val description = when (state) {
@@ -164,9 +164,9 @@ private fun OptionBadge(optionId: String, state: AnswerState) {
             val selected = state == AnswerState.Selected
             Surface(
                 shape = CircleShape,
-                color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                contentColor = if (selected) MaterialTheme.colorScheme.onPrimary else LocalContentColor.current,
-                border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
+                color = if (selected) MaterialTheme.colorScheme.tertiary else Color.Transparent,
+                contentColor = if (selected) MaterialTheme.colorScheme.onTertiary else LocalContentColor.current,
+                border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline),
             ) {
                 Box(Modifier.size(28.dp), contentAlignment = Alignment.Center) {
                     Text(optionId, style = MaterialTheme.typography.labelLarge)

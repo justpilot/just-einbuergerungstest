@@ -29,6 +29,7 @@ class SettingsContentTest {
                     onFederalState = {},
                     onTranslationLanguage = {},
                     onHaptics = {},
+                    onDynamicColor = {},
                     onReset = {},
                 )
             }

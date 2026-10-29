@@ -1,10 +1,15 @@
 package io.justpilot.justeinbuergerung.ui.home
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -24,13 +30,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -40,14 +45,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -66,10 +78,10 @@ fun HomeScreen(onStartSession: (SessionSelection) -> Unit, viewModel: HomeViewMo
     HomeContent(state, onStartSession)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(state: HomeUiState, onStartSession: (SessionSelection) -> Unit) {
-    Scaffold(topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) }) { padding ->
+    // No app bar: the brand header scrolls with the cards.
+    Scaffold { padding ->
         when (state) {
             HomeUiState.Loading -> Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -81,7 +93,8 @@ fun HomeContent(state: HomeUiState, onStartSession: (SessionSelection) -> Unit) 
                 Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                DailyCard(state.overview, onStart = { onStartSession(SessionSelection.Daily) })
+                Header(state)
+                DailyCard(state.overview, state.activity, onStart = { onStartSession(SessionSelection.Daily) })
                 ActivityCard(state.activity)
                 ProgressCard(state.overview, onPracticeBox = { onStartSession(SessionSelection.Box(it)) })
             }
@@ -89,20 +102,135 @@ fun HomeContent(state: HomeUiState, onStartSession: (SessionSelection) -> Unit) 
     }
 }
 
+/** App mark and name, a greeting and the facts that frame the learning: federal state and streak. */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun DailyCard(overview: LearningOverview, onStart: () -> Unit) {
-    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
+private fun Header(state: HomeUiState.Ready) {
+    Column(Modifier.padding(top = 8.dp, bottom = 4.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            AppMark()
+            Wordmark()
+        }
+        Text(
+            stringResource(
+                when (state.greeting) {
+                    Greeting.MORNING -> R.string.home_greeting_morning
+                    Greeting.DAY -> R.string.home_greeting_day
+                    Greeting.EVENING -> R.string.home_greeting_evening
+                },
+            ),
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.semantics { heading() },
+        )
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            InfoPill(R.drawable.ic_location_on_filled, state.federalState.germanName, MaterialTheme.colorScheme.primary)
+            val streak = state.activity.streak
+            if (streak > 0) {
+                InfoPill(
+                    R.drawable.ic_local_fire_department_filled,
+                    pluralStringResource(R.plurals.home_streak, streak, streak),
+                    MaterialTheme.colorScheme.tertiary,
+                )
+            }
+        }
+    }
+}
+
+/** The launcher icon's passport on its cream background. */
+@Composable
+private fun AppMark() {
+    Box(
+        Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(colorResource(R.color.ic_launcher_background)),
+        contentAlignment = Alignment.Center,
+    ) {
+        // The adaptive-icon foreground keeps its artwork in the middle of a 108 dp canvas.
+        Image(painterResource(R.drawable.ic_launcher_foreground), contentDescription = null, modifier = Modifier.requiredSize(54.dp))
+    }
+}
+
+/** The app name with its first word ("Just") in the brand colour. */
+@Composable
+private fun Wordmark() {
+    val name = stringResource(R.string.app_name)
+    val first = name.substringBefore(' ')
+    val primary = MaterialTheme.colorScheme.primary
+    Text(
+        buildAnnotatedString {
+            withStyle(SpanStyle(color = primary, fontWeight = FontWeight.Bold)) { append(first) }
+            append(name.removePrefix(first))
+        },
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Medium,
+    )
+}
+
+@Composable
+private fun InfoPill(@DrawableRes icon: Int, text: String, tint: Color) {
+    Surface(shape = CircleShape, color = MaterialTheme.colorScheme.surfaceContainerHigh) {
+        Row(
+            Modifier.padding(start = 10.dp, end = 14.dp, top = 6.dp, bottom = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Icon(painterResource(icon), contentDescription = null, tint = tint, modifier = Modifier.size(18.dp))
+            Text(text, style = MaterialTheme.typography.labelLarge)
+        }
+    }
+}
+
+/**
+ * The main call to action, styled like the passport of the app icon: a deep primary card with a
+ * gold button. A light theme's primary container is too pale for that, so it uses primary itself.
+ */
+@Composable
+private fun DailyCard(overview: LearningOverview, activity: Activity, onStart: () -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    val light = colors.surface.luminance() > 0.5f
+    val container = if (light) colors.primary else colors.primaryContainer
+    val content = if (light) colors.onPrimary else colors.onPrimaryContainer
+    val gold = ButtonDefaults.buttonColors(
+        containerColor = if (light) colors.tertiaryContainer else colors.tertiary,
+        contentColor = if (light) colors.onTertiaryContainer else colors.onTertiary,
+    )
+    Card(colors = CardDefaults.cardColors(containerColor = container, contentColor = content)) {
         Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(stringResource(R.string.home_daily_title), style = MaterialTheme.typography.titleLarge)
-            Text(stringResource(R.string.home_daily_text), style = MaterialTheme.typography.bodyMedium)
-            Text(
-                if (overview.due > 0) pluralStringResource(R.plurals.home_due, overview.due, overview.due)
-                else stringResource(R.string.home_nothing_due),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-            Button(onClick = onStart, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                Icon(painterResource(R.drawable.ic_play_arrow_filled), contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
-                Text(stringResource(R.string.home_daily_start), modifier = Modifier.padding(start = ButtonDefaults.IconSpacing))
+            if (activity.dailyDoneToday) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Icon(painterResource(R.drawable.ic_check_circle_filled), contentDescription = null)
+                    Text(stringResource(R.string.home_daily_done_title), style = MaterialTheme.typography.titleLarge)
+                }
+                // Wrong answers land in box 1, which is due at once, so "due" is not a to-do here.
+                Text(
+                    if (overview.due > 0) pluralStringResource(R.plurals.home_daily_done_due, overview.due, overview.due)
+                    else stringResource(R.string.home_daily_done_text),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                OutlinedButton(
+                    onClick = onStart,
+                    border = BorderStroke(1.dp, content.copy(alpha = 0.6f)),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = content),
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                ) {
+                    Text(stringResource(R.string.home_daily_again))
+                }
+            } else {
+                Text(stringResource(R.string.home_daily_title), style = MaterialTheme.typography.titleLarge)
+                Text(stringResource(R.string.home_daily_text), style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    when {
+                        overview.due > 0 -> pluralStringResource(R.plurals.home_due, overview.due, overview.due)
+                        overview.new == overview.total -> stringResource(R.string.home_first_session)
+                        else -> stringResource(R.string.home_nothing_due)
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                if (activity.streak > 0) {
+                    Text(stringResource(R.string.home_streak_keep), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+                }
+                Button(onClick = onStart, colors = gold, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                    Icon(painterResource(R.drawable.ic_play_arrow_filled), contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
+                    Text(stringResource(R.string.home_daily_start), modifier = Modifier.padding(start = ButtonDefaults.IconSpacing))
+                }
             }
         }
     }
@@ -139,28 +267,6 @@ private fun ProgressCard(overview: LearningOverview, onPracticeBox: (box: Int) -
 private fun ActivityCard(activity: Activity) {
     ElevatedCard {
         Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Icon(
-                    painterResource(R.drawable.ic_local_fire_department_filled),
-                    contentDescription = null,
-                    tint = if (activity.streak > 0) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
-                )
-                Text(
-                    pluralStringResource(R.plurals.home_streak, activity.streak, activity.streak),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-            }
-            Text(
-                stringResource(
-                    when {
-                        activity.dailyDoneToday -> R.string.home_streak_done_today
-                        activity.streak > 0 -> R.string.home_streak_keep
-                        else -> R.string.home_streak_start
-                    },
-                ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
             val total = activity.days.sumOf { it.answers }
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
@@ -262,10 +368,16 @@ private fun StackedBoxBar(overview: LearningOverview, colors: List<Color>) {
 /** New › box 1 › box 2 › mastered: the path every question takes. Boxes with questions start a session of that box. */
 @Composable
 private fun BoxLadder(overview: LearningOverview, colors: List<Color>, onPracticeBox: (box: Int) -> Unit) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+    // Top-aligned so the arrows sit on the line of the counts, also when labels wrap.
+    Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxWidth()) {
         BoxCount(stringResource(R.string.home_box_new), overview.new, MaterialTheme.colorScheme.surfaceVariant)
         overview.perBox.forEachIndexed { index, count ->
-            Text("›", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.titleMedium)
+            Text(
+                "›",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 4.dp).clearAndSetSemantics {},
+            )
             BoxCount(
                 stringResource(R.string.home_box, index + 1),
                 count,
@@ -308,7 +420,7 @@ private fun RowScope.BoxCount(
                 color = if (mastered) color else Color.Unspecified,
             )
         }
-        Text(label, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center, maxLines = 1)
+        Text(label, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
     }
 }
 

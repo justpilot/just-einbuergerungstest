@@ -24,6 +24,11 @@ class AppViewModel(private val settingsRepository: SettingsRepository) : ViewMod
         .map { if (it.federalState == null) AppUiState.Onboarding else AppUiState.Ready }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppUiState.Loading)
 
+    /** Whether the theme follows the wallpaper (Material You) instead of the brand colours. */
+    val dynamicColor: StateFlow<Boolean> = settingsRepository.settings
+        .map { it.dynamicColor }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
     fun selectFederalState(state: FederalState) {
         viewModelScope.launch { settingsRepository.setFederalState(state) }
     }

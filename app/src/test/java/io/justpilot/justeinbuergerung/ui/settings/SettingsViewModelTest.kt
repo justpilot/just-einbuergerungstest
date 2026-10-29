@@ -43,7 +43,8 @@ class SettingsViewModelTest {
         viewModel.setFederalState(FederalState.HAMBURG)
         viewModel.setTranslationLanguage(Language.UKRAINIAN)
         viewModel.setHapticsEnabled(false)
-        assertEquals(Settings(FederalState.HAMBURG, Language.UKRAINIAN, hapticsEnabled = false), viewModel.settings.value)
+        viewModel.setDynamicColor(true)
+        assertEquals(Settings(FederalState.HAMBURG, Language.UKRAINIAN, hapticsEnabled = false, dynamicColor = true), viewModel.settings.value)
 
         var done = false
         viewModel.resetProgress { done = true }

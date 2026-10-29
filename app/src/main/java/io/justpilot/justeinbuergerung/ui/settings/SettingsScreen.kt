@@ -10,18 +10,15 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +39,7 @@ import io.justpilot.justeinbuergerung.domain.model.Language
 import io.justpilot.justeinbuergerung.domain.model.Settings
 import io.justpilot.justeinbuergerung.ui.ViewModels
 import io.justpilot.justeinbuergerung.ui.common.FederalStateItem
+import io.justpilot.justeinbuergerung.ui.common.LargeTitleScaffold
 import io.justpilot.justeinbuergerung.ui.common.federalStatesByName
 import io.justpilot.justeinbuergerung.ui.common.title
 import kotlinx.coroutines.launch
@@ -62,12 +60,12 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel(factory = ViewModels
             onFederalState = viewModel::setFederalState,
             onTranslationLanguage = viewModel::setTranslationLanguage,
             onHaptics = viewModel::setHapticsEnabled,
+            onDynamicColor = viewModel::setDynamicColor,
             onReset = { viewModel.resetProgress { scope.launch { snackbar.showSnackbar(resetDone) } } },
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsContent(
     settings: Settings,
@@ -75,15 +73,13 @@ fun SettingsContent(
     onFederalState: (FederalState) -> Unit,
     onTranslationLanguage: (Language) -> Unit,
     onHaptics: (Boolean) -> Unit,
+    onDynamicColor: (Boolean) -> Unit,
     onReset: () -> Unit,
 ) {
     var pickState by rememberSaveable { mutableStateOf(false) }
     var confirmReset by rememberSaveable { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.nav_settings)) }) },
-        snackbarHost = { SnackbarHost(snackbar) },
-    ) { padding ->
+    LargeTitleScaffold(stringResource(R.string.nav_settings), snackbarHost = { SnackbarHost(snackbar) }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState())) {
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_state)) },
@@ -111,6 +107,12 @@ fun SettingsContent(
                 supportingContent = { Text(stringResource(R.string.settings_haptics_hint)) },
                 trailingContent = { Switch(checked = settings.hapticsEnabled, onCheckedChange = null) },
                 modifier = Modifier.toggleable(settings.hapticsEnabled, role = Role.Switch, onValueChange = onHaptics),
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(R.string.settings_dynamic_color)) },
+                supportingContent = { Text(stringResource(R.string.settings_dynamic_color_hint)) },
+                trailingContent = { Switch(checked = settings.dynamicColor, onCheckedChange = null) },
+                modifier = Modifier.toggleable(settings.dynamicColor, role = Role.Switch, onValueChange = onDynamicColor),
             )
             HorizontalDivider()
             ListItem(

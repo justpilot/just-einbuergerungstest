@@ -10,6 +10,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.justpilot.justeinbuergerung.domain.learning.Activity
 import io.justpilot.justeinbuergerung.domain.learning.LearningOverview
 import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
+import io.justpilot.justeinbuergerung.domain.model.FederalState
+import io.justpilot.justeinbuergerung.ui.home.Greeting
 import io.justpilot.justeinbuergerung.ui.home.HomeContent
 import io.justpilot.justeinbuergerung.ui.home.HomeUiState
 import io.justpilot.justeinbuergerung.ui.theme.JustEinbürgerungstestTheme
@@ -32,7 +34,7 @@ class HomeContentTest {
     private fun show(overview: LearningOverview, activity: Activity = noActivity) {
         compose.setContent {
             JustEinbürgerungstestTheme(dynamicColor = false) {
-                HomeContent(HomeUiState.Ready(overview, activity), onStartSession = { started += it })
+                HomeContent(HomeUiState.Ready(overview, activity, FederalState.BAVARIA, Greeting.EVENING), onStartSession = { started += it })
             }
         }
     }
@@ -42,12 +44,35 @@ class HomeContentTest {
         val activity = Activity.of(mapOf(today to 12, today.minusDays(6) to 4), setOf(today.minusDays(1), today.minusDays(2)), today)
         show(LearningOverview(total = 310, new = 300, perBox = listOf(5, 5, 0), due = 5, readyToMaster = 0, readySoon = 0, readySoonInDays = 0, bookmarked = 0), activity)
 
+        compose.onNodeWithText("Guten Abend").assertExists()
+        compose.onNodeWithText("Bayern").assertExists()
         compose.onNodeWithText("2 Tage in Folge").assertExists()
         compose.onNodeWithText("Schließe heute eine Tages-Session ab, um deine Serie zu halten.").assertExists()
         compose.onNodeWithText("16 Antworten").assertExists()
         compose.onNodeWithContentDescription("Heute: 12 Antworten").assertExists()
         compose.onNodeWithContentDescription("Freitag: 4 Antworten").performScrollTo().performClick()
         compose.onNodeWithText("4").assertExists()
+    }
+
+    @Test
+    fun aFinishedDailySessionOffersAnotherRoundInsteadOfReportingDueQuestions() {
+        val activity = Activity.of(mapOf(today to 10), setOf(today), today)
+        show(LearningOverview(total = 310, new = 300, perBox = listOf(7, 3, 0), due = 7, readyToMaster = 0, readySoon = 3, readySoonInDays = 2, bookmarked = 0), activity)
+
+        compose.onNodeWithText("Für heute geschafft").assertExists()
+        compose.onNodeWithText("7 Fragen aus Kasten 1 kannst du heute noch einmal üben.").assertExists()
+        compose.onNodeWithText("7 Wiederholungen sind heute fällig.").assertDoesNotExist()
+        compose.onNodeWithText("Noch eine Runde").performClick()
+
+        assertEquals(listOf(SessionSelection.Daily), started)
+    }
+
+    @Test
+    fun withoutAStreakNoStreakIsShown() {
+        show(LearningOverview(total = 310, new = 310, perBox = listOf(0, 0, 0), due = 0, readyToMaster = 0, readySoon = 0, readySoonInDays = 0, bookmarked = 0))
+
+        compose.onNodeWithText("0 Tage in Folge").assertDoesNotExist()
+        compose.onNodeWithText("Starte mit deinen ersten zehn Fragen.").assertExists()
     }
 
     @Test

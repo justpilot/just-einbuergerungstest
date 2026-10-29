@@ -32,6 +32,10 @@ class SettingsViewModel(
         viewModelScope.launch { settingsRepository.setHapticsEnabled(enabled) }
     }
 
+    fun setDynamicColor(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setDynamicColor(enabled) }
+    }
+
     /** Deletes all learning progress; [onDone] runs once it is gone. */
     fun resetProgress(onDone: () -> Unit) {
         viewModelScope.launch {

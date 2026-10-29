@@ -28,7 +28,7 @@ class DataStoreSettingsRepositoryTest {
 
     @Test
     fun `defaults before onboarding`() = scope.runTest {
-        assertEquals(Settings(federalState = null, translationLanguage = Language.ENGLISH, hapticsEnabled = true), repository.settings.first())
+        assertEquals(Settings(federalState = null, translationLanguage = Language.ENGLISH, hapticsEnabled = true, dynamicColor = false), repository.settings.first())
     }
 
     @Test
@@ -36,8 +36,12 @@ class DataStoreSettingsRepositoryTest {
         repository.setFederalState(FederalState.RHINELAND_PALATINATE)
         repository.setTranslationLanguage(Language.TURKISH)
         repository.setHapticsEnabled(false)
+        repository.setDynamicColor(true)
 
-        assertEquals(Settings(FederalState.RHINELAND_PALATINATE, Language.TURKISH, hapticsEnabled = false), repository.settings.first())
+        assertEquals(
+            Settings(FederalState.RHINELAND_PALATINATE, Language.TURKISH, hapticsEnabled = false, dynamicColor = true),
+            repository.settings.first(),
+        )
     }
 
     @Test

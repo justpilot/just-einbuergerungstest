@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -33,16 +34,20 @@ import io.justpilot.justeinbuergerung.ui.home.HomeScreen
 import io.justpilot.justeinbuergerung.ui.onboarding.OnboardingScreen
 import io.justpilot.justeinbuergerung.ui.session.SessionScreen
 import io.justpilot.justeinbuergerung.ui.settings.SettingsScreen
+import io.justpilot.justeinbuergerung.ui.theme.JustEinbürgerungstestTheme
 import kotlin.reflect.KClass
 
 @Composable
 fun JustApp(viewModel: AppViewModel = viewModel(factory = ViewModels.factory)) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    when (state) {
-        // Reading the settings takes a few milliseconds; show the plain background meanwhile.
-        AppUiState.Loading -> Surface(Modifier.fillMaxSize()) {}
-        AppUiState.Onboarding -> OnboardingScreen(onSelect = viewModel::selectFederalState)
-        AppUiState.Ready -> MainNavigation()
+    val dynamicColor by viewModel.dynamicColor.collectAsStateWithLifecycle()
+    JustEinbürgerungstestTheme(dynamicColor = dynamicColor) {
+        when (state) {
+            // Reading the settings takes a few milliseconds; show the plain background meanwhile.
+            AppUiState.Loading -> Surface(Modifier.fillMaxSize()) {}
+            AppUiState.Onboarding -> OnboardingScreen(onSelect = viewModel::selectFederalState)
+            AppUiState.Ready -> MainNavigation()
+        }
     }
 }
 
@@ -104,7 +109,8 @@ private fun BottomBar(current: TopLevelDestination, navController: NavHostContro
                     }
                 },
                 icon = { Icon(painterResource(if (selected) destination.selectedIcon else destination.icon), contentDescription = null) },
-                label = { Text(stringResource(destination.label)) },
+                // One line even with large fonts; a hyphen-less break ("Einstell-ungen") reads worse than an ellipsis.
+                label = { Text(stringResource(destination.label), maxLines = 1, overflow = TextOverflow.Ellipsis) },
             )
         }
     }
