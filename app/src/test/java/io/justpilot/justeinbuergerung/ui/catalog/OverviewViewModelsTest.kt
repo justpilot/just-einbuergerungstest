@@ -33,7 +33,7 @@ class OverviewViewModelsTest {
     private val clock = Clock.fixed(Instant.parse("2026-10-29T10:00:00Z"), ZoneOffset.UTC)
     private val questions = FakeQuestionRepository()
     private val progress = FakeProgressRepository(
-        listOf(answered("1", box = 1, due = today), answered("2", box = 5, due = today.plusDays(14)), bookmarkOnly("BY-1"))
+        listOf(answered("1", box = 1, due = today), answered("2", box = 3, due = today.plusDays(7)), bookmarkOnly("BY-1"))
             .associateBy { it.questionId },
     )
     private val settings = FakeSettingsRepository()

@@ -36,9 +36,9 @@ class QuestionSelectorTest {
     @Test
     fun `due reviews in lower boxes come first`() {
         val progress = progressOf(
-            *(1..6).map { answered("$it", box = 4, due = today.minusDays(5)) }.toTypedArray(),
+            *(1..6).map { answered("$it", box = 3, due = today.minusDays(5)) }.toTypedArray(),
             answered("7", box = 1, due = today),
-            answered("8", box = 3, due = today),
+            answered("8", box = 2, due = today),
         )
         val ids = daily(progress)
 
@@ -64,7 +64,7 @@ class QuestionSelectorTest {
     @Test
     fun `questions are reviewed early when nothing is due and nothing is new`() {
         val small = pool.take(12)
-        val progress = progressOf(*small.mapIndexed { i, q -> answered(q.id, box = 5, due = today.plusDays(i + 1L)) }.toTypedArray())
+        val progress = progressOf(*small.mapIndexed { i, q -> answered(q.id, box = 3, due = today.plusDays(i + 1L)) }.toTypedArray())
 
         assertEquals((1..10).map { "$it" }.toSet(), daily(progress, small).toSet())
     }
@@ -78,7 +78,7 @@ class QuestionSelectorTest {
     @Test
     fun `topic sessions contain the topic's questions, weakest first`() {
         val mixed = listOf(question("1"), question("2", Category.HISTORY), question("3"), question("4"))
-        val progress = progressOf(answered("1", box = 5, due = today), answered("3", box = 2, due = today))
+        val progress = progressOf(answered("1", box = 3, due = today), answered("3", box = 2, due = today))
 
         val ids = QuestionSelector.select(SessionSelection.Topic(Category.POLITICS), mixed, progress, today).map { it.id }
         assertEquals(listOf("4", "3", "1"), ids)

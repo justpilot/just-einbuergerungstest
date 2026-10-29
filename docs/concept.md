@@ -55,10 +55,11 @@ Aktuelle Prüfungstrainer im Google Play Store sind überwiegend von aggressiver
   * Dauer: ca. 3 Minuten (ideal für unterwegs).
   * **Sofort-Feedback:** Unmittelbare optische (Grün/Rot) und sanfte haptische Rückmeldung nach Klick auf eine Antwort.
   * **Session-Fehlerkorrektur (End-of-Session Retry):** Falsch beantwortete Fragen aus dem aktuellen 10er-Block werden am Ende nochmals abgefragt, bis alle Fehler positiv aufgelöst sind.
-* **Spaced Repetition (5-Kasten-System nach Leitner):**
-  * Kasten 1: Neu oder falsch beantwortet (höchste Abfragefrequenz).
-  * Kästen 2–4: Wiederholungsstufen mit aufsteigenden Intervallen.
-  * Kasten 5: Gemeistert.
+* **Spaced Repetition (3-Kasten-System nach Leitner):**
+  * Kasten 1: Neu oder falsch beantwortet (höchste Abfragefrequenz, sofort fällig).
+  * Kasten 2: Wiederholungsstufe (fällig nach 2 Tagen).
+  * Kasten 3: Gemeistert (Wiederholung alle 7 Tage).
+  * Drei Kästen genügen, weil der Fragenpool fest und öffentlich ist und der Lernhorizont bis zum Prüfungstermin reicht: Abdeckung aller 310 Fragen zählt mehr als jahrelanges Behalten.
   * Falsche Antworten stufen eine Frage sofort zurück in Kasten 1.
 * **Echte Prüfungssimulation:**
   * Exakt 33 Fragen (30 allgemeine + 3 Landesfragen).

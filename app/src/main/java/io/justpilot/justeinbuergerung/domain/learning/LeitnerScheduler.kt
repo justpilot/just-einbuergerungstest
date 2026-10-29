@@ -3,15 +3,15 @@ package io.justpilot.justeinbuergerung.domain.learning
 import java.time.LocalDate
 
 /**
- * Five-box Leitner system: a correct answer moves a question one box up, a wrong answer
+ * Three-box Leitner system: a correct answer moves a question one box up, a wrong answer
  * sends it back to box 1. Each box has a fixed review interval.
  */
 object LeitnerScheduler {
     const val FIRST_BOX = 1
-    const val MASTERED_BOX = 5
+    const val MASTERED_BOX = 3
 
     /** Days until a question in the given box is due again, indexed by box - 1. */
-    private val intervalDays = longArrayOf(0, 1, 3, 7, 14)
+    private val intervalDays = longArrayOf(0, 2, 7)
 
     data class Schedule(val box: Int, val dueDate: LocalDate)
 

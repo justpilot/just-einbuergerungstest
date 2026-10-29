@@ -54,7 +54,7 @@ class RoomProgressRepositoryTest {
     fun answersMoveQuestionsThroughTheBoxes() = runTest {
         repository.recordAnswer("1", correct = true, AnswerSource.DAILY)
         assertEquals(2, progress("1")?.box)
-        assertEquals(today.plusDays(1), progress("1")?.dueDate)
+        assertEquals(today.plusDays(2), progress("1")?.dueDate)
 
         repository.recordAnswer("1", correct = true, AnswerSource.DAILY)
         assertEquals(3, progress("1")?.box)

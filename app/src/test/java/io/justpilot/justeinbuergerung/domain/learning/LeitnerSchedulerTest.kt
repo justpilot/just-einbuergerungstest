@@ -11,8 +11,8 @@ class LeitnerSchedulerTest {
     private fun schedule(box: Int?, correct: Boolean) = LeitnerScheduler.schedule(box, correct, today)
 
     @Test
-    fun `new question answered correctly moves to box 2 and is due tomorrow`() {
-        assertEquals(LeitnerScheduler.Schedule(2, today.plusDays(1)), schedule(null, correct = true))
+    fun `new question answered correctly moves to box 2 and is due in two days`() {
+        assertEquals(LeitnerScheduler.Schedule(2, today.plusDays(2)), schedule(null, correct = true))
     }
 
     @Test
@@ -22,27 +22,25 @@ class LeitnerSchedulerTest {
 
     @Test
     fun `correct answers move one box up with growing intervals`() {
-        assertEquals(LeitnerScheduler.Schedule(2, today.plusDays(1)), schedule(1, correct = true))
-        assertEquals(LeitnerScheduler.Schedule(3, today.plusDays(3)), schedule(2, correct = true))
-        assertEquals(LeitnerScheduler.Schedule(4, today.plusDays(7)), schedule(3, correct = true))
-        assertEquals(LeitnerScheduler.Schedule(5, today.plusDays(14)), schedule(4, correct = true))
+        assertEquals(LeitnerScheduler.Schedule(2, today.plusDays(2)), schedule(1, correct = true))
+        assertEquals(LeitnerScheduler.Schedule(3, today.plusDays(7)), schedule(2, correct = true))
     }
 
     @Test
     fun `mastered questions stay in the last box`() {
-        assertEquals(LeitnerScheduler.Schedule(5, today.plusDays(14)), schedule(5, correct = true))
+        assertEquals(LeitnerScheduler.Schedule(3, today.plusDays(7)), schedule(3, correct = true))
     }
 
     @Test
     fun `a wrong answer sends any box back to box 1`() {
-        for (box in 1..5) {
+        for (box in 1..3) {
             assertEquals(LeitnerScheduler.Schedule(1, today), schedule(box, correct = false))
         }
     }
 
     @Test
-    fun `rejects boxes outside 1 to 5`() {
+    fun `rejects boxes outside 1 to 3`() {
         assertThrows(IllegalArgumentException::class.java) { schedule(0, correct = true) }
-        assertThrows(IllegalArgumentException::class.java) { schedule(6, correct = true) }
+        assertThrows(IllegalArgumentException::class.java) { schedule(4, correct = true) }
     }
 }

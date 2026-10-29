@@ -25,7 +25,7 @@
     <string name="home_mastered" tools:ignore="PluralsCandidate">%1$d von %2$d Fragen gemeistert</string>
     <string name="home_box_new">Neu</string>
     <string name="home_box">Kasten %d</string>
-    <string name="home_boxes_hint">Richtige Antworten bringen eine Frage einen Kasten weiter, falsche zurück in Kasten 1. Ab Kasten 5 gilt sie als gemeistert.</string>
+    <string name="home_boxes_hint">Richtige Antworten bringen eine Frage einen Kasten weiter, falsche zurück in Kasten 1. Ab Kasten 3 gilt sie als gemeistert.</string>
     <string name="loading_catalog">Fragen werden geladen …</string>
 
     <!-- Catalog -->
