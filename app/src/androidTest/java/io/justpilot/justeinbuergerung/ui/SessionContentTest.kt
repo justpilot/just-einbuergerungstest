@@ -1,0 +1,107 @@
+package io.justpilot.justeinbuergerung.ui
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.justpilot.justeinbuergerung.domain.model.AnswerOption
+import io.justpilot.justeinbuergerung.domain.model.Category
+import io.justpilot.justeinbuergerung.domain.model.FederalState
+import io.justpilot.justeinbuergerung.domain.model.Language
+import io.justpilot.justeinbuergerung.domain.model.LocalizedText
+import io.justpilot.justeinbuergerung.domain.model.Question
+import io.justpilot.justeinbuergerung.ui.onboarding.OnboardingScreen
+import io.justpilot.justeinbuergerung.ui.session.SessionContent
+import io.justpilot.justeinbuergerung.ui.session.SessionUiState
+import io.justpilot.justeinbuergerung.ui.theme.JustEinbürgerungstestTheme
+import org.junit.Assert.assertEquals
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class SessionContentTest {
+    @get:Rule
+    val compose = createComposeRule()
+
+    private val question = Question(
+        id = "1",
+        number = 1,
+        state = null,
+        category = Category.POLITICS,
+        imagePath = null,
+        text = LocalizedText("Was gilt hier?", "What applies here?", "Що тут діє?"),
+        options = listOf("A", "B", "C", "D").map { AnswerOption(it, LocalizedText("Antwort $it", "Answer $it", "Відповідь $it")) },
+        correctOptionId = "A",
+    )
+
+    private fun asking(selected: String? = null, translation: Boolean = false) = SessionUiState.Asking(
+        question = question,
+        position = 3,
+        roundSize = 10,
+        isRetryRound = false,
+        selectedOptionId = selected,
+        isLastQuestion = false,
+        showTranslation = translation,
+        translationLanguage = Language.ENGLISH,
+        bookmarked = false,
+        hapticsEnabled = false,
+    )
+
+    private fun show(initial: SessionUiState.Asking, onNext: () -> Unit = {}) {
+        compose.setContent {
+            var state by remember { mutableStateOf(initial) }
+            JustEinbürgerungstestTheme(dynamicColor = false) {
+                SessionContent(
+                    state = state,
+                    onAnswer = { state = state.copy(selectedOptionId = it) },
+                    onNext = onNext,
+                    onToggleTranslation = { state = state.copy(showTranslation = !state.showTranslation) },
+                    onToggleBookmark = {},
+                    onClose = {},
+                )
+            }
+        }
+    }
+
+    @Test
+    fun answeringShowsTheSolutionAndLocksTheCards() {
+        var nextClicks = 0
+        show(asking(), onNext = { nextClicks++ })
+        compose.onNodeWithText("Frage 3 von 10").assertExists()
+        compose.onNodeWithText("Weiter").assertDoesNotExist()
+
+        compose.onNodeWithText("Antwort B").performClick()
+
+        compose.onNodeWithText("Leider falsch", substring = true).assertExists()
+        compose.onNodeWithText("Antwort A").assertIsNotEnabled()
+        compose.onNodeWithText("Weiter").performClick()
+        assertEquals(1, nextClicks)
+    }
+
+    @Test
+    fun translationFoldsOutForQuestionAndAnswers() {
+        show(asking())
+        compose.onNodeWithText("What applies here?").assertDoesNotExist()
+
+        compose.onNodeWithContentDescription("Übersetzung anzeigen").performClick()
+
+        compose.onNodeWithText("What applies here?").assertExists()
+        compose.onNodeWithText("Answer D").assertExists()
+    }
+
+    @Test
+    fun onboardingReportsThePickedState() {
+        var picked: FederalState? = null
+        compose.setContent { JustEinbürgerungstestTheme(dynamicColor = false) { OnboardingScreen(onSelect = { picked = it }) } }
+
+        compose.onNodeWithText("Bayern").performClick()
+        assertEquals(FederalState.BAVARIA, picked)
+    }
+}

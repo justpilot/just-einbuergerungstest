@@ -19,7 +19,7 @@ private val Context.settingsDataStore by preferencesDataStore(name = "settings")
 class AppContainer(context: Context) {
     private val appContext = context.applicationContext
     private val database by lazy { AppDatabase.create(appContext) }
-    private val clock: Clock = Clock.systemDefaultZone()
+    val clock: Clock = Clock.systemDefaultZone()
 
     val catalogImporter by lazy {
         CatalogImporter(database) { appContext.assets.open(CatalogParser.ASSET_PATH) }

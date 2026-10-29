@@ -1,3 +1,91 @@
-<resources>
+<!-- "%1$d von %2$d" is German for "x of y"; the count is not followed by a noun that needs a plural. -->
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Just Einbürgerungstest</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Start</string>
+    <string name="nav_catalog">Katalog</string>
+    <string name="nav_settings">Einstellungen</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Willkommen</string>
+    <string name="onboarding_text">Der Test besteht aus Fragen für ganz Deutschland und zehn Fragen zu deinem Bundesland. In welchem Bundesland legst du den Test ab?</string>
+    <string name="onboarding_hint">Du kannst das Bundesland später in den Einstellungen ändern.</string>
+
+    <!-- Home -->
+    <string name="home_daily_title">Tages-Session</string>
+    <string name="home_daily_text">10 Fragen, etwa 3 Minuten. Fällige Wiederholungen und neue Fragen gemischt.</string>
+    <plurals name="home_due">
+        <item quantity="one">%d Wiederholung ist heute fällig.</item>
+        <item quantity="other">%d Wiederholungen sind heute fällig.</item>
+    </plurals>
+    <string name="home_nothing_due">Heute ist nichts fällig. Zeit für neue Fragen.</string>
+    <string name="home_daily_start">10 Fragen starten</string>
+    <string name="home_progress_title">Dein Fortschritt</string>
+    <string name="home_mastered" tools:ignore="PluralsCandidate">%1$d von %2$d Fragen gemeistert</string>
+    <string name="home_box_new">Neu</string>
+    <string name="home_box">Kasten %d</string>
+    <string name="home_boxes_hint">Richtige Antworten bringen eine Frage einen Kasten weiter, falsche zurück in Kasten 1. Ab Kasten 5 gilt sie als gemeistert.</string>
+    <string name="loading_catalog">Fragen werden geladen …</string>
+
+    <!-- Catalog -->
+    <string name="catalog_topics">Themen</string>
+    <string name="catalog_review">Wiederholen</string>
+    <string name="topic_politics">Politik in der Demokratie</string>
+    <string name="topic_history">Geschichte und Verantwortung</string>
+    <string name="topic_society">Mensch und Gesellschaft</string>
+    <string name="topic_state">Mein Bundesland: %s</string>
+    <string name="catalog_topic_progress" tools:ignore="PluralsCandidate">%1$d von %2$d gemeistert</string>
+    <string name="catalog_mistakes">Fehlerkasten</string>
+    <plurals name="catalog_mistakes_count">
+        <item quantity="one">%d Frage in Kasten 1</item>
+        <item quantity="other">%d Fragen in Kasten 1</item>
+    </plurals>
+    <string name="catalog_bookmarks">Merkliste</string>
+    <plurals name="catalog_bookmarks_count">
+        <item quantity="one">%d Frage gemerkt</item>
+        <item quantity="other">%d Fragen gemerkt</item>
+    </plurals>
+    <string name="catalog_empty">Noch keine Fragen</string>
+
+    <!-- Session -->
+    <string name="session_close">Sitzung beenden</string>
+    <string name="session_progress" tools:ignore="PluralsCandidate">Frage %1$d von %2$d</string>
+    <string name="session_retry_progress" tools:ignore="PluralsCandidate">Fehler wiederholen: %1$d von %2$d</string>
+    <string name="session_show_translation">Übersetzung anzeigen</string>
+    <string name="session_hide_translation">Übersetzung ausblenden</string>
+    <string name="session_bookmark">Merken</string>
+    <string name="session_remove_bookmark">Nicht mehr merken</string>
+    <string name="session_image">Abbildung zur Frage</string>
+    <string name="session_next">Weiter</string>
+    <string name="session_finish">Abschließen</string>
+    <string name="session_answer_correct">richtige Antwort</string>
+    <string name="session_answer_wrong">falsche Antwort</string>
+    <string name="session_feedback_correct">Richtig!</string>
+    <string name="session_feedback_wrong">Leider falsch. Die Frage kommt am Ende noch einmal.</string>
+    <string name="session_feedback_retry_wrong">Leider falsch. Die Frage kommt gleich noch einmal.</string>
+    <string name="session_done_title">Geschafft!</string>
+    <string name="session_done_score" tools:ignore="PluralsCandidate">%1$d von %2$d Fragen beim ersten Versuch richtig.</string>
+    <string name="session_done_hint">Falsch beantwortete Fragen bleiben in Kasten 1 und kommen bald wieder.</string>
+    <string name="session_empty">Hier gibt es gerade keine Fragen.</string>
+    <string name="session_back">Zurück</string>
+
+    <!-- Settings -->
+    <string name="settings_state">Bundesland</string>
+    <string name="settings_translation">Übersetzung</string>
+    <string name="settings_translation_hint">Wird auf Wunsch unter Fragen und Antworten eingeblendet. Die Prüfung selbst ist auf Deutsch.</string>
+    <string name="language_de">Deutsch</string>
+    <string name="language_en">Englisch</string>
+    <string name="language_uk">Ukrainisch</string>
+    <string name="settings_haptics">Haptisches Feedback</string>
+    <string name="settings_haptics_hint">Vibration bei richtigen und falschen Antworten</string>
+    <string name="settings_reset">Lernfortschritt zurücksetzen</string>
+    <string name="settings_reset_hint">Löscht Kästen, Merkliste und Statistik</string>
+    <string name="settings_reset_confirm_title">Lernfortschritt zurücksetzen?</string>
+    <string name="settings_reset_confirm_text">Alle Kästen, die Merkliste und die Statistik werden gelöscht. Das lässt sich nicht rückgängig machen.</string>
+    <string name="settings_reset_confirm">Zurücksetzen</string>
+    <string name="settings_reset_done">Lernfortschritt wurde zurückgesetzt.</string>
+    <string name="settings_about">Über die App</string>
+    <string name="settings_about_text">Version %s · Open Source (Apache 2.0) · ohne Werbung, ohne Tracking, komplett offline. Fragen: Bundesamt für Migration und Flüchtlinge (BAMF).</string>
+    <string name="cancel">Abbrechen</string>
 </resources>
