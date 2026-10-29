@@ -13,9 +13,7 @@ local.properties
 *.iml
 *.ipr
 *.iws
-.idea/*
-!.idea/codeStyles/
-!.idea/inspectionProfiles/
+.idea/
 captures/
 .navigation/
 out/
