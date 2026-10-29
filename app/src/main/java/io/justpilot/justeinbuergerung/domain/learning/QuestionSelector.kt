@@ -17,7 +17,7 @@ sealed interface SessionSelection {
         override val source = AnswerSource.DAILY
     }
 
-    /** All questions of one topic area, weakest first. */
+    /** The [QuestionSelector.TOPIC_SIZE] weakest questions of one topic area. */
     data class Topic(val category: Category) : SessionSelection {
         override val source = AnswerSource.CATALOG
     }
@@ -67,6 +67,9 @@ object QuestionSelector {
     const val DAILY_REVIEWS = 6
     const val DAILY_NEW = DAILY_SIZE - DAILY_REVIEWS
 
+    /** Topics hold up to 151 questions; a block keeps the retry round within reach. */
+    const val TOPIC_SIZE = 20
+
     fun select(
         selection: SessionSelection,
         pool: List<Question>,
@@ -75,7 +78,7 @@ object QuestionSelector {
         random: Random = Random.Default,
     ): List<Question> = when (selection) {
         SessionSelection.Daily -> daily(pool, progress, today, random)
-        is SessionSelection.Topic -> pool.filter { it.category == selection.category }.weakestFirst(progress)
+        is SessionSelection.Topic -> pool.filter { it.category == selection.category }.weakestFirst(progress).take(TOPIC_SIZE)
         SessionSelection.Mistakes -> pool.filter { progress[it.id].isMistake() }
         SessionSelection.Bookmarks -> pool.filter { progress[it.id]?.bookmarked == true }
         is SessionSelection.Box -> pool

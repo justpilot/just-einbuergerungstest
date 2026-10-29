@@ -42,7 +42,7 @@ class SessionContentTest {
         correctOptionId = "A",
     )
 
-    private fun asking(selected: String? = null, translation: Boolean = false) = SessionUiState.Asking(
+    private fun asking(selected: String? = null, translation: Boolean = false, daily: Boolean = false) = SessionUiState.Asking(
         question = question,
         position = 3,
         roundSize = 10,
@@ -53,9 +53,10 @@ class SessionContentTest {
         translationLanguage = Language.ENGLISH,
         bookmarked = false,
         hapticsEnabled = false,
+        isDaily = daily,
     )
 
-    private fun show(initial: SessionUiState.Asking, onNext: () -> Unit = {}) {
+    private fun show(initial: SessionUiState.Asking, onNext: () -> Unit = {}, onClose: () -> Unit = {}) {
         compose.setContent {
             var state by remember { mutableStateOf(initial) }
             JustEinbürgerungstestTheme(dynamicColor = false) {
@@ -65,10 +66,68 @@ class SessionContentTest {
                     onNext = onNext,
                     onToggleTranslation = { state = state.copy(showTranslation = !state.showTranslation) },
                     onToggleBookmark = {},
-                    onClose = {},
+                    onClose = onClose,
+                    onRestart = {},
                 )
             }
         }
+    }
+
+    private fun showFinished(finished: SessionUiState.Finished, onClose: () -> Unit = {}, onRestart: () -> Unit = {}) {
+        compose.setContent {
+            JustEinbürgerungstestTheme(dynamicColor = false) {
+                SessionContent(
+                    state = finished,
+                    onAnswer = {},
+                    onNext = {},
+                    onToggleTranslation = {},
+                    onToggleBookmark = {},
+                    onClose = onClose,
+                    onRestart = onRestart,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun closingAStartedDailySessionAsksFirst() {
+        var closed = 0
+        show(asking(daily = true), onClose = { closed++ })
+
+        compose.onNodeWithContentDescription("Sitzung beenden").performClick()
+        compose.onNodeWithText("Tages-Session beenden?").assertExists()
+        compose.onNodeWithText("Weitermachen").performClick()
+        assertEquals(0, closed)
+
+        compose.onNodeWithContentDescription("Sitzung beenden").performClick()
+        compose.onNodeWithText("Beenden").performClick()
+        assertEquals(1, closed)
+    }
+
+    @Test
+    fun otherSessionsCloseWithoutAsking() {
+        var closed = 0
+        show(asking(daily = false), onClose = { closed++ })
+
+        compose.onNodeWithContentDescription("Sitzung beenden").performClick()
+        assertEquals(1, closed)
+    }
+
+    @Test
+    fun theCatalogNumberIsShownAboveTheQuestion() {
+        show(asking())
+        compose.onNodeWithText("Frage ${question.number}").assertExists()
+    }
+
+    @Test
+    fun aWeakRoundIsNotCelebratedAndCanBeRepeated() {
+        var restarts = 0
+        showFinished(SessionUiState.Finished(correctFirstTime = 3, total = 10), onRestart = { restarts++ })
+
+        compose.onNodeWithText("Runde beendet").assertExists()
+        compose.onNodeWithText("Geschafft!").assertDoesNotExist()
+        compose.onNodeWithText("Noch eine Runde").performClick()
+        assertEquals(1, restarts)
     }
 
     @Test
@@ -108,6 +167,7 @@ class SessionContentTest {
                     onToggleTranslation = {},
                     onToggleBookmark = {},
                     onClose = {},
+                    onRestart = {},
                 )
             }
         }

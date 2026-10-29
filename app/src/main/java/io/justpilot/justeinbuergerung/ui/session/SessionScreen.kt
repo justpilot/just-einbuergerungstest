@@ -1,5 +1,6 @@
 package io.justpilot.justeinbuergerung.ui.session
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,10 +25,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,10 +48,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.domain.learning.SessionBalance
 import io.justpilot.justeinbuergerung.ui.ViewModels
+import io.justpilot.justeinbuergerung.ui.common.label
 import io.justpilot.justeinbuergerung.ui.theme.AppTheme
 
 @Composable
-fun SessionScreen(onClose: () -> Unit, viewModel: SessionViewModel = viewModel(factory = ViewModels.factory)) {
+fun SessionScreen(onClose: () -> Unit, onRestart: () -> Unit, viewModel: SessionViewModel = viewModel(factory = ViewModels.factory)) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     SessionContent(
         state = state,
@@ -54,8 +61,12 @@ fun SessionScreen(onClose: () -> Unit, viewModel: SessionViewModel = viewModel(f
         onToggleTranslation = viewModel::toggleTranslation,
         onToggleBookmark = viewModel::toggleBookmark,
         onClose = onClose,
+        onRestart = onRestart,
     )
 }
+
+/** Share of first-try answers from which a session counts as done well rather than as practice. */
+private const val GOOD_SHARE = 0.7
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,49 +77,66 @@ fun SessionContent(
     onToggleTranslation: () -> Unit,
     onToggleBookmark: () -> Unit,
     onClose: () -> Unit,
+    onRestart: () -> Unit,
 ) {
     val haptics = LocalHapticFeedback.current
+    var confirmClose by rememberSaveable { mutableStateOf(false) }
+    val asking = state as? SessionUiState.Asking
+    val askFirst = asking != null && asking.isDaily && asking.isStarted
+    val close = { if (askFirst) confirmClose = true else onClose() }
+    BackHandler(enabled = askFirst) { confirmClose = true }
+
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    if (state is SessionUiState.Asking) {
-                        Text(
-                            stringResource(
-                                if (state.isRetryRound) R.string.session_retry_progress else R.string.session_progress,
-                                state.position,
-                                state.roundSize,
-                            ),
-                            style = MaterialTheme.typography.titleMedium,
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onClose) {
-                        Icon(painterResource(R.drawable.ic_close), contentDescription = stringResource(R.string.session_close))
-                    }
-                },
-                actions = {
-                    if (state is SessionUiState.Asking) {
-                        IconToggleButton(checked = state.showTranslation, onCheckedChange = { onToggleTranslation() }) {
-                            Icon(
-                                painterResource(R.drawable.ic_translate),
-                                contentDescription = stringResource(
-                                    if (state.showTranslation) R.string.session_hide_translation else R.string.session_show_translation,
+            Column {
+                TopAppBar(
+                    title = {
+                        if (state is SessionUiState.Asking) {
+                            Text(
+                                stringResource(
+                                    if (state.isRetryRound) R.string.session_retry_progress else R.string.session_progress,
+                                    state.position,
+                                    state.roundSize,
                                 ),
+                                style = MaterialTheme.typography.titleMedium,
                             )
                         }
-                        IconToggleButton(checked = state.bookmarked, onCheckedChange = { onToggleBookmark() }) {
-                            Icon(
-                                painterResource(if (state.bookmarked) R.drawable.ic_bookmark_filled else R.drawable.ic_bookmark),
-                                contentDescription = stringResource(
-                                    if (state.bookmarked) R.string.session_remove_bookmark else R.string.session_bookmark,
-                                ),
-                            )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = close) {
+                            Icon(painterResource(R.drawable.ic_close), contentDescription = stringResource(R.string.session_close))
                         }
-                    }
-                },
-            )
+                    },
+                    actions = {
+                        if (state is SessionUiState.Asking) {
+                            IconToggleButton(checked = state.showTranslation, onCheckedChange = { onToggleTranslation() }) {
+                                Icon(
+                                    painterResource(R.drawable.ic_translate),
+                                    contentDescription = stringResource(
+                                        if (state.showTranslation) R.string.session_hide_translation else R.string.session_show_translation,
+                                    ),
+                                )
+                            }
+                            IconToggleButton(checked = state.bookmarked, onCheckedChange = { onToggleBookmark() }) {
+                                Icon(
+                                    painterResource(if (state.bookmarked) R.drawable.ic_bookmark_filled else R.drawable.ic_bookmark),
+                                    contentDescription = stringResource(
+                                        if (state.bookmarked) R.string.session_remove_bookmark else R.string.session_bookmark,
+                                    ),
+                                )
+                            }
+                        }
+                    },
+                )
+                // In the bar rather than the content, so it stays visible while a long question scrolls.
+                if (state is SessionUiState.Asking) {
+                    LinearProgressIndicator(
+                        progress = { (state.position - 1 + if (state.selectedOptionId != null) 1 else 0) / state.roundSize.toFloat() },
+                        drawStopIndicator = {},
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
         },
         bottomBar = {
             if (state is SessionUiState.Asking && state.selectedOptionId != null) {
@@ -126,15 +154,18 @@ fun SessionContent(
         Box(Modifier.fillMaxSize().padding(padding)) {
             when (state) {
                 SessionUiState.Loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
-                is SessionUiState.Finished -> Summary(state, onClose)
+                is SessionUiState.Finished -> Summary(state, onClose, onRestart)
                 is SessionUiState.Asking -> {
                     val scroll = rememberScrollState()
                     // Every question starts at the top.
                     LaunchedEffect(state.question.id, state.isRetryRound) { scroll.scrollTo(0) }
-                    Column(Modifier.fillMaxSize().verticalScroll(scroll)) {
-                        LinearProgressIndicator(
-                            progress = { (state.position - 1 + if (state.selectedOptionId != null) 1 else 0) / state.roundSize.toFloat() },
-                            modifier = Modifier.fillMaxWidth(),
+                    Column(Modifier.fillMaxSize().verticalScroll(scroll).padding(16.dp)) {
+                        // The catalog number helps to look a question up or to report a mistake in it.
+                        Text(
+                            state.question.label(),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(bottom = 8.dp),
                         )
                         QuestionContent(
                             question = state.question,
@@ -149,12 +180,26 @@ fun SessionContent(
                                 }
                                 onAnswer(option.id)
                             },
-                            modifier = Modifier.padding(16.dp),
                         )
                     }
                 }
             }
         }
+    }
+
+    if (confirmClose) {
+        AlertDialog(
+            onDismissRequest = { confirmClose = false },
+            title = { Text(stringResource(R.string.session_abort_title)) },
+            text = { Text(stringResource(R.string.session_abort_text)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmClose = false
+                    onClose()
+                }) { Text(stringResource(R.string.session_abort_confirm)) }
+            },
+            dismissButton = { TextButton(onClick = { confirmClose = false }) { Text(stringResource(R.string.exam_continue)) } },
+        )
     }
 }
 
@@ -175,7 +220,7 @@ private fun Feedback(state: SessionUiState.Asking) {
 }
 
 @Composable
-private fun Summary(state: SessionUiState.Finished, onClose: () -> Unit) {
+private fun Summary(state: SessionUiState.Finished, onClose: () -> Unit, onRestart: () -> Unit) {
     Column(
         Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
@@ -184,13 +229,18 @@ private fun Summary(state: SessionUiState.Finished, onClose: () -> Unit) {
         if (state.total == 0) {
             Text(stringResource(R.string.session_empty), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
         } else {
+            // A cheer for 3 of 10 would ring hollow; a weaker round is simply finished.
+            val good = state.correctFirstTime >= state.total * GOOD_SHARE
             Icon(
-                painterResource(R.drawable.ic_check_circle_filled),
+                painterResource(if (good) R.drawable.ic_check_circle_filled else R.drawable.ic_flag_filled),
                 contentDescription = null,
-                tint = AppTheme.feedbackColors.correct,
+                tint = if (good) AppTheme.feedbackColors.correct else MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.size(64.dp),
             )
-            Text(stringResource(R.string.session_done_title), style = MaterialTheme.typography.headlineMedium)
+            Text(
+                stringResource(if (good) R.string.session_done_title else R.string.session_done_title_practice),
+                style = MaterialTheme.typography.headlineMedium,
+            )
             Text(
                 stringResource(R.string.session_done_score, state.correctFirstTime, state.total),
                 style = MaterialTheme.typography.bodyLarge,
@@ -206,7 +256,12 @@ private fun Summary(state: SessionUiState.Finished, onClose: () -> Unit) {
                 )
             }
         }
-        Button(onClick = onClose, modifier = Modifier.padding(top = 8.dp)) { Text(stringResource(R.string.session_back)) }
+        if (state.total > 0) {
+            Button(onClick = onRestart, modifier = Modifier.padding(top = 8.dp)) { Text(stringResource(R.string.session_again)) }
+            TextButton(onClick = onClose) { Text(stringResource(R.string.session_back)) }
+        } else {
+            Button(onClick = onClose, modifier = Modifier.padding(top = 8.dp)) { Text(stringResource(R.string.session_back)) }
+        }
     }
 }
 

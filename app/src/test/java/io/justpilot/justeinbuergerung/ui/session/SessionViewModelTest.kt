@@ -74,9 +74,12 @@ class SessionViewModelTest {
     @Test
     fun `an unfinished Daily 10 and other sessions do not count for the streak`() = runTest {
         val daily = viewModel(SessionSelection.Daily)
+        assertTrue("closing asks only once something was answered", daily.asking.isDaily && !daily.asking.isStarted)
         daily.answer("A")
         daily.next()
+        assertTrue(daily.asking.isStarted)
         val topic = viewModel(SessionSelection.Topic(Category.HISTORY))
+        assertTrue(!topic.asking.isDaily)
         topic.answer("A")
         topic.next()
 

@@ -85,6 +85,15 @@ class QuestionSelectorTest {
     }
 
     @Test
+    fun `topic sessions are blocks of the weakest questions`() {
+        val topic = (1..50).map { question("$it") }
+        val progress = progressOf(*(1..25).map { answered("$it", box = 2, due = today) }.toTypedArray())
+
+        val ids = QuestionSelector.select(SessionSelection.Topic(Category.POLITICS), topic, progress, today).map { it.id }
+        assertEquals((26..45).map { "$it" }, ids)
+    }
+
+    @Test
     fun `mistakes are answered questions in box 1, bookmarks include unanswered ones`() {
         val progress = progressOf(
             answered("1", box = 1, due = today, bookmarked = true),

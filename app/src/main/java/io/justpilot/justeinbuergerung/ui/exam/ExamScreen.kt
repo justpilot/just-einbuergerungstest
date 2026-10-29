@@ -60,6 +60,7 @@ import io.justpilot.justeinbuergerung.domain.exam.ExamResult
 import io.justpilot.justeinbuergerung.domain.model.Language
 import io.justpilot.justeinbuergerung.domain.model.Question
 import io.justpilot.justeinbuergerung.ui.ViewModels
+import io.justpilot.justeinbuergerung.ui.common.label
 import io.justpilot.justeinbuergerung.ui.session.QuestionContent
 import io.justpilot.justeinbuergerung.ui.theme.AppTheme
 import java.time.Duration
@@ -104,37 +105,47 @@ fun ExamContent(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    if (running != null) {
-                        Text(
-                            stringResource(R.string.session_progress, running.position, running.total),
-                            style = MaterialTheme.typography.titleMedium,
-                        )
-                    } else if (state is ExamUiState.Finished) {
-                        Text(stringResource(R.string.exam_result_title))
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { if (running != null) confirmAbort = true else onClose() }) {
-                        Icon(painterResource(R.drawable.ic_close), contentDescription = stringResource(R.string.session_close))
-                    }
-                },
-                actions = {
-                    if (running != null) {
-                        Timer(running.remaining)
-                        IconToggleButton(checked = running.flagged, onCheckedChange = { onToggleFlag() }) {
-                            Icon(
-                                painterResource(if (running.flagged) R.drawable.ic_flag_filled else R.drawable.ic_flag),
-                                contentDescription = stringResource(if (running.flagged) R.string.exam_unflag else R.string.exam_flag),
+            Column {
+                TopAppBar(
+                    title = {
+                        if (running != null) {
+                            Text(
+                                stringResource(R.string.session_progress, running.position, running.total),
+                                style = MaterialTheme.typography.titleMedium,
                             )
+                        } else if (state is ExamUiState.Finished) {
+                            Text(stringResource(R.string.exam_result_title))
                         }
-                        IconButton(onClick = { showOverview = true }) {
-                            Icon(painterResource(R.drawable.ic_grid_view), contentDescription = stringResource(R.string.exam_overview))
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { if (running != null) confirmAbort = true else onClose() }) {
+                            Icon(painterResource(R.drawable.ic_close), contentDescription = stringResource(R.string.session_close))
                         }
-                    }
-                },
-            )
+                    },
+                    actions = {
+                        if (running != null) {
+                            Timer(running.remaining)
+                            IconToggleButton(checked = running.flagged, onCheckedChange = { onToggleFlag() }) {
+                                Icon(
+                                    painterResource(if (running.flagged) R.drawable.ic_flag_filled else R.drawable.ic_flag),
+                                    contentDescription = stringResource(if (running.flagged) R.string.exam_unflag else R.string.exam_flag),
+                                )
+                            }
+                            IconButton(onClick = { showOverview = true }) {
+                                Icon(painterResource(R.drawable.ic_grid_view), contentDescription = stringResource(R.string.exam_overview))
+                            }
+                        }
+                    },
+                )
+                // Answered share; it stays in the bar while a long question scrolls.
+                if (running != null) {
+                    LinearProgressIndicator(
+                        progress = { (running.total - running.unanswered) / running.total.toFloat() },
+                        drawStopIndicator = {},
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
         },
         bottomBar = {
             if (running != null) {
@@ -171,10 +182,6 @@ fun ExamContent(
                     // Every question starts at the top.
                     LaunchedEffect(state.position) { scroll.scrollTo(0) }
                     Column(Modifier.fillMaxSize().verticalScroll(scroll)) {
-                        LinearProgressIndicator(
-                            progress = { (state.total - state.unanswered) / state.total.toFloat() },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
                         // The exam is in German only, like the real test.
                         QuestionContent(
                             question = state.question,
@@ -408,11 +415,6 @@ private fun WrongAnswer(answer: ExamResult.Answer) {
         }
     }
 }
-
-@Composable
-private fun Question.label(): String =
-    state?.let { stringResource(R.string.question_label_state, it.germanName, number) }
-        ?: stringResource(R.string.question_label_general, number)
 
 private fun Question.optionText(optionId: String): String =
     "$optionId) " + options.first { it.id == optionId }.text.german
