@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "1e9ddb939dac0f49",
+  "catalogVersion": "c9244328d07f27f5",
   "questions": [
     {
       "id": "1",
@@ -5296,7 +5296,7 @@
         {
           "id": "D",
           "text": {
-            "de": "Ehrentitel \"Held der Deutschen Demokratischen Republik\"",
+            "de": "Ehrentitel „Held der Deutschen Demokratischen Republik“",
             "en": "honorary title \"Hero of the German Democratic Republic\"",
             "uk": "Почесним званням «Герой Німецької Демократичної Республіки»",
             "tr": "„Alman Demokratik Cumhuriyeti Kahramanı” onur unvanı"
@@ -9707,7 +9707,7 @@
         {
           "id": "C",
           "text": {
-            "de": "\"Drittes Reich\"",
+            "de": "„Drittes Reich“",
             "en": "“Third Reich”",
             "uk": "«Третій рейх»",
             "tr": "\"Üçüncü Reich\""
@@ -10781,7 +10781,7 @@
         {
           "id": "A",
           "text": {
-            "de": "der Geheimdienst im \"Dritten Reich\"",
+            "de": "der Geheimdienst im „Dritten Reich“",
             "en": "the secret service in the “Third Reich”",
             "uk": "спецслужбою в «Третьому рейху»",
             "tr": "\"Üçüncü Reich\"teki gizli servis"
@@ -12393,7 +12393,7 @@
         {
           "id": "A",
           "text": {
-            "de": "durch die \"Hamburger Verträge\"",
+            "de": "durch die „Hamburger Verträge“",
             "en": "through the “Treaties of Hamburg”",
             "uk": "«Гамбурзькими договорами»",
             "tr": "\"Hamburg Antlaşmaları\" ile"
@@ -12402,7 +12402,7 @@
         {
           "id": "B",
           "text": {
-            "de": "durch die \"Römischen Verträge\"",
+            "de": "durch die „Römischen Verträge“",
             "en": "through the “Treaties of Rome”",
             "uk": "«Римськими договорами»",
             "tr": "\"Roma Antlaşmaları\" ile"
@@ -12411,7 +12411,7 @@
         {
           "id": "C",
           "text": {
-            "de": "durch die \"Pariser Verträge\"",
+            "de": "durch die „Pariser Verträge“",
             "en": "through the “Treaties of Paris”",
             "uk": "«Паризькими договорами»",
             "tr": "\"Paris Antlaşmaları\" ile"
@@ -12420,7 +12420,7 @@
         {
           "id": "D",
           "text": {
-            "de": "durch die \"Londoner Verträge\"",
+            "de": "durch die „Londoner Verträge“",
             "en": "through the “Treaties of London”",
             "uk": "«Лондонськими договорами»",
             "tr": "\"Londra Antlaşmaları\" ile"
