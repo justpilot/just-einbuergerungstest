@@ -2,6 +2,8 @@ package io.justpilot.justeinbuergerung.ui.catalog
 
 import io.justpilot.justeinbuergerung.domain.model.Category
 import io.justpilot.justeinbuergerung.domain.model.FederalState
+import io.justpilot.justeinbuergerung.domain.model.SessionKind
+import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.testing.FakeProgressRepository
 import io.justpilot.justeinbuergerung.testing.FakeQuestionRepository
 import io.justpilot.justeinbuergerung.testing.FakeSettingsRepository
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Rule
 import org.junit.Test
 import java.time.Clock
@@ -50,6 +53,22 @@ class OverviewViewModelsTest {
         assertEquals(3, overview.total)
         assertEquals(1, overview.mastered)
         assertEquals(1, overview.due)
+    }
+
+    @Test
+    fun `home shows the last seven days and the streak`() = runTest {
+        questions.questions.value = listOf(question("1"))
+        progress.answersPerDay.value = mapOf(today to 7, today.minusDays(1) to 3, today.minusDays(9) to 50)
+        progress.sessionResults.value = listOf(today.minusDays(1), today.minusDays(2)).map {
+            SessionResult(SessionKind.DAILY, Instant.EPOCH, it, correct = 10, total = 10)
+        } + SessionResult(SessionKind.EXAM, Instant.EPOCH, today, correct = 20, total = 33)
+        val viewModel = HomeViewModel(questions, progress, settings, clock)
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
+
+        val activity = (viewModel.uiState.value as HomeUiState.Ready).activity
+        assertEquals(listOf(0, 0, 0, 0, 0, 3, 7), activity.days.map { it.answers })
+        assertEquals("exams do not count for the streak", 2, activity.streak)
+        assertFalse(activity.dailyDoneToday)
     }
 
     @Test

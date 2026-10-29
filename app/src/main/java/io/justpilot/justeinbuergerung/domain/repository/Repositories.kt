@@ -32,6 +32,9 @@ interface ProgressRepository {
      */
     suspend fun recordExam(result: ExamResult)
 
+    /** Stores the score of a Daily 10 that was played to the end. */
+    suspend fun recordDailySession(correct: Int, total: Int)
+
     /** Results of finished sessions of [kind], newest first. */
     fun sessionResults(kind: SessionKind): Flow<List<SessionResult>>
 

@@ -113,7 +113,12 @@ class SessionViewModel(
     }
 
     fun next() {
-        session.update { it?.takeIf { it.isAnswered }?.next() ?: it }
+        val current = session.value?.takeIf { it.isAnswered } ?: return
+        val next = current.next()
+        session.value = next
+        if (next.isFinished && selection == SessionSelection.Daily) {
+            viewModelScope.launch { progressRepository.recordDailySession(next.correctFirstTime.size, next.size) }
+        }
     }
 
     fun toggleTranslation() {

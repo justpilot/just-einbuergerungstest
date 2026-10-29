@@ -26,7 +26,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.justpilot.justeinbuergerung.R
-import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
 import io.justpilot.justeinbuergerung.ui.catalog.CatalogScreen
 import io.justpilot.justeinbuergerung.ui.exam.ExamHistoryScreen
 import io.justpilot.justeinbuergerung.ui.exam.ExamScreen
@@ -75,7 +74,7 @@ private fun MainNavigation() {
     ) { padding ->
         NavHost(navController, startDestination = HomeRoute, modifier = Modifier.padding(padding)) {
             composable<HomeRoute> {
-                HomeScreen(onStartDaily = { navController.navigate(SessionRoute(SessionSelection.Daily.key)) })
+                HomeScreen(onStartSession = { navController.navigate(SessionRoute(it.key)) })
             }
             composable<CatalogRoute> {
                 CatalogScreen(onStartSession = { navController.navigate(SessionRoute(it.key)) })

@@ -45,6 +45,24 @@
     <string name="home_box_new">Neu</string>
     <string name="home_box">Kasten %d</string>
     <string name="home_boxes_hint">Richtige Antworten bringen eine Frage einen Kasten weiter, falsche zurück in Kasten 1. Ab Kasten 3 gilt sie als gemeistert.</string>
+    <string name="home_box_practice" tools:ignore="PluralsCandidate">Kasten %d üben</string>
+    <string name="home_activity_title">Letzte 7 Tage</string>
+    <plurals name="home_activity_total">
+        <item quantity="one">%d Antwort</item>
+        <item quantity="other">%d Antworten</item>
+    </plurals>
+    <plurals name="home_activity_day">
+        <item quantity="one">%1$s: %2$d Antwort</item>
+        <item quantity="other">%1$s: %2$d Antworten</item>
+    </plurals>
+    <string name="home_activity_today">Heute</string>
+    <plurals name="home_streak">
+        <item quantity="one">%d Tag in Folge</item>
+        <item quantity="other">%d Tage in Folge</item>
+    </plurals>
+    <string name="home_streak_done_today">Die Tages-Session für heute ist geschafft.</string>
+    <string name="home_streak_keep">Schließe heute eine Tages-Session ab, um deine Serie zu halten.</string>
+    <string name="home_streak_start">Schließe heute eine Tages-Session ab, um eine Serie zu starten.</string>
     <string name="loading_catalog">Fragen werden geladen …</string>
 
     <!-- Catalog -->

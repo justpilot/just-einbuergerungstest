@@ -34,6 +34,8 @@ class FakeProgressRepository(progress: Map<String, Progress> = emptyMap()) : Pro
     val progress = MutableStateFlow(progress)
     val answers = mutableListOf<Answer>()
     val exams = mutableListOf<ExamResult>()
+    val dailySessions = mutableListOf<Pair<Int, Int>>()
+    val answersPerDay = MutableStateFlow<Map<LocalDate, Int>>(emptyMap())
     val sessionResults = MutableStateFlow<List<SessionResult>>(emptyList())
     var resetCount = 0
 
@@ -47,6 +49,10 @@ class FakeProgressRepository(progress: Map<String, Progress> = emptyMap()) : Pro
         exams += result
     }
 
+    override suspend fun recordDailySession(correct: Int, total: Int) {
+        dailySessions += correct to total
+    }
+
     override fun sessionResults(kind: SessionKind): Flow<List<SessionResult>> =
         sessionResults.map { results -> results.filter { it.kind == kind } }
 
@@ -57,7 +63,8 @@ class FakeProgressRepository(progress: Map<String, Progress> = emptyMap()) : Pro
         }
     }
 
-    override fun answersPerDay(from: LocalDate): Flow<Map<LocalDate, Int>> = MutableStateFlow(emptyMap())
+    override fun answersPerDay(from: LocalDate): Flow<Map<LocalDate, Int>> =
+        answersPerDay.map { counts -> counts.filterKeys { it >= from } }
 
     override suspend fun reset() {
         resetCount++

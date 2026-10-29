@@ -72,7 +72,7 @@ Aktuelle Prüfungstrainer im Google Play Store sind überwiegend von aggressiver
 
 #### C. Fortschritts- & Motivations-Tracking
 * **Aktivitäts-Statistik (Letzte 7 Tage):**
-  * Minimalistisches Balkendiagramm auf dem Dashboard (Montag bis Sonntag).
+  * Minimalistisches Balkendiagramm auf dem Dashboard: die letzten 7 Tage bis heute, beschriftet mit Wochentagen.
   * Zeigt beantwortete Fragen pro Tag an.
 * **Streak-Zähler:**
   * Zählt aufeinanderfolgende Tage mit mindestens einer beendeten Tages-Session (`🔥 Streak`).

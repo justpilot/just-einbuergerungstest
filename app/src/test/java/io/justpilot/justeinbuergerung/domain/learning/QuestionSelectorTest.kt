@@ -97,9 +97,24 @@ class QuestionSelectorTest {
     }
 
     @Test
+    fun `box sessions contain the answered questions of that box, soonest due first`() {
+        val progress = progressOf(
+            answered("1", box = 2, due = today.plusDays(2)),
+            answered("2", box = 2, due = today),
+            answered("3", box = 3, due = today),
+            bookmarkOnly("4"),
+        )
+
+        assertEquals(listOf("2", "1"), QuestionSelector.select(SessionSelection.Box(2), pool, progress, today).map { it.id })
+        assertEquals(listOf("3"), QuestionSelector.select(SessionSelection.Box(3), pool, progress, today).map { it.id })
+        assertEquals(emptyList<String>(), QuestionSelector.select(SessionSelection.Box(1), pool, progress, today).map { it.id })
+        assertThrows(IllegalArgumentException::class.java) { SessionSelection.Box(4) }
+    }
+
+    @Test
     fun `selection keys round-trip`() {
         val selections = listOf(SessionSelection.Daily, SessionSelection.Mistakes, SessionSelection.Bookmarks) +
-            Category.entries.map { SessionSelection.Topic(it) }
+            Category.entries.map { SessionSelection.Topic(it) } + (1..3).map { SessionSelection.Box(it) }
         for (selection in selections) {
             assertEquals(selection, SessionSelection.fromKey(selection.key))
         }

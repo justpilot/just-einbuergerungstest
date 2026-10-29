@@ -111,6 +111,18 @@ class RoomProgressRepositoryTest {
     }
 
     @Test
+    fun finishedDailySessionsAreStoredByLocalDay() = runTest {
+        now = today.atTime(23, 30).atZone(berlin).toInstant()
+        repository.recordDailySession(correct = 8, total = 10)
+
+        assertEquals(
+            listOf(SessionResult(SessionKind.DAILY, now, today, correct = 8, total = 10)),
+            repository.sessionResults(SessionKind.DAILY).first(),
+        )
+        assertEquals(emptyList<SessionResult>(), repository.sessionResults(SessionKind.EXAM).first())
+    }
+
+    @Test
     fun bookmarkingKeepsLearningStateAndUnansweredQuestionsCountAsNew() = runTest {
         repository.setBookmarked("1", true)
         assertEquals(Progress("1", box = 1, dueDate = null, lastAnsweredAt = null, bookmarked = true), progress("1"))

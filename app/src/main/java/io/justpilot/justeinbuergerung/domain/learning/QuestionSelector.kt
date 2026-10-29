@@ -31,6 +31,15 @@ sealed interface SessionSelection {
         override val source = AnswerSource.CATALOG
     }
 
+    /** Answered questions currently in one Leitner box, the soonest due first. */
+    data class Box(val box: Int) : SessionSelection {
+        init {
+            require(box in LeitnerScheduler.FIRST_BOX..LeitnerScheduler.MASTERED_BOX) { "Invalid box $box" }
+        }
+
+        override val source = AnswerSource.CATALOG
+    }
+
     /** Stable string form for navigation arguments. */
     val key: String
         get() = when (this) {
@@ -38,6 +47,7 @@ sealed interface SessionSelection {
             is Topic -> "topic:${category.code}"
             Mistakes -> "mistakes"
             Bookmarks -> "bookmarks"
+            is Box -> "box:$box"
         }
 
     companion object {
@@ -46,6 +56,7 @@ sealed interface SessionSelection {
             key == Mistakes.key -> Mistakes
             key == Bookmarks.key -> Bookmarks
             key.startsWith("topic:") -> Topic(Category.fromCode(key.removePrefix("topic:")))
+            key.startsWith("box:") -> Box(key.removePrefix("box:").toInt())
             else -> throw IllegalArgumentException("Unknown session selection: $key")
         }
     }
@@ -67,6 +78,9 @@ object QuestionSelector {
         is SessionSelection.Topic -> pool.filter { it.category == selection.category }.weakestFirst(progress)
         SessionSelection.Mistakes -> pool.filter { progress[it.id].isMistake() }
         SessionSelection.Bookmarks -> pool.filter { progress[it.id]?.bookmarked == true }
+        is SessionSelection.Box -> pool
+            .filter { progress[it.id].isAnswered() && progress.getValue(it.id).box == selection.box }
+            .sortedBy { progress.getValue(it.id).dueDate }
     }
 
     /**

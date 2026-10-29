@@ -86,17 +86,21 @@ class RoomProgressRepository(
                     ),
                 )
             }
-            sessionResultDao.insert(
-                SessionResultEntity(
-                    kind = SessionKind.EXAM.name,
-                    finishedAt = now.toEpochMilli(),
-                    finishedEpochDay = today.toEpochDay(),
-                    correct = result.correct,
-                    total = result.total,
-                ),
-            )
+            sessionResultDao.insert(sessionResult(SessionKind.EXAM, result.correct, result.total))
         }
     }
+
+    override suspend fun recordDailySession(correct: Int, total: Int) {
+        sessionResultDao.insert(sessionResult(SessionKind.DAILY, correct, total))
+    }
+
+    private fun sessionResult(kind: SessionKind, correct: Int, total: Int) = SessionResultEntity(
+        kind = kind.name,
+        finishedAt = clock.instant().toEpochMilli(),
+        finishedEpochDay = LocalDate.now(clock).toEpochDay(),
+        correct = correct,
+        total = total,
+    )
 
     override fun sessionResults(kind: SessionKind): Flow<List<SessionResult>> =
         sessionResultDao.observe(kind.name).map { rows -> rows.map { it.toDomain() } }

@@ -68,6 +68,20 @@ class SessionViewModelTest {
         assertEquals(setOf("1", "2", "3", "BY-1"), asked.toSet())
         assertEquals(SessionUiState.Finished(correctFirstTime = 4, total = 4, SessionBalance(advanced = 4)), viewModel.uiState.value)
         assertTrue(progress.answers.all { it.correct && it.source == AnswerSource.DAILY })
+        assertEquals("a finished Daily 10 counts for the streak", listOf(4 to 4), progress.dailySessions)
+    }
+
+    @Test
+    fun `an unfinished Daily 10 and other sessions do not count for the streak`() = runTest {
+        val daily = viewModel(SessionSelection.Daily)
+        daily.answer("A")
+        daily.next()
+        val topic = viewModel(SessionSelection.Topic(Category.HISTORY))
+        topic.answer("A")
+        topic.next()
+
+        assertTrue(topic.uiState.value is SessionUiState.Finished)
+        assertEquals(emptyList<Pair<Int, Int>>(), progress.dailySessions)
     }
 
     @Test

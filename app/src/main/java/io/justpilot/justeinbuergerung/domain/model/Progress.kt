@@ -25,6 +25,8 @@ enum class AnswerSource {
 }
 
 enum class SessionKind {
+    /** A Daily 10 played to the end; the streak counts the days with one. */
+    DAILY,
     EXAM,
 }
 
