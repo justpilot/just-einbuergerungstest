@@ -11,6 +11,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -27,6 +28,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -44,8 +47,19 @@ import io.justpilot.justeinbuergerung.ui.common.federalStatesByName
 import io.justpilot.justeinbuergerung.ui.common.title
 import kotlinx.coroutines.launch
 
-/** Shown as plain text: the app has no network access and links nowhere by itself. */
 private const val SOURCE_URL = "github.com/justpilot/just-einbuergerungstest"
+
+// The app itself has no network access; these links open in the browser.
+private const val SOURCE_LINK = "https://$SOURCE_URL"
+private const val PRIVACY_LINK = "$SOURCE_LINK/blob/main/PRIVACY.md"
+
+/** Libraries shipped in the APK; every one is under the Apache License 2.0. */
+private val LIBRARIES = listOf(
+    "AndroidX Activity, Core, Lifecycle, Navigation",
+    "AndroidX Room, DataStore",
+    "Jetpack Compose, Material 3",
+    "Kotlin Standard Library, Coroutines, Serialization",
+)
 
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel = viewModel(factory = ViewModels.factory)) {
@@ -78,6 +92,10 @@ fun SettingsContent(
 ) {
     var pickState by rememberSaveable { mutableStateOf(false) }
     var confirmReset by rememberSaveable { mutableStateOf(false) }
+    var showLicenses by rememberSaveable { mutableStateOf(false) }
+    val uriHandler = LocalUriHandler.current
+    // Without a browser there is nothing to open; the address stays readable in the item.
+    val open = { url: String -> runCatching { uriHandler.openUri(url) } }
 
     LargeTitleScaffold(stringResource(R.string.nav_settings), snackbarHost = { SnackbarHost(snackbar) }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState())) {
@@ -123,7 +141,13 @@ fun SettingsContent(
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_about)) },
-                supportingContent = { Text(stringResource(R.string.settings_about_text, BuildConfig.VERSION_NAME, SOURCE_URL)) },
+                supportingContent = { Text(stringResource(R.string.settings_about_text, BuildConfig.VERSION_NAME)) },
+            )
+            LinkItem(stringResource(R.string.settings_source), SOURCE_URL) { open(SOURCE_LINK) }
+            LinkItem(stringResource(R.string.settings_privacy), stringResource(R.string.settings_privacy_text)) { open(PRIVACY_LINK) }
+            ListItem(
+                headlineContent = { Text(stringResource(R.string.settings_licenses)) },
+                modifier = Modifier.clickable { showLicenses = true },
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_sources)) },
@@ -150,6 +174,16 @@ fun SettingsContent(
             dismissButton = { TextButton(onClick = { pickState = false }) { Text(stringResource(R.string.cancel)) } },
         )
     }
+    if (showLicenses) {
+        AlertDialog(
+            onDismissRequest = { showLicenses = false },
+            title = { Text(stringResource(R.string.settings_licenses)) },
+            text = {
+                Text(stringResource(R.string.settings_licenses_text) + "\n\n" + LIBRARIES.joinToString("\n") { "• $it" })
+            },
+            confirmButton = { TextButton(onClick = { showLicenses = false }) { Text(stringResource(R.string.close)) } },
+        )
+    }
     if (confirmReset) {
         AlertDialog(
             onDismissRequest = { confirmReset = false },
@@ -163,4 +197,15 @@ fun SettingsContent(
             dismissButton = { TextButton(onClick = { confirmReset = false }) { Text(stringResource(R.string.cancel)) } },
         )
     }
+}
+
+/** An entry that opens a web page; the trailing icon says it leaves the app. */
+@Composable
+private fun LinkItem(title: String, supporting: String, onClick: () -> Unit) {
+    ListItem(
+        headlineContent = { Text(title) },
+        supportingContent = { Text(supporting) },
+        trailingContent = { Icon(painterResource(R.drawable.ic_open_in_new), contentDescription = null) },
+        modifier = Modifier.clickable(onClick = onClick),
+    )
 }

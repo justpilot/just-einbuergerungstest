@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -111,6 +112,16 @@ class SessionContentTest {
 
         compose.onNodeWithContentDescription("Sitzung beenden").performClick()
         assertEquals(1, closed)
+    }
+
+    @Test
+    fun picturesOpenFullScreen() {
+        show(asking().copy(question = question.copy(imagePath = "images/130.png")))
+
+        compose.waitUntil(5_000) { compose.onAllNodesWithContentDescription("Abbildung zur Frage").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithContentDescription("Abbildung zur Frage").performClick()
+        compose.onNodeWithContentDescription("Schließen").performClick()
+        compose.onNodeWithContentDescription("Schließen").assertDoesNotExist()
     }
 
     @Test

@@ -38,6 +38,25 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.domain.model.AnswerOption
 import io.justpilot.justeinbuergerung.domain.model.Language
@@ -204,9 +223,10 @@ private fun BilingualText(
     }
 }
 
-/** A picture from the app's assets, decoded off the main thread. */
+/** A picture from the app's assets, decoded off the main thread. Tapping it opens it full screen. */
 @Composable
 private fun AssetImage(path: String, contentDescription: String) {
+    var zoomed by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
     val bitmap by produceState<ImageBitmap?>(null, path) {
         value = withContext(Dispatchers.IO) {
@@ -214,13 +234,63 @@ private fun AssetImage(path: String, contentDescription: String) {
         }
     }
     bitmap?.let {
-        Surface(shape = MaterialTheme.shapes.medium, color = Color.White, modifier = Modifier.fillMaxWidth()) {
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            color = Color.White,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.medium)
+                .clickable(onClickLabel = stringResource(R.string.session_image_zoom)) { zoomed = true },
+        ) {
             Image(
                 it,
                 contentDescription = contentDescription,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxWidth().padding(8.dp),
             )
+        }
+        if (zoomed) ZoomedImage(it, contentDescription, onDismiss = { zoomed = false })
+    }
+}
+
+private const val MAX_ZOOM = 5f
+
+/** Full-screen picture that can be pinched, dragged and double-tapped to zoom. */
+@Composable
+private fun ZoomedImage(bitmap: ImageBitmap, contentDescription: String, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+        var scale by remember { mutableFloatStateOf(1f) }
+        var offset by remember { mutableStateOf(Offset.Zero) }
+        val transform = rememberTransformableState { zoomChange, panChange, _ ->
+            scale = (scale * zoomChange).coerceIn(1f, MAX_ZOOM)
+            offset = if (scale == 1f) Offset.Zero else offset + panChange
+        }
+        Box(Modifier.fillMaxSize().background(Color.White)) {
+            Image(
+                bitmap,
+                contentDescription = contentDescription,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .pointerInput(Unit) {
+                        detectTapGestures(onDoubleTap = {
+                            scale = if (scale > 1f) 1f else 2.5f
+                            offset = Offset.Zero
+                        })
+                    }
+                    .transformable(transform)
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        translationX = offset.x
+                        translationY = offset.y
+                    },
+            )
+            // Icons on the white picture background stay dark in both themes.
+            IconButton(onClick = onDismiss, modifier = Modifier.align(Alignment.TopEnd).safeDrawingPadding().padding(8.dp)) {
+                Icon(painterResource(R.drawable.ic_close), contentDescription = stringResource(R.string.close), tint = Color.Black)
+            }
         }
     }
 }
