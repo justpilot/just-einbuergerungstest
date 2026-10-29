@@ -31,6 +31,11 @@ sealed interface SessionSelection {
         override val source = AnswerSource.CATALOG
     }
 
+    /** Exactly these questions in this order, e.g. the mistakes of an exam. Ids contain no commas. */
+    data class Questions(val ids: List<String>) : SessionSelection {
+        override val source = AnswerSource.CATALOG
+    }
+
     /** Answered questions currently in one Leitner box, the soonest due first. */
     data class Box(val box: Int) : SessionSelection {
         init {
@@ -48,6 +53,7 @@ sealed interface SessionSelection {
             Mistakes -> "mistakes"
             Bookmarks -> "bookmarks"
             is Box -> "box:$box"
+            is Questions -> "questions:" + ids.joinToString(",")
         }
 
     companion object {
@@ -57,6 +63,7 @@ sealed interface SessionSelection {
             key == Bookmarks.key -> Bookmarks
             key.startsWith("topic:") -> Topic(Category.fromCode(key.removePrefix("topic:")))
             key.startsWith("box:") -> Box(key.removePrefix("box:").toInt())
+            key.startsWith("questions:") -> Questions(key.removePrefix("questions:").split(",").filter { it.isNotEmpty() })
             else -> throw IllegalArgumentException("Unknown session selection: $key")
         }
     }
@@ -84,6 +91,8 @@ object QuestionSelector {
         is SessionSelection.Box -> pool
             .filter { progress[it.id].isAnswered() && progress.getValue(it.id).box == selection.box }
             .sortedBy { progress.getValue(it.id).dueDate }
+        // Ids that left the pool (e.g. after a change of federal state) are skipped.
+        is SessionSelection.Questions -> pool.associateBy { it.id }.let { byId -> selection.ids.mapNotNull { byId[it] } }
     }
 
     /**

@@ -1,5 +1,6 @@
 package io.justpilot.justeinbuergerung.ui.exam
 
+import androidx.lifecycle.SavedStateHandle
 import io.justpilot.justeinbuergerung.domain.model.Category
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.SessionKind
@@ -53,8 +54,8 @@ class ExamViewModelTest {
         override fun withZone(zone: ZoneId?): Clock = this
     }
 
-    private fun TestScope.viewModel(): ExamViewModel {
-        val viewModel = ExamViewModel(questions, progress, settings, clock(), Random(1))
+    private fun TestScope.viewModel(savedState: SavedStateHandle = SavedStateHandle()): ExamViewModel {
+        val viewModel = ExamViewModel(savedState, questions, progress, settings, clock(), Random(1))
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
         return viewModel
     }
@@ -142,6 +143,50 @@ class ExamViewModelTest {
         progress.sessionResults.value = listOf(exam)
 
         assertEquals(ExamHistoryUiState.Ready(listOf(exam)), viewModel.uiState.value)
+    }
+
+    @Test
+    fun `a running exam survives the end of the process with the time running on`() = runTest {
+        val savedState = SavedStateHandle()
+        val first = viewModel(savedState)
+        first.answer("B")
+        first.toggleFlag()
+        first.goTo(5)
+        val asked = first.running.question.id
+        advanceTimeBy(Duration.ofMinutes(10).toMillis())
+
+        // A new ViewModel with a different random seed would draw other questions.
+        val restored = ExamViewModel(savedState, questions, progress, settings, clock(), Random(99))
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { restored.uiState.collect {} }
+
+        with(restored.running) {
+            assertEquals(6, position)
+            assertEquals(asked, question.id)
+            assertEquals(ExamUiState.QuestionStatus(answered = true, flagged = true), overview[0])
+            assertEquals(Duration.ofMinutes(50), remaining)
+        }
+    }
+
+    @Test
+    fun `a submitted exam shows its result again after the end of the process without recording it twice`() = runTest {
+        val savedState = SavedStateHandle()
+        viewModel(savedState).submit()
+        val restored = viewModel(savedState)
+
+        assertTrue(restored.uiState.value is ExamUiState.Finished)
+        assertEquals(1, progress.exams.size)
+    }
+
+    @Test
+    fun `mistakes can be bookmarked from the result`() = runTest {
+        val viewModel = viewModel()
+        viewModel.submit()
+        val id = (viewModel.uiState.value as ExamUiState.Finished).result.wrong.first().question.id
+
+        viewModel.toggleBookmark(id)
+        assertEquals(setOf(id), (viewModel.uiState.value as ExamUiState.Finished).bookmarked)
+        viewModel.toggleBookmark(id)
+        assertEquals(emptySet<String>(), (viewModel.uiState.value as ExamUiState.Finished).bookmarked)
     }
 
     @Test

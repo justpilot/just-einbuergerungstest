@@ -176,7 +176,11 @@
     <string name="exam_result_your_answer">Deine Antwort: %s</string>
     <string name="exam_result_no_answer">Nicht beantwortet</string>
     <string name="exam_result_correct_answer">Richtig: %s</string>
-    <string name="exam_result_hint">Prüfungsantworten verschieben keine Fragen zwischen den Kästen. Übe die Fehler im Katalog oder in der Tages-Session.</string>
+    <string name="exam_result_hint">Prüfungsantworten verschieben keine Fragen zwischen den Kästen und landen nicht im Fehlerkasten. Übe die Fehler deshalb hier oder merke dir einzelne Fragen.</string>
+    <plurals name="exam_practice_wrong">
+        <item quantity="one">%d Fehler jetzt üben</item>
+        <item quantity="other">%d Fehler jetzt üben</item>
+    </plurals>
     <string name="exam_done">Fertig</string>
     <string name="question_label_general">Frage %d</string>
     <string name="question_label_state">%1$s, Frage %2$d</string>

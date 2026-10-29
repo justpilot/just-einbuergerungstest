@@ -12,6 +12,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.justpilot.justeinbuergerung.domain.exam.ExamResult
+import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
 import io.justpilot.justeinbuergerung.domain.model.AnswerOption
 import io.justpilot.justeinbuergerung.domain.model.Category
 import io.justpilot.justeinbuergerung.domain.model.FederalState
@@ -51,6 +52,9 @@ class ExamContentTest {
         remaining = Duration.ofMinutes(42).plusSeconds(5),
     )
 
+    private val practised = mutableListOf<SessionSelection>()
+    private val bookmarkToggles = mutableListOf<String>()
+
     private fun show(initial: ExamUiState, onSubmit: () -> Unit = {}, onClose: () -> Unit = {}) {
         compose.setContent {
             var state by remember { mutableStateOf(initial) }
@@ -64,6 +68,8 @@ class ExamContentTest {
                     onGoTo = {},
                     onSubmit = onSubmit,
                     onClose = onClose,
+                    onToggleBookmark = { bookmarkToggles += it },
+                    onPractice = { practised += it },
                 )
             }
         }
@@ -120,5 +126,18 @@ class ExamContentTest {
         compose.onNodeWithText("Bayern, Frage 4").performScrollTo().assertExists()
         compose.onNodeWithText("Deine Antwort: C) Antwort C").performScrollTo().assertExists()
         compose.onNodeWithText("Frage 100").performScrollTo().assertExists()
+    }
+
+    @Test
+    fun mistakesCanBePractisedAndBookmarkedFromTheResult() {
+        val answers = listOf(ExamResult.Answer(question("1"), "A"), ExamResult.Answer(question("2"), "B"), ExamResult.Answer(question("BY-4", FederalState.BAVARIA), null))
+        show(ExamUiState.Finished(ExamResult(total = 3, answers = answers), bookmarked = setOf("2")))
+
+        compose.onNodeWithText("2 Fehler jetzt üben").performClick()
+        assertEquals(listOf(SessionSelection.Questions(listOf("2", "BY-4"))), practised)
+
+        compose.onNodeWithContentDescription("Nicht mehr merken").performScrollTo().assertExists()
+        compose.onNodeWithContentDescription("Merken").performScrollTo().performClick()
+        assertEquals(listOf("BY-4"), bookmarkToggles)
     }
 }

@@ -36,6 +36,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,6 +58,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.domain.exam.ExamResult
+import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
 import io.justpilot.justeinbuergerung.domain.model.Language
 import io.justpilot.justeinbuergerung.domain.model.Question
 import io.justpilot.justeinbuergerung.ui.ViewModels
@@ -66,7 +68,11 @@ import io.justpilot.justeinbuergerung.ui.theme.AppTheme
 import java.time.Duration
 
 @Composable
-fun ExamScreen(onClose: () -> Unit, viewModel: ExamViewModel = viewModel(factory = ViewModels.factory)) {
+fun ExamScreen(
+    onClose: () -> Unit,
+    onPractice: (SessionSelection) -> Unit,
+    viewModel: ExamViewModel = viewModel(factory = ViewModels.factory),
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     ExamContent(
         state = state,
@@ -77,6 +83,8 @@ fun ExamScreen(onClose: () -> Unit, viewModel: ExamViewModel = viewModel(factory
         onGoTo = viewModel::goTo,
         onSubmit = viewModel::submit,
         onClose = onClose,
+        onToggleBookmark = viewModel::toggleBookmark,
+        onPractice = onPractice,
     )
 }
 
@@ -94,6 +102,8 @@ fun ExamContent(
     onGoTo: (index: Int) -> Unit,
     onSubmit: () -> Unit,
     onClose: () -> Unit,
+    onToggleBookmark: (questionId: String) -> Unit,
+    onPractice: (SessionSelection) -> Unit,
 ) {
     var confirmAbort by rememberSaveable { mutableStateOf(false) }
     var confirmSubmit by rememberSaveable { mutableStateOf(false) }
@@ -176,7 +186,7 @@ fun ExamContent(
         Box(Modifier.fillMaxSize().padding(padding)) {
             when (state) {
                 ExamUiState.Loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
-                is ExamUiState.Finished -> Result(state.result, onClose)
+                is ExamUiState.Finished -> Result(state, onClose, onToggleBookmark, onPractice)
                 is ExamUiState.Running -> {
                     val scroll = rememberScrollState()
                     // Every question starts at the top.
@@ -199,7 +209,8 @@ fun ExamContent(
     }
 
     if (running != null && showOverview) {
-        ModalBottomSheet(onDismissRequest = { showOverview = false }) {
+        // Fully open right away, so the submit button below the grid is in view.
+        ModalBottomSheet(onDismissRequest = { showOverview = false }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             Overview(
                 state = running,
                 onGoTo = {
@@ -300,12 +311,17 @@ private fun Overview(state: ExamUiState.Running, onGoTo: (Int) -> Unit, onSubmit
                     if (status.answered) add(stringResource(R.string.exam_overview_answered))
                     if (status.flagged) add(stringResource(R.string.exam_overview_flagged))
                 }.joinToString(", ")
+                // Answered tiles are filled, open ones only outlined, so the gaps stand out.
                 Surface(
                     onClick = { onGoTo(index) },
                     shape = MaterialTheme.shapes.small,
-                    color = if (status.answered) colors.primaryContainer else colors.surfaceContainerHigh,
+                    color = if (status.answered) colors.primaryContainer else Color.Transparent,
                     contentColor = if (status.answered) colors.onPrimaryContainer else colors.onSurface,
-                    border = if (current) BorderStroke(2.dp, colors.primary) else null,
+                    border = when {
+                        current -> BorderStroke(2.dp, colors.primary)
+                        status.answered -> null
+                        else -> BorderStroke(1.dp, colors.outline)
+                    },
                     modifier = Modifier.aspectRatio(1f).semantics { contentDescription = description },
                 ) {
                     Box(contentAlignment = Alignment.Center) {
@@ -328,7 +344,13 @@ private fun Overview(state: ExamUiState.Running, onGoTo: (Int) -> Unit, onSubmit
 }
 
 @Composable
-private fun Result(result: ExamResult, onClose: () -> Unit) {
+private fun Result(
+    state: ExamUiState.Finished,
+    onClose: () -> Unit,
+    onToggleBookmark: (questionId: String) -> Unit,
+    onPractice: (SessionSelection) -> Unit,
+) {
+    val result = state.result
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -351,15 +373,24 @@ private fun Result(result: ExamResult, onClose: () -> Unit) {
         if (result.wrong.isEmpty()) {
             Text(stringResource(R.string.exam_result_all_correct), style = MaterialTheme.typography.titleMedium)
         } else {
-            Text(stringResource(R.string.exam_result_wrong), style = MaterialTheme.typography.titleMedium)
-            result.wrong.forEach { WrongAnswer(it) }
+            // Exam answers move no boxes, so these mistakes are not in the mistakes box: practise them here.
+            Button(
+                onClick = { onPractice(SessionSelection.Questions(result.wrong.map { it.question.id })) },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(pluralStringResource(R.plurals.exam_practice_wrong, result.wrong.size, result.wrong.size))
+            }
             Text(
                 stringResource(R.string.exam_result_hint),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Text(stringResource(R.string.exam_result_wrong), style = MaterialTheme.typography.titleMedium)
+            result.wrong.forEach { answer ->
+                WrongAnswer(answer, bookmarked = answer.question.id in state.bookmarked, onToggleBookmark = { onToggleBookmark(answer.question.id) })
+            }
         }
-        Button(onClick = onClose, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.exam_done)) }
+        OutlinedButton(onClick = onClose, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.exam_done)) }
         Spacer(Modifier.navigationBarsPadding())
     }
 }
@@ -390,17 +421,26 @@ private fun PassLine(label: String, passed: Boolean) {
 }
 
 @Composable
-private fun WrongAnswer(answer: ExamResult.Answer) {
+private fun WrongAnswer(answer: ExamResult.Answer, bookmarked: Boolean, onToggleBookmark: () -> Unit) {
     val question = answer.question
     Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(
-                question.label(),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(question.text.german, style = MaterialTheme.typography.bodyLarge)
-            HorizontalDivider()
+        Column(Modifier.padding(start = 16.dp, end = 4.dp, bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    question.label(),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f),
+                )
+                IconToggleButton(checked = bookmarked, onCheckedChange = { onToggleBookmark() }) {
+                    Icon(
+                        painterResource(if (bookmarked) R.drawable.ic_bookmark_filled else R.drawable.ic_bookmark),
+                        contentDescription = stringResource(if (bookmarked) R.string.session_remove_bookmark else R.string.session_bookmark),
+                    )
+                }
+            }
+            Text(question.text.german, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(end = 12.dp))
+            HorizontalDivider(Modifier.padding(end = 12.dp))
             Text(
                 answer.chosenOptionId?.let { stringResource(R.string.exam_result_your_answer, question.optionText(it)) }
                     ?: stringResource(R.string.exam_result_no_answer),

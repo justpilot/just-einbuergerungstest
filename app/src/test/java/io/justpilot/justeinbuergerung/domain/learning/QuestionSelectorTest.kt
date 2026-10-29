@@ -121,9 +121,16 @@ class QuestionSelectorTest {
     }
 
     @Test
+    fun `question sessions keep the given order and skip ids outside the pool`() {
+        val ids = QuestionSelector.select(SessionSelection.Questions(listOf("5", "BE-1", "2")), pool, emptyMap(), today).map { it.id }
+        assertEquals(listOf("5", "2"), ids)
+    }
+
+    @Test
     fun `selection keys round-trip`() {
         val selections = listOf(SessionSelection.Daily, SessionSelection.Mistakes, SessionSelection.Bookmarks) +
-            Category.entries.map { SessionSelection.Topic(it) } + (1..3).map { SessionSelection.Box(it) }
+            Category.entries.map { SessionSelection.Topic(it) } + (1..3).map { SessionSelection.Box(it) } +
+            SessionSelection.Questions(listOf("12", "BY-3", "7"))
         for (selection in selections) {
             assertEquals(selection, SessionSelection.fromKey(selection.key))
         }
