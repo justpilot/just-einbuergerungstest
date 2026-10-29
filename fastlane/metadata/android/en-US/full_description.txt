@@ -13,13 +13,16 @@ A three-box Leitner system repeats mistakes right away and known questions less 
 Practise by topic (politics, history, society, your federal state), your mistakes or your bookmarks.
 
 <b>Exam simulation</b>
-33 questions in 60 minutes, like the real test: 30 general and 3 state questions. You can change answers and flag questions until you submit. Afterwards you see your score and every mistake; past results are kept.
+33 questions in 60 minutes, like the real test: 30 general and 3 state questions. You can change answers and flag questions until you submit. Afterwards you see your score and every mistake, and can practise them straight away; past results are kept.
 
 <b>Progress</b>
 Your daily streak, answers over the last seven days and your next goal at a glance.
 
 <b>Translations</b>
 Questions and answers can be shown in English, Ukrainian or Turkish. The app itself is in German, the language of the test, and the exam simulation is German only.
+
+<b>Design</b>
+Light, dark or matching your phone, with Material You colours from your wallpaper or the app's own colours.
 
 <b>Privacy</b>
 The app has no internet permission. Your progress stays on your device.

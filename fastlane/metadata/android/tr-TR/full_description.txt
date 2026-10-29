@@ -13,13 +13,16 @@ Günde yaklaşık üç dakikada on soru: zamanı gelen tekrarlar ve yeni sorular
 Konuya göre (siyaset, tarih, toplum, eyaletin), hatalarına veya yer imlerine göre çalış.
 
 <b>Sınav simülasyonu</b>
-Gerçek testteki gibi 60 dakikada 33 soru: 30 genel ve 3 eyalet sorusu. Teslim edene kadar cevaplarını değiştirebilir ve soruları işaretleyebilirsin. Sonrasında puanını ve her hatayı görürsün; geçmiş sonuçlar saklanır.
+Gerçek testteki gibi 60 dakikada 33 soru: 30 genel ve 3 eyalet sorusu. Teslim edene kadar cevaplarını değiştirebilir ve soruları işaretleyebilirsin. Sonrasında puanını ve her hatayı görür, onları hemen çalışabilirsin; geçmiş sonuçlar saklanır.
 
 <b>İlerleme</b>
 Günlük serin, son yedi gündeki cevapların ve bir sonraki hedefin bir bakışta.
 
 <b>Çeviriler</b>
 Sorular ve cevaplar Türkçe, İngilizce veya Ukraynaca gösterilebilir. Uygulamanın kendisi testin dili olan Almancadır; sınav simülasyonu yalnızca Almancadır.
+
+<b>Görünüm</b>
+Açık, koyu veya telefonundaki gibi – duvar kağıdından gelen Material You renkleriyle ya da uygulamanın kendi renkleriyle.
 
 <b>Gizlilik</b>
 Uygulamanın internet izni yoktur. İlerlemen cihazında kalır.

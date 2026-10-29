@@ -13,13 +13,16 @@ Ein Leitner-System mit drei Kästen wiederholt Fehler sofort und Gelerntes selte
 Übe nach Themen (Politik, Geschichte, Gesellschaft, dein Bundesland), mit dem Fehlerkasten oder mit deiner Merkliste.
 
 <b>Prüfungssimulation</b>
-33 Fragen in 60 Minuten wie in der echten Prüfung: 30 allgemeine und 3 Landesfragen. Antworten lassen sich bis zur Abgabe ändern und Fragen markieren. Danach siehst du dein Ergebnis und alle Fehler; frühere Ergebnisse bleiben gespeichert.
+33 Fragen in 60 Minuten wie in der echten Prüfung: 30 allgemeine und 3 Landesfragen. Antworten lassen sich bis zur Abgabe ändern und Fragen markieren. Danach siehst du dein Ergebnis und alle Fehler und kannst sie direkt üben; frühere Ergebnisse bleiben gespeichert.
 
 <b>Fortschritt</b>
 Tagesserie, Antworten der letzten sieben Tage und dein nächstes Ziel auf einen Blick.
 
 <b>Übersetzungen</b>
 Fragen und Antworten lassen sich auf Englisch, Ukrainisch oder Türkisch einblenden. In der Prüfungssimulation gibt es nur Deutsch – wie in der echten Prüfung.
+
+<b>Design</b>
+Hell, dunkel oder wie dein Handy – mit Material-You-Farben aus deinem Hintergrundbild oder den eigenen Farben der App.
 
 <b>Privatsphäre</b>
 Die App hat keine Internet-Berechtigung. Dein Lernfortschritt bleibt auf deinem Gerät.
