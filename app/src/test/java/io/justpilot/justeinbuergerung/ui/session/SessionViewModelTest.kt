@@ -1,5 +1,6 @@
 package io.justpilot.justeinbuergerung.ui.session
 
+import io.justpilot.justeinbuergerung.domain.learning.SessionBalance
 import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
 import io.justpilot.justeinbuergerung.domain.model.AnswerSource
 import io.justpilot.justeinbuergerung.domain.model.Category
@@ -9,6 +10,7 @@ import io.justpilot.justeinbuergerung.testing.FakeProgressRepository
 import io.justpilot.justeinbuergerung.testing.FakeQuestionRepository
 import io.justpilot.justeinbuergerung.testing.FakeSettingsRepository
 import io.justpilot.justeinbuergerung.testing.MainDispatcherRule
+import io.justpilot.justeinbuergerung.testing.answered
 import io.justpilot.justeinbuergerung.testing.question
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -23,6 +25,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.time.Clock
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneOffset
 import kotlin.random.Random
 
@@ -63,7 +66,7 @@ class SessionViewModelTest {
         }
 
         assertEquals(setOf("1", "2", "3", "BY-1"), asked.toSet())
-        assertEquals(SessionUiState.Finished(correctFirstTime = 4, total = 4), viewModel.uiState.value)
+        assertEquals(SessionUiState.Finished(correctFirstTime = 4, total = 4, SessionBalance(advanced = 4)), viewModel.uiState.value)
         assertTrue(progress.answers.all { it.correct && it.source == AnswerSource.DAILY })
     }
 
@@ -84,6 +87,20 @@ class SessionViewModelTest {
 
         assertEquals(SessionUiState.Finished(correctFirstTime = 0, total = 1), viewModel.uiState.value)
         assertEquals(listOf(FakeProgressRepository.Answer("3", false, AnswerSource.CATALOG)), progress.answers)
+    }
+
+    @Test
+    fun `the summary counts box moves against the boxes at session start`() = runTest {
+        progress.progress.value = mapOf("1" to answered("1", box = 2, due = LocalDate.of(2026, 10, 29)), "2" to answered("2", box = 3, due = LocalDate.of(2026, 10, 29)))
+        val viewModel = viewModel(SessionSelection.Topic(Category.POLITICS))
+        while (viewModel.uiState.value is SessionUiState.Asking) {
+            // Question 2 is answered wrongly once, then correctly in the retry round.
+            val wrongFirst = viewModel.asking.question.id == "2" && !viewModel.asking.isRetryRound
+            viewModel.answer(if (wrongFirst) "B" else "A")
+            viewModel.next()
+        }
+
+        assertEquals(SessionBalance(mastered = 1, backToFirstBox = 1), (viewModel.uiState.value as SessionUiState.Finished).balance)
     }
 
     @Test

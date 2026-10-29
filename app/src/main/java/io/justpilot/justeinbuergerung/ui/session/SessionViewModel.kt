@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.justpilot.justeinbuergerung.domain.learning.LearningSession
 import io.justpilot.justeinbuergerung.domain.learning.QuestionSelector
+import io.justpilot.justeinbuergerung.domain.learning.SessionBalance
 import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
 import io.justpilot.justeinbuergerung.domain.model.Language
 import io.justpilot.justeinbuergerung.domain.model.Question
@@ -40,7 +41,7 @@ sealed interface SessionUiState {
         val hapticsEnabled: Boolean,
     ) : SessionUiState
 
-    data class Finished(val correctFirstTime: Int, val total: Int) : SessionUiState
+    data class Finished(val correctFirstTime: Int, val total: Int, val balance: SessionBalance = SessionBalance()) : SessionUiState
 }
 
 class SessionViewModel(
@@ -53,6 +54,9 @@ class SessionViewModel(
 ) : ViewModel() {
     private val session = MutableStateFlow<LearningSession?>(null)
 
+    /** Box of each session question when the session started, null for new questions. */
+    private var startBoxes: Map<String, Int?> = emptyMap()
+
     // Stays on across questions once the user asked for it.
     private val showTranslation = MutableStateFlow(false)
 
@@ -64,7 +68,11 @@ class SessionViewModel(
     ) { session, showTranslation, settings, progress ->
         when {
             session == null -> SessionUiState.Loading
-            session.isFinished -> SessionUiState.Finished(session.correctFirstTime.size, session.size)
+            session.isFinished -> SessionUiState.Finished(
+                session.correctFirstTime.size,
+                session.size,
+                SessionBalance.of(startBoxes, session.correctFirstTime),
+            )
             else -> {
                 val question = session.current!!
                 SessionUiState.Asking(
@@ -89,7 +97,9 @@ class SessionViewModel(
             val state = settingsRepository.settings.first().federalState
             val pool = state?.let { questionRepository.questionPool(it).first() }.orEmpty()
             val progress = progressRepository.progress().first()
-            session.value = LearningSession(QuestionSelector.select(selection, pool, progress, LocalDate.now(clock), random))
+            val questions = QuestionSelector.select(selection, pool, progress, LocalDate.now(clock), random)
+            startBoxes = questions.associate { question -> question.id to progress[question.id]?.takeIf { it.lastAnsweredAt != null }?.box }
+            session.value = LearningSession(questions)
         }
     }
 

@@ -22,7 +22,25 @@
     <string name="home_nothing_due">Heute ist nichts fällig. Zeit für neue Fragen.</string>
     <string name="home_daily_start">10 Fragen starten</string>
     <string name="home_progress_title">Dein Fortschritt</string>
-    <string name="home_mastered" tools:ignore="PluralsCandidate">%1$d von %2$d Fragen gemeistert</string>
+    <string name="home_learned" tools:ignore="PluralsCandidate">%1$d von %2$d Fragen gelernt</string>
+    <string name="home_learned_mastered" tools:ignore="PluralsCandidate">davon %d gemeistert</string>
+    <plurals name="home_goal_ready">
+        <item quantity="one">%d Frage aus Kasten 2 ist heute bereit für Kasten 3.</item>
+        <item quantity="other">%d Fragen aus Kasten 2 sind heute bereit für Kasten 3.</item>
+    </plurals>
+    <plurals name="home_goal_ready_tomorrow">
+        <item quantity="one">%d Frage aus Kasten 2 ist morgen bereit für Kasten 3.</item>
+        <item quantity="other">%d Fragen aus Kasten 2 sind morgen bereit für Kasten 3.</item>
+    </plurals>
+    <plurals name="home_goal_ready_in_days">
+        <item quantity="one">%1$d Frage aus Kasten 2 ist in %2$d Tagen bereit für Kasten 3.</item>
+        <item quantity="other">%1$d Fragen aus Kasten 2 sind in %2$d Tagen bereit für Kasten 3.</item>
+    </plurals>
+    <plurals name="home_goal_milestone">
+        <item quantity="one">Noch %1$d Frage bis %2$d gemeistert.</item>
+        <item quantity="other">Noch %1$d Fragen bis %2$d gemeistert.</item>
+    </plurals>
+    <string name="home_goal_all_mastered">Alle Fragen gemeistert! Bleib mit der Tages-Session in Übung.</string>
     <string name="home_box_new">Neu</string>
     <string name="home_box">Kasten %d</string>
     <string name="home_boxes_hint">Richtige Antworten bringen eine Frage einen Kasten weiter, falsche zurück in Kasten 1. Ab Kasten 3 gilt sie als gemeistert.</string>
@@ -66,6 +84,18 @@
     <string name="session_feedback_retry_wrong">Leider falsch. Die Frage kommt gleich noch einmal.</string>
     <string name="session_done_title">Geschafft!</string>
     <string name="session_done_score" tools:ignore="PluralsCandidate">%1$d von %2$d Fragen beim ersten Versuch richtig.</string>
+    <plurals name="session_done_mastered">
+        <item quantity="one">%d Frage neu gemeistert</item>
+        <item quantity="other">%d Fragen neu gemeistert</item>
+    </plurals>
+    <plurals name="session_done_advanced">
+        <item quantity="one">%d Frage einen Kasten aufgestiegen</item>
+        <item quantity="other">%d Fragen einen Kasten aufgestiegen</item>
+    </plurals>
+    <plurals name="session_done_back">
+        <item quantity="one">%d Frage zurück in Kasten 1</item>
+        <item quantity="other">%d Fragen zurück in Kasten 1</item>
+    </plurals>
     <string name="session_done_hint">Falsch beantwortete Fragen bleiben in Kasten 1 und kommen bald wieder.</string>
     <string name="session_empty">Hier gibt es gerade keine Fragen.</string>
     <string name="session_back">Zurück</string>

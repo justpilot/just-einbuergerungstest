@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.justpilot.justeinbuergerung.domain.learning.SessionBalance
 import io.justpilot.justeinbuergerung.domain.model.AnswerOption
 import io.justpilot.justeinbuergerung.domain.model.Category
 import io.justpilot.justeinbuergerung.domain.model.FederalState
@@ -94,6 +95,26 @@ class SessionContentTest {
 
         compose.onNodeWithText("What applies here?").assertExists()
         compose.onNodeWithText("Answer D").assertExists()
+    }
+
+    @Test
+    fun summaryShowsOnlyTheBoxMovesThatHappened() {
+        compose.setContent {
+            JustEinbürgerungstestTheme(dynamicColor = false) {
+                SessionContent(
+                    state = SessionUiState.Finished(correctFirstTime = 8, total = 10, SessionBalance(advanced = 5, mastered = 3)),
+                    onAnswer = {},
+                    onNext = {},
+                    onToggleTranslation = {},
+                    onToggleBookmark = {},
+                    onClose = {},
+                )
+            }
+        }
+
+        compose.onNodeWithText("3 Fragen neu gemeistert").assertExists()
+        compose.onNodeWithText("5 Fragen einen Kasten aufgestiegen").assertExists()
+        compose.onNodeWithText("zurück in Kasten 1", substring = true).assertDoesNotExist()
     }
 
     @Test

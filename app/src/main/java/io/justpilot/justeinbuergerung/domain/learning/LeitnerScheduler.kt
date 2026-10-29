@@ -19,12 +19,19 @@ object LeitnerScheduler {
      * @param currentBox the question's box, or null if it was never answered
      */
     fun schedule(currentBox: Int?, correct: Boolean, today: LocalDate): Schedule {
+        val box = nextBox(currentBox, correct)
+        return Schedule(box, today.plusDays(intervalDays[box - 1]))
+    }
+
+    /**
+     * @param currentBox the question's box, or null if it was never answered
+     */
+    fun nextBox(currentBox: Int?, correct: Boolean): Int {
         require(currentBox == null || currentBox in FIRST_BOX..MASTERED_BOX) { "Invalid box: $currentBox" }
-        val box = when {
+        return when {
             !correct -> FIRST_BOX
             currentBox == null -> FIRST_BOX + 1
             else -> minOf(currentBox + 1, MASTERED_BOX)
         }
-        return Schedule(box, today.plusDays(intervalDays[box - 1]))
     }
 }

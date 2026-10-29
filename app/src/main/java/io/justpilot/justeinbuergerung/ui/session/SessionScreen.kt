@@ -1,8 +1,10 @@
 package io.justpilot.justeinbuergerung.ui.session
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -27,15 +29,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.justpilot.justeinbuergerung.R
+import io.justpilot.justeinbuergerung.domain.learning.SessionBalance
 import io.justpilot.justeinbuergerung.ui.ViewModels
 import io.justpilot.justeinbuergerung.ui.theme.AppTheme
 
@@ -191,6 +196,7 @@ private fun Summary(state: SessionUiState.Finished, onClose: () -> Unit) {
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
             )
+            Balance(state.balance)
             if (state.correctFirstTime < state.total) {
                 Text(
                     stringResource(R.string.session_done_hint),
@@ -201,5 +207,33 @@ private fun Summary(state: SessionUiState.Finished, onClose: () -> Unit) {
             }
         }
         Button(onClick = onClose, modifier = Modifier.padding(top = 8.dp)) { Text(stringResource(R.string.session_back)) }
+    }
+}
+
+/** Box moves of the session; lines without questions are left out. */
+@Composable
+private fun Balance(balance: SessionBalance) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (balance.mastered > 0) {
+            BalanceLine(R.drawable.ic_star_filled, pluralStringResource(R.plurals.session_done_mastered, balance.mastered, balance.mastered), MaterialTheme.colorScheme.primary)
+        }
+        if (balance.advanced > 0) {
+            BalanceLine(R.drawable.ic_arrow_upward, pluralStringResource(R.plurals.session_done_advanced, balance.advanced, balance.advanced), AppTheme.feedbackColors.correct)
+        }
+        if (balance.backToFirstBox > 0) {
+            BalanceLine(
+                R.drawable.ic_arrow_downward,
+                pluralStringResource(R.plurals.session_done_back, balance.backToFirstBox, balance.backToFirstBox),
+                MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun BalanceLine(@DrawableRes icon: Int, text: String, tint: Color) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Icon(painterResource(icon), contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+        Text(text, style = MaterialTheme.typography.bodyLarge)
     }
 }
