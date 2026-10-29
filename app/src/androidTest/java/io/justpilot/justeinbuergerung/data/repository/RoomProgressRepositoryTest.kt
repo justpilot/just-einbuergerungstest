@@ -83,8 +83,8 @@ class RoomProgressRepositoryTest {
     @Test
     fun examsStoreTheirScoreAndLogOnlyAnsweredQuestions() = runTest {
         fun question(id: String) = Question(
-            id, 1, null, Category.POLITICS, null, LocalizedText("?", null, null),
-            listOf("A", "B").map { AnswerOption(it, LocalizedText(it, null, null)) }, correctOptionId = "A",
+            id, 1, null, Category.POLITICS, null, LocalizedText("?", null, null, null),
+            listOf("A", "B").map { AnswerOption(it, LocalizedText(it, null, null, null)) }, correctOptionId = "A",
         )
         val first = ExamResult(
             total = 3,

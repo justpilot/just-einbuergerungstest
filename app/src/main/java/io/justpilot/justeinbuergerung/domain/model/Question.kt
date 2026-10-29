@@ -17,21 +17,23 @@ enum class Category(val code: String) {
 enum class Language(val code: String) {
     GERMAN("de"),
     ENGLISH("en"),
-    UKRAINIAN("uk");
+    UKRAINIAN("uk"),
+    TURKISH("tr");
 
     companion object {
-        val translations = listOf(ENGLISH, UKRAINIAN)
+        val translations = listOf(ENGLISH, UKRAINIAN, TURKISH)
 
         fun fromCode(code: String): Language =
             entries.firstOrNull { it.code == code } ?: throw IllegalArgumentException("Unknown language: $code")
     }
 }
 
-data class LocalizedText(val german: String, val english: String?, val ukrainian: String?) {
+data class LocalizedText(val german: String, val english: String?, val ukrainian: String?, val turkish: String?) {
     operator fun get(language: Language): String? = when (language) {
         Language.GERMAN -> german
         Language.ENGLISH -> english
         Language.UKRAINIAN -> ukrainian
+        Language.TURKISH -> turkish
     }
 }
 

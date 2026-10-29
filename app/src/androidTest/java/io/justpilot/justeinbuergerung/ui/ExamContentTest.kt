@@ -37,8 +37,8 @@ class ExamContentTest {
         state = state,
         category = if (state == null) Category.POLITICS else Category.STATE,
         imagePath = null,
-        text = LocalizedText("Was gilt bei $id?", "What applies to $id?", null),
-        options = listOf("A", "B", "C", "D").map { AnswerOption(it, LocalizedText("Antwort $it", "Answer $it", null)) },
+        text = LocalizedText("Was gilt bei $id?", "What applies to $id?", null, null),
+        options = listOf("A", "B", "C", "D").map { AnswerOption(it, LocalizedText("Antwort $it", "Answer $it", null, null)) },
         correctOptionId = "A",
     )
 

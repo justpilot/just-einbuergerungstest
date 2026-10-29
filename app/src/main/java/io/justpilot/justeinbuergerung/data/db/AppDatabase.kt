@@ -15,10 +15,12 @@ import androidx.room.RoomDatabase
         CatalogInfoEntity::class,
         SessionResultEntity::class,
     ],
-    version = 2,
+    version = 3,
     autoMigrations = [
         // 2: session_results for the exam history.
         AutoMigration(from = 1, to = 2),
+        // 3: Turkish translation columns.
+        AutoMigration(from = 2, to = 3),
     ],
 )
 abstract class AppDatabase : RoomDatabase() {

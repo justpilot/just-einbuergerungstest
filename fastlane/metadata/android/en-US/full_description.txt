@@ -19,7 +19,7 @@ Practise by topic (politics, history, society, your federal state), your mistake
 Your daily streak, answers over the last seven days and your next goal at a glance.
 
 <b>Translations</b>
-Questions and answers can be shown in English or Ukrainian. The app itself is in German, the language of the test, and the exam simulation is German only.
+Questions and answers can be shown in English, Ukrainian or Turkish. The app itself is in German, the language of the test, and the exam simulation is German only.
 
 <b>Privacy</b>
 The app has no internet permission. Your progress stays on your device.

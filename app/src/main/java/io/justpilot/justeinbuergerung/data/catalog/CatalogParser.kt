@@ -60,7 +60,7 @@ object CatalogParser {
     private data class OptionDto(val id: String, val text: TextDto)
 
     @Serializable
-    private data class TextDto(val de: String, val en: String? = null, val uk: String? = null) {
-        fun toDomain() = LocalizedText(german = de, english = en, ukrainian = uk)
+    private data class TextDto(val de: String, val en: String? = null, val uk: String? = null, val tr: String? = null) {
+        fun toDomain() = LocalizedText(german = de, english = en, ukrainian = uk, turkish = tr)
     }
 }

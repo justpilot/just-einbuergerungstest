@@ -18,6 +18,7 @@ data class QuestionEntity(
     val textDe: String,
     val textEn: String?,
     val textUk: String?,
+    val textTr: String?,
     val correctOption: String,
 )
 
@@ -40,6 +41,7 @@ data class OptionEntity(
     val textDe: String,
     val textEn: String?,
     val textUk: String?,
+    val textTr: String?,
 )
 
 data class QuestionWithOptions(

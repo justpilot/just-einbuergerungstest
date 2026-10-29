@@ -85,5 +85,6 @@ class CatalogImporterTest {
         val first = repository.questions(listOf("1")).single()
         assertEquals(listOf("A", "B", "C", "D"), first.options.map { it.id })
         assertNotNull(first.text[Language.UKRAINIAN])
+        assertNotNull(first.text[Language.TURKISH])
     }
 }

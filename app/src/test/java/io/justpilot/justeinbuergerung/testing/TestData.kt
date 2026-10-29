@@ -21,8 +21,8 @@ fun question(
     state = state,
     category = category,
     imagePath = null,
-    text = LocalizedText("Frage $id?", "Question $id?", "Питання $id?"),
-    options = listOf("A", "B", "C", "D").map { AnswerOption(it, LocalizedText("Antwort $it", "Answer $it", "Відповідь $it")) },
+    text = LocalizedText("Frage $id?", "Question $id?", "Питання $id?", "Soru $id?"),
+    options = listOf("A", "B", "C", "D").map { AnswerOption(it, LocalizedText("Antwort $it", "Answer $it", "Відповідь $it", "Cevap $it")) },
     correctOptionId = "A",
 )
 

@@ -19,7 +19,7 @@ class CatalogParserTest {
         options: String = """[{"id":"A","text":{"de":"a"}},{"id":"B","text":{"de":"b"}},{"id":"C","text":{"de":"c"}},{"id":"D","text":{"de":"d"}}]""",
         correct: String = "B",
     ) = """{"id":"$id","number":1,"state":${state?.let { "\"$it\"" }},"category":"${if (state == null) "politics" else "state"}",
-        |"image":null,"question":{"de":"Frage?","en":"Question?"},"options":$options,"correct_option":"$correct"}""".trimMargin()
+        |"image":null,"question":{"de":"Frage?","en":"Question?","tr":"Soru?"},"options":$options,"correct_option":"$correct"}""".trimMargin()
 
     @Test
     fun `parses a question with partial translations`() {
@@ -31,6 +31,7 @@ class CatalogParserTest {
         assertEquals(Category.STATE, q.category)
         assertEquals("Question?", q.text[Language.ENGLISH])
         assertNull(q.text[Language.UKRAINIAN])
+        assertEquals("Soru?", q.text[Language.TURKISH])
         assertEquals(listOf("A", "B", "C", "D"), q.options.map { it.id })
         assertTrue(q.isCorrect("B"))
     }

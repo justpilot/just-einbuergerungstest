@@ -20,4 +20,5 @@ fun Language.title(): String = when (this) {
     Language.GERMAN -> stringResource(R.string.language_de)
     Language.ENGLISH -> stringResource(R.string.language_en)
     Language.UKRAINIAN -> stringResource(R.string.language_uk)
+    Language.TURKISH -> stringResource(R.string.language_tr)
 }

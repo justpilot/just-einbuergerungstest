@@ -19,7 +19,7 @@ Ein Leitner-System mit drei Kästen wiederholt Fehler sofort und Gelerntes selte
 Tagesserie, Antworten der letzten sieben Tage und dein nächstes Ziel auf einen Blick.
 
 <b>Übersetzungen</b>
-Fragen und Antworten lassen sich auf Englisch oder Ukrainisch einblenden. In der Prüfungssimulation gibt es nur Deutsch – wie in der echten Prüfung.
+Fragen und Antworten lassen sich auf Englisch, Ukrainisch oder Türkisch einblenden. In der Prüfungssimulation gibt es nur Deutsch – wie in der echten Prüfung.
 
 <b>Privatsphäre</b>
 Die App hat keine Internet-Berechtigung. Dein Lernfortschritt bleibt auf deinem Gerät.

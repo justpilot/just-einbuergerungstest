@@ -174,6 +174,7 @@
     <string name="language_de">Deutsch</string>
     <string name="language_en">Englisch</string>
     <string name="language_uk">Ukrainisch</string>
+    <string name="language_tr">Türkisch</string>
     <string name="settings_haptics">Haptisches Feedback</string>
     <string name="settings_haptics_hint">Vibration bei richtigen und falschen Antworten</string>
     <string name="settings_reset">Lernfortschritt zurücksetzen</string>

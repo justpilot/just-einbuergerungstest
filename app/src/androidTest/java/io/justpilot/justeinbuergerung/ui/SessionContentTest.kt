@@ -37,8 +37,8 @@ class SessionContentTest {
         state = null,
         category = Category.POLITICS,
         imagePath = null,
-        text = LocalizedText("Was gilt hier?", "What applies here?", "Що тут діє?"),
-        options = listOf("A", "B", "C", "D").map { AnswerOption(it, LocalizedText("Antwort $it", "Answer $it", "Відповідь $it")) },
+        text = LocalizedText("Was gilt hier?", "What applies here?", "Що тут діє?", "Burada ne geçerlidir?"),
+        options = listOf("A", "B", "C", "D").map { AnswerOption(it, LocalizedText("Antwort $it", "Answer $it", "Відповідь $it", "Cevap $it")) },
         correctOptionId = "A",
     )
 

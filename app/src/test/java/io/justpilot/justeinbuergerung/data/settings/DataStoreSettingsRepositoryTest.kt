@@ -34,10 +34,10 @@ class DataStoreSettingsRepositoryTest {
     @Test
     fun `stores every setting`() = scope.runTest {
         repository.setFederalState(FederalState.RHINELAND_PALATINATE)
-        repository.setTranslationLanguage(Language.UKRAINIAN)
+        repository.setTranslationLanguage(Language.TURKISH)
         repository.setHapticsEnabled(false)
 
-        assertEquals(Settings(FederalState.RHINELAND_PALATINATE, Language.UKRAINIAN, hapticsEnabled = false), repository.settings.first())
+        assertEquals(Settings(FederalState.RHINELAND_PALATINATE, Language.TURKISH, hapticsEnabled = false), repository.settings.first())
     }
 
     @Test

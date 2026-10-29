@@ -15,7 +15,7 @@ Aktuelle Prüfungstrainer im Google Play Store sind überwiegend von aggressiver
 **Just Einbürgerungstest** verfolgt einen radikal nutzerzentrierten Ansatz:
 * **Fokus & Ruhe:** Modernes, reduziertes Material-3-Design ohne visuellen Lärm.
 * **Privatsphäre & Offline-First:** Der gesamte Fragenkatalog (300 bundesweite Fragen + je 10 landesspezifische Fragen für alle 16 Bundesländer) liegt vollständig lokal auf dem Gerät. Null Internet-Berechtigungen (`android.permission.INTERNET` wird im Manifest gar nicht angefordert).
-* **Didaktische Unterstützung:** Optionale, zuschaltbare Übersetzungen (Englisch, Ukrainisch) direkt für Fragen und Antworten, um Sprachbarrieren bei behördlichen Formulierungen abzubauen.
+* **Didaktische Unterstützung:** Optionale, zuschaltbare Übersetzungen (Englisch, Ukrainisch, Türkisch) direkt für Fragen und Antworten, um Sprachbarrieren bei behördlichen Formulierungen abzubauen.
 * **Intelligente Wiederholung:** Spaced-Repetition-System (3 Kästen), das Fehler automatisch priorisiert und beherrschte Inhalte seltener abfragt.
 
 ---
@@ -47,7 +47,7 @@ Aktuelle Prüfungstrainer im Google Play Store sind überwiegend von aggressiver
   * Standardsprache: Deutsch (gemäß den Prüfungsanforderungen).
   * Dezent platziertes Icon `[🌐]` auf dem Frage-Screen.
   * Beim Antippen klappen simultan die Übersetzungen für die Frage sowie für alle 4 Antwortoptionen aus.
-  * Unterstützte Sprachen im Release 1: **Englisch (`en`)** und **Ukrainisch (`uk`)**.
+  * Unterstützte Sprachen im Release 1: **Englisch (`en`)**, **Ukrainisch (`uk`)** und **Türkisch (`tr`)**.
 
 #### B. Lernmodi & Didaktik
 * **Tages-Session („Daily 10“):**
@@ -102,7 +102,7 @@ Die Benutzeroberfläche verzichtet auf laute Gamification-Elemente und setzt auf
    * Startknopf für eine neue 60-minütige Simulation.
 4. **Einstellungen:**
    * Bundesland festlegen.
-   * Übersetzungssprache auswählen (`en` / `uk`).
+   * Übersetzungssprache auswählen (`en` / `uk` / `tr`).
    * Haptisches Feedback aktivieren/deaktivieren.
    * Daten-Reset (Lernfortschritt zurücksetzen).
 

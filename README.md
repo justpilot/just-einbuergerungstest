@@ -34,7 +34,7 @@ on your device and teaches it with spaced repetition, in short daily sessions.
 | 🎯 **Targeted practice** | By topic (politics, history, society, your state), by mistakes or by bookmarks. |
 | 📝 **Exam simulation** | 33 questions in 60 minutes, like the real test. Change answers and flag questions until you submit; past results are kept. |
 | 🔥 **Progress** | Daily streak, answers over the last seven days and your next goal. |
-| 🌍 **Translations** | Optional English and Ukrainian for questions and answers. The exam simulation stays German, like the real test. |
+| 🌍 **Translations** | Optional English, Ukrainian and Turkish for questions and answers. The exam simulation stays German, like the real test. |
 | 🎨 **Material You** | Material 3 with dynamic colour, dark mode and edge-to-edge layout. |
 
 > [!NOTE]

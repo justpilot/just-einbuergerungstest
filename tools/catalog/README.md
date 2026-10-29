@@ -42,7 +42,7 @@ OCR test is skipped when Tesseract or the German model is missing.
 | `overrides.json` | Manual corrections keyed by question id: `question`, `options` (all four), `category`, `image: false`. Use it for OCR mistakes. |
 | `categories.json` | Topic of each general question (`politics`, `history`, `society`). The portal does not publish one, so it is maintained by hand. State questions are always `state`. |
 | `translations.py` | `export <lang> todo.json` writes all questions whose translation is missing or stale; translate them and `import <lang> done.json` merges them with the current source hash. |
-| `translations/<lang>.json` | `{id: {source, question, options[4]}}` for `en` and `uk`. `source` is the hash of the German text the translation was made from; `build.py` warns when the German text changes and a translation becomes stale. |
+| `translations/<lang>.json` | `{id: {source, question, options[4]}}` for `en`, `uk` and `tr`. `source` is the hash of the German text the translation was made from; `build.py` warns when the German text changes and a translation becomes stale. |
 
 ## How the portal works
 

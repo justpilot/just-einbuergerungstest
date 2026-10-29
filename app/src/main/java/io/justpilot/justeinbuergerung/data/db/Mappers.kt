@@ -21,6 +21,7 @@ fun Question.toEntities() = QuestionWithOptions(
         textDe = text.german,
         textEn = text.english,
         textUk = text.ukrainian,
+        textTr = text.turkish,
         correctOption = correctOptionId,
     ),
     options = options.mapIndexed { position, option ->
@@ -31,6 +32,7 @@ fun Question.toEntities() = QuestionWithOptions(
             textDe = option.text.german,
             textEn = option.text.english,
             textUk = option.text.ukrainian,
+            textTr = option.text.turkish,
         )
     },
 )
@@ -41,9 +43,9 @@ fun QuestionWithOptions.toDomain() = Question(
     state = question.state?.let(FederalState::fromCode),
     category = Category.fromCode(question.category),
     imagePath = question.imagePath,
-    text = LocalizedText(question.textDe, question.textEn, question.textUk),
+    text = LocalizedText(question.textDe, question.textEn, question.textUk, question.textTr),
     options = options.sortedBy { it.position }.map {
-        AnswerOption(it.optionId, LocalizedText(it.textDe, it.textEn, it.textUk))
+        AnswerOption(it.optionId, LocalizedText(it.textDe, it.textEn, it.textUk, it.textTr))
     },
     correctOptionId = question.correctOption,
 )
