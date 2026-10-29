@@ -66,20 +66,28 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.domain.learning.Activity
 import io.justpilot.justeinbuergerung.domain.learning.LearningOverview
+import io.justpilot.justeinbuergerung.domain.exam.ExamResult
 import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
+import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.ui.ViewModels
+import io.justpilot.justeinbuergerung.ui.common.StackedBoxBar
+import io.justpilot.justeinbuergerung.ui.common.boxColors
 import io.justpilot.justeinbuergerung.ui.theme.AppTheme
 import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun HomeScreen(onStartSession: (SessionSelection) -> Unit, viewModel: HomeViewModel = viewModel(factory = ViewModels.factory)) {
+fun HomeScreen(
+    onStartSession: (SessionSelection) -> Unit,
+    onStartExam: () -> Unit,
+    viewModel: HomeViewModel = viewModel(factory = ViewModels.factory),
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    HomeContent(state, onStartSession)
+    HomeContent(state, onStartSession, onStartExam)
 }
 
 @Composable
-fun HomeContent(state: HomeUiState, onStartSession: (SessionSelection) -> Unit) {
+fun HomeContent(state: HomeUiState, onStartSession: (SessionSelection) -> Unit, onStartExam: () -> Unit) {
     // No app bar: the brand header scrolls with the cards.
     Scaffold { padding ->
         when (state) {
@@ -95,8 +103,9 @@ fun HomeContent(state: HomeUiState, onStartSession: (SessionSelection) -> Unit) 
             ) {
                 Header(state)
                 DailyCard(state.overview, state.activity, onStart = { onStartSession(SessionSelection.Daily) })
-                ActivityCard(state.activity)
+                ExamCard(state.lastExam, onStartExam)
                 ProgressCard(state.overview, onPracticeBox = { onStartSession(SessionSelection.Box(it)) })
+                ActivityCard(state.activity)
             }
         }
     }
@@ -236,6 +245,40 @@ private fun DailyCard(overview: LearningOverview, activity: Activity, onStart: (
     }
 }
 
+/** Shortcut to the exam simulation with the last result, so readiness can be checked from Home. */
+@Composable
+private fun ExamCard(lastExam: SessionResult?, onStart: () -> Unit) {
+    ElevatedCard {
+        Row(Modifier.fillMaxWidth().padding(start = 20.dp, end = 16.dp, top = 16.dp, bottom = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(stringResource(R.string.exam_title), style = MaterialTheme.typography.titleMedium)
+                if (lastExam == null) {
+                    Text(
+                        stringResource(R.string.home_exam_none),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                } else {
+                    val passed = lastExam.correct >= ExamResult.CITIZENSHIP_PASS_MARK
+                    Text(
+                        stringResource(
+                            if (passed) R.string.home_exam_last_passed else R.string.home_exam_last_failed,
+                            lastExam.correct,
+                            lastExam.total,
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (passed) AppTheme.feedbackColors.correct else MaterialTheme.colorScheme.error,
+                    )
+                }
+            }
+            OutlinedButton(onClick = onStart, modifier = Modifier.padding(start = 12.dp)) {
+                Icon(painterResource(R.drawable.ic_timer), contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
+                Text(stringResource(R.string.home_exam_start), modifier = Modifier.padding(start = ButtonDefaults.IconSpacing))
+            }
+        }
+    }
+}
+
 @Composable
 private fun ProgressCard(overview: LearningOverview, onPracticeBox: (box: Int) -> Unit) {
     val colors = boxColors()
@@ -251,7 +294,7 @@ private fun ProgressCard(overview: LearningOverview, onPracticeBox: (box: Int) -
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            StackedBoxBar(overview, colors)
+            StackedBoxBar(overview, colors = colors)
             BoxLadder(overview, colors, onPracticeBox)
             NextGoal(overview.nextGoal)
             Text(
@@ -340,28 +383,6 @@ private fun ActivityChart(days: List<Activity.Day>) {
                 )
             }
         }
-    }
-}
-
-/** Colours of box 1 to the mastered box: muted mistakes, then the primary colour, then the success green. */
-@Composable
-private fun boxColors(): List<Color> = listOf(
-    MaterialTheme.colorScheme.outline,
-    MaterialTheme.colorScheme.primary,
-    AppTheme.feedbackColors.correct,
-)
-
-/** One bar for the whole pool: mastered on the left, then the lower boxes, new questions as the empty track. */
-@Composable
-private fun StackedBoxBar(overview: LearningOverview, colors: List<Color>) {
-    Row(
-        Modifier.fillMaxWidth().height(12.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceVariant),
-    ) {
-        overview.perBox.indices.reversed().forEach { index ->
-            val count = overview.perBox[index]
-            if (count > 0) Box(Modifier.weight(count.toFloat()).fillMaxHeight().background(colors[index]))
-        }
-        if (overview.new > 0) Spacer(Modifier.weight(overview.new.toFloat()))
     }
 }
 

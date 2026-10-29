@@ -72,6 +72,10 @@
         <item quantity="other">%d Fragen aus Kasten 1 kannst du heute noch einmal üben.</item>
     </plurals>
     <string name="home_daily_again">Noch eine Runde</string>
+    <string name="home_exam_none">33 Fragen in 60 Minuten, wie im echten Test</string>
+    <string name="home_exam_last_passed" tools:ignore="PluralsCandidate">Zuletzt %1$d von %2$d richtig · bestanden</string>
+    <string name="home_exam_last_failed" tools:ignore="PluralsCandidate">Zuletzt %1$d von %2$d richtig · nicht bestanden</string>
+    <string name="home_exam_start">Starten</string>
     <string name="loading_catalog">Fragen werden geladen …</string>
 
     <!-- Catalog -->
@@ -81,7 +85,7 @@
     <string name="topic_history">Geschichte und Verantwortung</string>
     <string name="topic_society">Mensch und Gesellschaft</string>
     <string name="topic_state">Mein Bundesland: %s</string>
-    <string name="catalog_topic_progress" tools:ignore="PluralsCandidate">%1$d von %2$d gemeistert</string>
+    <string name="catalog_topic_progress" tools:ignore="PluralsCandidate">%1$d von %2$d gelernt · %3$d gemeistert</string>
     <string name="catalog_mistakes">Fehlerkasten</string>
     <plurals name="catalog_mistakes_count">
         <item quantity="one">%d Frage in Kasten 1</item>

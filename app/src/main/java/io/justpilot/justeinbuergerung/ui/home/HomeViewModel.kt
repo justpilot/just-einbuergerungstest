@@ -6,6 +6,7 @@ import io.justpilot.justeinbuergerung.domain.learning.Activity
 import io.justpilot.justeinbuergerung.domain.learning.LearningOverview
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.SessionKind
+import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.domain.repository.ProgressRepository
 import io.justpilot.justeinbuergerung.domain.repository.QuestionRepository
 import io.justpilot.justeinbuergerung.domain.repository.SettingsRepository
@@ -30,6 +31,8 @@ sealed interface HomeUiState {
         val activity: Activity,
         val federalState: FederalState,
         val greeting: Greeting,
+        /** Newest exam simulation, or null before the first one. */
+        val lastExam: SessionResult? = null,
     ) : HomeUiState
 }
 
@@ -62,9 +65,9 @@ class HomeViewModel(
             activePool(settingsRepository, questionRepository),
             progressRepository.progress(),
             progressRepository.answersPerDay(today.minusDays(Activity.DAYS - 1L)),
-            progressRepository.sessionResults(SessionKind.DAILY).map { results -> results.map { it.day }.toSet() },
+            sessions(progressRepository),
             settingsRepository.settings,
-        ) { pool, progress, answersPerDay, dailyDays, settings ->
+        ) { pool, progress, answersPerDay, (dailyDays, lastExam), settings ->
             val state = settings.federalState
             if (pool.isEmpty() || state == null) HomeUiState.Loading
             else HomeUiState.Ready(
@@ -73,7 +76,14 @@ class HomeViewModel(
                 federalState = state,
                 // Taken whenever the data changes; an hour-old greeting is fine.
                 greeting = Greeting.of(LocalTime.now(clock)),
+                lastExam = lastExam,
             )
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUiState.Loading)
+
+    /** Days with a finished daily session, and the newest exam. */
+    private fun sessions(progressRepository: ProgressRepository) = combine(
+        progressRepository.sessionResults(SessionKind.DAILY).map { results -> results.map { it.day }.toSet() },
+        progressRepository.sessionResults(SessionKind.EXAM).map { it.firstOrNull() },
+    ) { dailyDays, lastExam -> dailyDays to lastExam }
 }

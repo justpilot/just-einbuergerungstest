@@ -80,7 +80,10 @@ private fun MainNavigation() {
     ) { padding ->
         NavHost(navController, startDestination = HomeRoute, modifier = Modifier.padding(padding)) {
             composable<HomeRoute> {
-                HomeScreen(onStartSession = { navController.navigate(SessionRoute(it.key)) })
+                HomeScreen(
+                    onStartSession = { navController.navigate(SessionRoute(it.key)) },
+                    onStartExam = { navController.navigate(ExamSessionRoute) },
+                )
             }
             composable<CatalogRoute> {
                 CatalogScreen(onStartSession = { navController.navigate(SessionRoute(it.key)) })
