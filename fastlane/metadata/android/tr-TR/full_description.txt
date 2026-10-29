@@ -1,0 +1,31 @@
+Just Einbürgerungstest, Alman vatandaşlık testine (Einbürgerungstest) ve „Leben in Deutschland“ testine hazırlanmana yardımcı olur – ücretsiz, reklamsız, takipsiz ve tamamen çevrimdışı.
+
+<b>Tüm sorular cihazında</b>
+Resmî katalogdaki 300 genel sorunun tamamı ve eyaletine ait 10 soru. Eyaletini ilk açılışta seçersin ve istediğin zaman değiştirebilirsin.
+
+<b>Günlük 10</b>
+Günde yaklaşık üç dakikada on soru: zamanı gelen tekrarlar ve yeni sorular bir arada. Yanlış cevapladığın sorular turun sonunda tekrar gelir.
+
+<b>Kutularla öğrenme</b>
+Üç kutulu Leitner sistemi hataları hemen, bildiğin soruları daha seyrek tekrarlar. Ana ekran her kutuda kaç soru olduğunu gösterir ve istediğin kutuyu doğrudan çalışabilirsin.
+
+<b>Katalog</b>
+Konuya göre (siyaset, tarih, toplum, eyaletin), hatalarına veya yer imlerine göre çalış.
+
+<b>Sınav simülasyonu</b>
+Gerçek testteki gibi 60 dakikada 33 soru: 30 genel ve 3 eyalet sorusu. Teslim edene kadar cevaplarını değiştirebilir ve soruları işaretleyebilirsin. Sonrasında puanını ve her hatayı görürsün; geçmiş sonuçlar saklanır.
+
+<b>İlerleme</b>
+Günlük serin, son yedi gündeki cevapların ve bir sonraki hedefin bir bakışta.
+
+<b>Çeviriler</b>
+Sorular ve cevaplar Türkçe, İngilizce veya Ukraynaca gösterilebilir. Uygulamanın kendisi testin dili olan Almancadır; sınav simülasyonu yalnızca Almancadır.
+
+<b>Gizlilik</b>
+Uygulamanın internet izni yoktur. İlerlemen cihazında kalır.
+
+<b>Açık kaynak</b>
+Kaynak kodu Apache License 2.0 lisansıyla sunulur: https://github.com/justpilot/just-einbuergerungstest
+
+<b>Sorumluluk reddi</b>
+Bu uygulamanın Federal Göç ve Mülteciler Dairesi (BAMF) veya başka bir devlet kurumuyla hiçbir bağlantısı yoktur. Sorular, BAMF tarafından yayımlanan resmî katalogdan (Einbürgerungstestverordnung Ek 1) alınmıştır: https://oet.bamf.de/ords/oetut/f?p=534:1::::::
