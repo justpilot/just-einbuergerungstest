@@ -28,6 +28,8 @@ import androidx.navigation.compose.rememberNavController
 import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.domain.learning.SessionSelection
 import io.justpilot.justeinbuergerung.ui.catalog.CatalogScreen
+import io.justpilot.justeinbuergerung.ui.exam.ExamHistoryScreen
+import io.justpilot.justeinbuergerung.ui.exam.ExamScreen
 import io.justpilot.justeinbuergerung.ui.home.HomeScreen
 import io.justpilot.justeinbuergerung.ui.onboarding.OnboardingScreen
 import io.justpilot.justeinbuergerung.ui.session.SessionScreen
@@ -54,6 +56,7 @@ private enum class TopLevelDestination(
 ) {
     HOME(HomeRoute, HomeRoute::class, R.string.nav_home, R.drawable.ic_home, R.drawable.ic_home_filled),
     CATALOG(CatalogRoute, CatalogRoute::class, R.string.nav_catalog, R.drawable.ic_menu_book, R.drawable.ic_menu_book_filled),
+    EXAM(ExamRoute, ExamRoute::class, R.string.nav_exam, R.drawable.ic_quiz, R.drawable.ic_quiz_filled),
     SETTINGS(SettingsRoute, SettingsRoute::class, R.string.nav_settings, R.drawable.ic_settings, R.drawable.ic_settings_filled),
 }
 
@@ -77,7 +80,11 @@ private fun MainNavigation() {
             composable<CatalogRoute> {
                 CatalogScreen(onStartSession = { navController.navigate(SessionRoute(it.key)) })
             }
+            composable<ExamRoute> {
+                ExamHistoryScreen(onStartExam = { navController.navigate(ExamSessionRoute) })
+            }
             composable<SettingsRoute> { SettingsScreen() }
+            composable<ExamSessionRoute> { ExamScreen(onClose = { navController.popBackStack() }) }
             composable<SessionRoute> { SessionScreen(onClose = { navController.popBackStack() }) }
         }
     }

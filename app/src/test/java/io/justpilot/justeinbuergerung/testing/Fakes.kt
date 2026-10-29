@@ -1,10 +1,13 @@
 package io.justpilot.justeinbuergerung.testing
 
+import io.justpilot.justeinbuergerung.domain.exam.ExamResult
 import io.justpilot.justeinbuergerung.domain.model.AnswerSource
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Language
 import io.justpilot.justeinbuergerung.domain.model.Progress
 import io.justpilot.justeinbuergerung.domain.model.Question
+import io.justpilot.justeinbuergerung.domain.model.SessionKind
+import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.domain.model.Settings
 import io.justpilot.justeinbuergerung.domain.repository.ProgressRepository
 import io.justpilot.justeinbuergerung.domain.repository.QuestionRepository
@@ -30,6 +33,8 @@ class FakeProgressRepository(progress: Map<String, Progress> = emptyMap()) : Pro
 
     val progress = MutableStateFlow(progress)
     val answers = mutableListOf<Answer>()
+    val exams = mutableListOf<ExamResult>()
+    val sessionResults = MutableStateFlow<List<SessionResult>>(emptyList())
     var resetCount = 0
 
     override fun progress(): Flow<Map<String, Progress>> = progress
@@ -37,6 +42,13 @@ class FakeProgressRepository(progress: Map<String, Progress> = emptyMap()) : Pro
     override suspend fun recordAnswer(questionId: String, correct: Boolean, source: AnswerSource) {
         answers += Answer(questionId, correct, source)
     }
+
+    override suspend fun recordExam(result: ExamResult) {
+        exams += result
+    }
+
+    override fun sessionResults(kind: SessionKind): Flow<List<SessionResult>> =
+        sessionResults.map { results -> results.filter { it.kind == kind } }
 
     override suspend fun setBookmarked(questionId: String, bookmarked: Boolean) {
         progress.update { current ->

@@ -75,6 +75,19 @@ data class AnswerLogEntity(
     val source: String,
 )
 
+/** Result of a finished session, e.g. an exam simulation. */
+@Entity(tableName = "session_results", indices = [Index("kind")])
+data class SessionResultEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val kind: String,
+    /** Epoch milliseconds. */
+    val finishedAt: Long,
+    /** Local epoch day of [finishedAt] in the time zone the session was finished in. */
+    val finishedEpochDay: Long,
+    val correct: Int,
+    val total: Int,
+)
+
 /** Single-row table holding the version of the imported question catalog. */
 @Entity(tableName = "catalog_info")
 data class CatalogInfoEntity(

@@ -9,7 +9,14 @@ data object HomeRoute
 data object CatalogRoute
 
 @Serializable
+data object ExamRoute
+
+@Serializable
 data object SettingsRoute
+
+/** A running exam simulation. */
+@Serializable
+data object ExamSessionRoute
 
 /** @param selection a [io.justpilot.justeinbuergerung.domain.learning.SessionSelection.key] */
 @Serializable

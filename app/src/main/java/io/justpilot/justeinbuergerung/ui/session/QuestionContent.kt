@@ -52,6 +52,7 @@ import kotlinx.coroutines.withContext
  * show the solution and no longer react to taps.
  *
  * @param showTranslation whether texts in [translationLanguage] fold out under the German ones
+ * @param revealSolution false for the exam: the chosen card is only highlighted and can still be changed
  */
 @Composable
 fun QuestionContent(
@@ -61,6 +62,7 @@ fun QuestionContent(
     showTranslation: Boolean,
     onAnswer: (AnswerOption) -> Unit,
     modifier: Modifier = Modifier,
+    revealSolution: Boolean = true,
 ) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         BilingualText(question.text, translationLanguage, showTranslation, isTitle = true)
@@ -70,6 +72,7 @@ fun QuestionContent(
             AnswerCard(
                 option = option,
                 state = when {
+                    !revealSolution -> if (option.id == selectedOptionId) AnswerState.Selected else AnswerState.Open
                     selectedOptionId == null -> AnswerState.Open
                     question.isCorrect(option.id) -> AnswerState.Correct
                     option.id == selectedOptionId -> AnswerState.Wrong
@@ -78,12 +81,13 @@ fun QuestionContent(
                 translationLanguage = translationLanguage,
                 showTranslation = showTranslation,
                 onClick = { onAnswer(option) },
+                enabled = !revealSolution || selectedOptionId == null,
             )
         }
     }
 }
 
-private enum class AnswerState { Open, Correct, Wrong, Other }
+private enum class AnswerState { Open, Selected, Correct, Wrong, Other }
 
 @Composable
 private fun AnswerCard(
@@ -92,6 +96,7 @@ private fun AnswerCard(
     translationLanguage: Language,
     showTranslation: Boolean,
     onClick: () -> Unit,
+    enabled: Boolean,
 ) {
     val feedback = AppTheme.feedbackColors
     val colors = MaterialTheme.colorScheme
@@ -99,6 +104,7 @@ private fun AnswerCard(
         when (state) {
             AnswerState.Correct -> feedback.correctContainer
             AnswerState.Wrong -> colors.errorContainer
+            AnswerState.Selected -> colors.primaryContainer
             else -> colors.surfaceContainerLow
         },
         label = "answer container",
@@ -106,22 +112,25 @@ private fun AnswerCard(
     val content = when (state) {
         AnswerState.Correct -> feedback.onCorrectContainer
         AnswerState.Wrong -> colors.onErrorContainer
+        AnswerState.Selected -> colors.onPrimaryContainer
         AnswerState.Other -> colors.onSurface.copy(alpha = 0.6f)
         AnswerState.Open -> colors.onSurface
     }
     val border = when (state) {
         AnswerState.Correct -> feedback.correct
         AnswerState.Wrong -> colors.error
+        AnswerState.Selected -> colors.primary
         else -> colors.outlineVariant
     }
     val description = when (state) {
         AnswerState.Correct -> stringResource(R.string.session_answer_correct)
         AnswerState.Wrong -> stringResource(R.string.session_answer_wrong)
+        AnswerState.Selected -> stringResource(R.string.exam_answer_selected)
         else -> null
     }
     Surface(
         onClick = onClick,
-        enabled = state == AnswerState.Open,
+        enabled = enabled,
         shape = MaterialTheme.shapes.large,
         color = container,
         contentColor = content,
@@ -152,7 +161,13 @@ private fun OptionBadge(optionId: String, state: AnswerState) {
         if (icon != null) {
             Icon(painterResource(icon), contentDescription = null, modifier = Modifier.size(28.dp))
         } else {
-            Surface(shape = CircleShape, color = Color.Transparent, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)) {
+            val selected = state == AnswerState.Selected
+            Surface(
+                shape = CircleShape,
+                color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                contentColor = if (selected) MaterialTheme.colorScheme.onPrimary else LocalContentColor.current,
+                border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
+            ) {
                 Box(Modifier.size(28.dp), contentAlignment = Alignment.Center) {
                     Text(optionId, style = MaterialTheme.typography.labelLarge)
                 }

@@ -6,6 +6,8 @@ import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.LocalizedText
 import io.justpilot.justeinbuergerung.domain.model.Progress
 import io.justpilot.justeinbuergerung.domain.model.Question
+import io.justpilot.justeinbuergerung.domain.model.SessionKind
+import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import java.time.Instant
 import java.time.LocalDate
 
@@ -52,4 +54,12 @@ fun ProgressEntity.toDomain() = Progress(
     dueDate = dueEpochDay?.let(LocalDate::ofEpochDay),
     lastAnsweredAt = lastAnsweredAt?.let(Instant::ofEpochMilli),
     bookmarked = bookmarked,
+)
+
+fun SessionResultEntity.toDomain() = SessionResult(
+    kind = SessionKind.valueOf(kind),
+    finishedAt = Instant.ofEpochMilli(finishedAt),
+    day = LocalDate.ofEpochDay(finishedEpochDay),
+    correct = correct,
+    total = total,
 )

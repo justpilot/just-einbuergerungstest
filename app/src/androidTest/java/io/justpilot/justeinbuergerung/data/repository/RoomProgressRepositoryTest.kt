@@ -5,8 +5,15 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.justpilot.justeinbuergerung.data.db.AppDatabase
+import io.justpilot.justeinbuergerung.domain.exam.ExamResult
+import io.justpilot.justeinbuergerung.domain.model.AnswerOption
 import io.justpilot.justeinbuergerung.domain.model.AnswerSource
+import io.justpilot.justeinbuergerung.domain.model.Category
+import io.justpilot.justeinbuergerung.domain.model.LocalizedText
 import io.justpilot.justeinbuergerung.domain.model.Progress
+import io.justpilot.justeinbuergerung.domain.model.Question
+import io.justpilot.justeinbuergerung.domain.model.SessionKind
+import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -74,6 +81,36 @@ class RoomProgressRepositoryTest {
     }
 
     @Test
+    fun examsStoreTheirScoreAndLogOnlyAnsweredQuestions() = runTest {
+        fun question(id: String) = Question(
+            id, 1, null, Category.POLITICS, null, LocalizedText("?", null, null),
+            listOf("A", "B").map { AnswerOption(it, LocalizedText(it, null, null)) }, correctOptionId = "A",
+        )
+        val first = ExamResult(
+            total = 3,
+            answers = listOf(
+                ExamResult.Answer(question("1"), "A"),
+                ExamResult.Answer(question("2"), "B"),
+                ExamResult.Answer(question("3"), null),
+            ),
+        )
+
+        repository.recordExam(first)
+        now = now.plusSeconds(3600)
+        repository.recordExam(first.copy(answers = first.answers.take(1)))
+
+        assertEquals(
+            listOf(
+                SessionResult(SessionKind.EXAM, now, today, correct = 1, total = 3),
+                SessionResult(SessionKind.EXAM, now.minusSeconds(3600), today, correct = 1, total = 3),
+            ),
+            repository.sessionResults(SessionKind.EXAM).first(),
+        )
+        assertEquals(mapOf(today to 3), repository.answersPerDay(today).first())
+        assertEquals(emptyMap<String, Progress>(), repository.progress().first())
+    }
+
+    @Test
     fun bookmarkingKeepsLearningStateAndUnansweredQuestionsCountAsNew() = runTest {
         repository.setBookmarked("1", true)
         assertEquals(Progress("1", box = 1, dueDate = null, lastAnsweredAt = null, bookmarked = true), progress("1"))
@@ -102,13 +139,15 @@ class RoomProgressRepositoryTest {
     }
 
     @Test
-    fun resetDeletesProgressAndLog() = runTest {
+    fun resetDeletesProgressLogAndResults() = runTest {
         repository.recordAnswer("1", correct = true, AnswerSource.DAILY)
         repository.setBookmarked("2", true)
+        repository.recordExam(ExamResult(total = 33, answers = emptyList()))
 
         repository.reset()
 
         assertEquals(emptyMap<String, Progress>(), repository.progress().first())
         assertEquals(emptyMap<LocalDate, Int>(), repository.answersPerDay(LocalDate.of(2000, 1, 1)).first())
+        assertEquals(emptyList<SessionResult>(), repository.sessionResults(SessionKind.EXAM).first())
     }
 }

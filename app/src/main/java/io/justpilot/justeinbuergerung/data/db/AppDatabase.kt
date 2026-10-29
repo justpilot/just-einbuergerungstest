@@ -1,6 +1,7 @@
 package io.justpilot.justeinbuergerung.data.db
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -12,8 +13,13 @@ import androidx.room.RoomDatabase
         ProgressEntity::class,
         AnswerLogEntity::class,
         CatalogInfoEntity::class,
+        SessionResultEntity::class,
     ],
-    version = 1,
+    version = 2,
+    autoMigrations = [
+        // 2: session_results for the exam history.
+        AutoMigration(from = 1, to = 2),
+    ],
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun questionDao(): QuestionDao
@@ -21,6 +27,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun progressDao(): ProgressDao
 
     abstract fun answerLogDao(): AnswerLogDao
+
+    abstract fun sessionResultDao(): SessionResultDao
 
     companion object {
         const val NAME = "just-einbuergerungstest.db"

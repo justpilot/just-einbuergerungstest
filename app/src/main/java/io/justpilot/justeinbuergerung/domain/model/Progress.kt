@@ -9,7 +9,7 @@ import java.time.LocalDate
  */
 data class Progress(
     val questionId: String,
-    /** Leitner box 1 (new or wrong) to 5 (mastered). */
+    /** Leitner box 1 (new or wrong) to 3 (mastered). */
     val box: Int,
     /** First day on which the question is due again; null if it was never answered. */
     val dueDate: LocalDate?,
@@ -23,6 +23,20 @@ enum class AnswerSource {
     EXAM,
     CATALOG,
 }
+
+enum class SessionKind {
+    EXAM,
+}
+
+/** Score of a finished session. */
+data class SessionResult(
+    val kind: SessionKind,
+    val finishedAt: Instant,
+    /** Local day on which the session was finished. */
+    val day: LocalDate,
+    val correct: Int,
+    val total: Int,
+)
 
 data class Settings(
     /** Null until the user picked a federal state during onboarding. */

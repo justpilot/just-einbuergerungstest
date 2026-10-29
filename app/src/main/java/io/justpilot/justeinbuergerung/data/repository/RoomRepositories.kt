@@ -4,12 +4,16 @@ import androidx.room.withTransaction
 import io.justpilot.justeinbuergerung.data.db.AnswerLogEntity
 import io.justpilot.justeinbuergerung.data.db.AppDatabase
 import io.justpilot.justeinbuergerung.data.db.ProgressEntity
+import io.justpilot.justeinbuergerung.data.db.SessionResultEntity
 import io.justpilot.justeinbuergerung.data.db.toDomain
+import io.justpilot.justeinbuergerung.domain.exam.ExamResult
 import io.justpilot.justeinbuergerung.domain.learning.LeitnerScheduler
 import io.justpilot.justeinbuergerung.domain.model.AnswerSource
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Progress
 import io.justpilot.justeinbuergerung.domain.model.Question
+import io.justpilot.justeinbuergerung.domain.model.SessionKind
+import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.domain.repository.ProgressRepository
 import io.justpilot.justeinbuergerung.domain.repository.QuestionRepository
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +35,7 @@ class RoomProgressRepository(
 ) : ProgressRepository {
     private val progressDao = database.progressDao()
     private val answerLogDao = database.answerLogDao()
+    private val sessionResultDao = database.sessionResultDao()
 
     override fun progress(): Flow<Map<String, Progress>> =
         progressDao.observeAll().map { rows -> rows.associate { it.questionId to it.toDomain() } }
@@ -66,6 +71,36 @@ class RoomProgressRepository(
         }
     }
 
+    override suspend fun recordExam(result: ExamResult) {
+        val now = clock.instant()
+        val today = LocalDate.now(clock)
+        database.withTransaction {
+            result.answers.filter { it.chosenOptionId != null }.forEach { answer ->
+                answerLogDao.insert(
+                    AnswerLogEntity(
+                        questionId = answer.question.id,
+                        answeredAt = now.toEpochMilli(),
+                        answeredEpochDay = today.toEpochDay(),
+                        correct = answer.correct,
+                        source = AnswerSource.EXAM.name,
+                    ),
+                )
+            }
+            sessionResultDao.insert(
+                SessionResultEntity(
+                    kind = SessionKind.EXAM.name,
+                    finishedAt = now.toEpochMilli(),
+                    finishedEpochDay = today.toEpochDay(),
+                    correct = result.correct,
+                    total = result.total,
+                ),
+            )
+        }
+    }
+
+    override fun sessionResults(kind: SessionKind): Flow<List<SessionResult>> =
+        sessionResultDao.observe(kind.name).map { rows -> rows.map { it.toDomain() } }
+
     override suspend fun setBookmarked(questionId: String, bookmarked: Boolean) {
         database.withTransaction {
             val current = progressDao.get(questionId)
@@ -82,6 +117,7 @@ class RoomProgressRepository(
         database.withTransaction {
             progressDao.deleteAll()
             answerLogDao.deleteAll()
+            sessionResultDao.deleteAll()
         }
     }
 }

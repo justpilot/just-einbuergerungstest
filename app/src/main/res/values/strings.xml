@@ -5,6 +5,7 @@
     <!-- Navigation -->
     <string name="nav_home">Start</string>
     <string name="nav_catalog">Katalog</string>
+    <string name="nav_exam">Prüfung</string>
     <string name="nav_settings">Einstellungen</string>
 
     <!-- Onboarding -->
@@ -99,6 +100,54 @@
     <string name="session_done_hint">Falsch beantwortete Fragen bleiben in Kasten 1 und kommen bald wieder.</string>
     <string name="session_empty">Hier gibt es gerade keine Fragen.</string>
     <string name="session_back">Zurück</string>
+
+    <!-- Exam -->
+    <string name="exam_title">Prüfungssimulation</string>
+    <string name="exam_intro">33 Fragen in 60 Minuten, wie im echten Test: ohne Übersetzung und ohne Auflösung bis zur Abgabe. Du kannst Fragen markieren und Antworten bis zur Abgabe ändern.</string>
+    <string name="exam_pass_marks">Bestanden ab 17 richtigen Antworten, für „Leben in Deutschland“ ab 15.</string>
+    <string name="exam_start">Prüfung starten</string>
+    <string name="exam_history">Bisherige Ergebnisse</string>
+    <string name="exam_history_empty">Noch keine Prüfung abgelegt.</string>
+    <string name="exam_score" tools:ignore="PluralsCandidate">%1$d von %2$d richtig</string>
+    <string name="exam_passed">Bestanden</string>
+    <string name="exam_failed">Nicht bestanden</string>
+    <string name="exam_time_left">Verbleibende Zeit %s</string>
+    <string name="exam_flag">Markieren</string>
+    <string name="exam_unflag">Markierung entfernen</string>
+    <string name="exam_overview">Übersicht</string>
+    <string name="exam_previous">Zurück</string>
+    <string name="exam_next">Weiter</string>
+    <string name="exam_submit">Abgeben</string>
+    <string name="exam_answer_selected">ausgewählt</string>
+    <string name="exam_overview_question">Frage %d</string>
+    <string name="exam_overview_answered">beantwortet</string>
+    <string name="exam_overview_flagged">markiert</string>
+    <plurals name="exam_unanswered">
+        <item quantity="one">%d Frage unbeantwortet</item>
+        <item quantity="other">%d Fragen unbeantwortet</item>
+    </plurals>
+    <string name="exam_submit_title">Prüfung abgeben?</string>
+    <plurals name="exam_submit_unanswered">
+        <item quantity="one">%d Frage ist noch unbeantwortet und zählt als falsch.</item>
+        <item quantity="other">%d Fragen sind noch unbeantwortet und zählen als falsch.</item>
+    </plurals>
+    <string name="exam_submit_complete">Alle Fragen sind beantwortet. Nach der Abgabe kannst du nichts mehr ändern.</string>
+    <string name="exam_abort_title">Prüfung abbrechen?</string>
+    <string name="exam_abort_text">Deine Antworten werden verworfen und nicht gewertet.</string>
+    <string name="exam_abort_confirm">Prüfung abbrechen</string>
+    <string name="exam_continue">Weitermachen</string>
+    <string name="exam_result_title">Ergebnis</string>
+    <string name="exam_result_life_in_germany">Leben in Deutschland (ab %d)</string>
+    <string name="exam_result_citizenship">Einbürgerungstest (ab %d)</string>
+    <string name="exam_result_wrong">Falsch oder nicht beantwortet</string>
+    <string name="exam_result_all_correct">Alle Fragen richtig beantwortet!</string>
+    <string name="exam_result_your_answer">Deine Antwort: %s</string>
+    <string name="exam_result_no_answer">Nicht beantwortet</string>
+    <string name="exam_result_correct_answer">Richtig: %s</string>
+    <string name="exam_result_hint">Prüfungsantworten verschieben keine Fragen zwischen den Kästen. Übe die Fehler im Katalog oder in der Tages-Session.</string>
+    <string name="exam_done">Fertig</string>
+    <string name="question_label_general">Frage %d</string>
+    <string name="question_label_state">%1$s, Frage %2$d</string>
 
     <!-- Settings -->
     <string name="settings_state">Bundesland</string>

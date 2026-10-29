@@ -70,3 +70,16 @@ interface AnswerLogDao {
     @Query("DELETE FROM answer_log")
     suspend fun deleteAll()
 }
+
+@Dao
+interface SessionResultDao {
+    @Insert
+    suspend fun insert(result: SessionResultEntity)
+
+    /** Newest first. */
+    @Query("SELECT * FROM session_results WHERE kind = :kind ORDER BY finishedAt DESC")
+    fun observe(kind: String): Flow<List<SessionResultEntity>>
+
+    @Query("DELETE FROM session_results")
+    suspend fun deleteAll()
+}
