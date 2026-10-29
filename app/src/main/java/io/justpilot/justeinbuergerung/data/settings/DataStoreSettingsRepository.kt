@@ -21,6 +21,7 @@ class DataStoreSettingsRepository(private val dataStore: DataStore<Preferences>)
                 ?.let { code -> Language.translations.firstOrNull { it.code == code } }
                 ?: DEFAULT_TRANSLATION_LANGUAGE,
             hapticsEnabled = preferences[HAPTICS_ENABLED] ?: true,
+            dynamicColor = preferences[DYNAMIC_COLOR] ?: false,
         )
     }
 
@@ -37,10 +38,15 @@ class DataStoreSettingsRepository(private val dataStore: DataStore<Preferences>)
         dataStore.edit { it[HAPTICS_ENABLED] = enabled }
     }
 
+    override suspend fun setDynamicColor(enabled: Boolean) {
+        dataStore.edit { it[DYNAMIC_COLOR] = enabled }
+    }
+
     private companion object {
         val FEDERAL_STATE = stringPreferencesKey("federal_state")
         val TRANSLATION_LANGUAGE = stringPreferencesKey("translation_language")
         val HAPTICS_ENABLED = booleanPreferencesKey("haptics_enabled")
+        val DYNAMIC_COLOR = booleanPreferencesKey("dynamic_color")
         val DEFAULT_TRANSLATION_LANGUAGE = Language.ENGLISH
     }
 }

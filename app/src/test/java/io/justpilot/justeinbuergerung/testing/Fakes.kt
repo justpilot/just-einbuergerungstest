@@ -82,4 +82,6 @@ class FakeSettingsRepository(
     override suspend fun setTranslationLanguage(language: Language) = settings.update { it.copy(translationLanguage = language) }
 
     override suspend fun setHapticsEnabled(enabled: Boolean) = settings.update { it.copy(hapticsEnabled = enabled) }
+
+    override suspend fun setDynamicColor(enabled: Boolean) = settings.update { it.copy(dynamicColor = enabled) }
 }

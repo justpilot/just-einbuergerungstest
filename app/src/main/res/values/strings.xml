@@ -60,9 +60,18 @@
         <item quantity="one">%d Tag in Folge</item>
         <item quantity="other">%d Tage in Folge</item>
     </plurals>
-    <string name="home_streak_done_today">Die Tages-Session für heute ist geschafft.</string>
     <string name="home_streak_keep">Schließe heute eine Tages-Session ab, um deine Serie zu halten.</string>
-    <string name="home_streak_start">Schließe heute eine Tages-Session ab, um eine Serie zu starten.</string>
+    <string name="home_greeting_morning">Guten Morgen</string>
+    <string name="home_greeting_day">Guten Tag</string>
+    <string name="home_greeting_evening">Guten Abend</string>
+    <string name="home_first_session">Starte mit deinen ersten zehn Fragen.</string>
+    <string name="home_daily_done_title">Für heute geschafft</string>
+    <string name="home_daily_done_text">Mit einer weiteren Runde kommst du schneller voran.</string>
+    <plurals name="home_daily_done_due">
+        <item quantity="one">%d Frage aus Kasten 1 kannst du heute noch einmal üben.</item>
+        <item quantity="other">%d Fragen aus Kasten 1 kannst du heute noch einmal üben.</item>
+    </plurals>
+    <string name="home_daily_again">Noch eine Runde</string>
     <string name="loading_catalog">Fragen werden geladen …</string>
 
     <!-- Catalog -->
@@ -177,6 +186,8 @@
     <string name="language_tr">Türkisch</string>
     <string name="settings_haptics">Haptisches Feedback</string>
     <string name="settings_haptics_hint">Vibration bei richtigen und falschen Antworten</string>
+    <string name="settings_dynamic_color">Systemfarben verwenden</string>
+    <string name="settings_dynamic_color_hint">Farben passend zum Hintergrundbild statt der App-Farben</string>
     <string name="settings_reset">Lernfortschritt zurücksetzen</string>
     <string name="settings_reset_hint">Löscht Kästen, Merkliste und Statistik</string>
     <string name="settings_reset_confirm_title">Lernfortschritt zurücksetzen?</string>

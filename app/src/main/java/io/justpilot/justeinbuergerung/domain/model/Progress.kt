@@ -45,4 +45,6 @@ data class Settings(
     val federalState: FederalState?,
     val translationLanguage: Language,
     val hapticsEnabled: Boolean,
+    /** Material You colours from the wallpaper instead of the app's own colours. */
+    val dynamicColor: Boolean = false,
 )

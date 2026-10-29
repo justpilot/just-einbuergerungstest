@@ -55,4 +55,6 @@ interface SettingsRepository {
     suspend fun setTranslationLanguage(language: Language)
 
     suspend fun setHapticsEnabled(enabled: Boolean)
+
+    suspend fun setDynamicColor(enabled: Boolean)
 }

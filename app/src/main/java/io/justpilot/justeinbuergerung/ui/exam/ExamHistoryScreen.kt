@@ -11,13 +11,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -31,6 +28,7 @@ import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.domain.exam.ExamResult
 import io.justpilot.justeinbuergerung.domain.model.SessionResult
 import io.justpilot.justeinbuergerung.ui.ViewModels
+import io.justpilot.justeinbuergerung.ui.common.LargeTitleScaffold
 import io.justpilot.justeinbuergerung.ui.theme.AppTheme
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -43,10 +41,9 @@ fun ExamHistoryScreen(onStartExam: () -> Unit, viewModel: ExamHistoryViewModel =
     ExamHistoryContent(state, onStartExam)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamHistoryContent(state: ExamHistoryUiState, onStartExam: () -> Unit) {
-    Scaffold(topBar = { TopAppBar(title = { Text(stringResource(R.string.nav_exam)) }) }) { padding ->
+    LargeTitleScaffold(stringResource(R.string.nav_exam)) { padding ->
         when (state) {
             ExamHistoryUiState.Loading -> Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()

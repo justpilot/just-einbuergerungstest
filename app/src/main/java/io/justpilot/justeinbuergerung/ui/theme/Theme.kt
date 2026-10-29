@@ -15,8 +15,9 @@ private val LocalFeedbackColors = staticCompositionLocalOf { LightFeedbackColors
 @Composable
 fun JustEinbürgerungstestTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic colour is available on every supported version (minSdk 31).
-    dynamicColor: Boolean = true,
+    // Off by default: the brand colours match the launcher icon. Every supported version
+    // (minSdk 31) can turn on Material You colours in the settings.
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colorScheme = when {
