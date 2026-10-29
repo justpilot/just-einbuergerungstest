@@ -39,7 +39,12 @@ sealed interface SessionUiState {
         val translationLanguage: Language,
         val bookmarked: Boolean,
         val hapticsEnabled: Boolean,
-    ) : SessionUiState
+        /** Leaving a daily session early costs the streak, so closing it asks first. */
+        val isDaily: Boolean = false,
+    ) : SessionUiState {
+        /** Whether anything was answered yet, so that closing would cut the session short. */
+        val isStarted: Boolean get() = position > 1 || isRetryRound || selectedOptionId != null
+    }
 
     data class Finished(val correctFirstTime: Int, val total: Int, val balance: SessionBalance = SessionBalance()) : SessionUiState
 }
@@ -87,6 +92,7 @@ class SessionViewModel(
                     translationLanguage = settings.translationLanguage,
                     bookmarked = progress[question.id]?.bookmarked == true,
                     hapticsEnabled = settings.hapticsEnabled,
+                    isDaily = selection == SessionSelection.Daily,
                 )
             }
         }

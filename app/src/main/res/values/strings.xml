@@ -111,6 +111,11 @@
     <string name="session_feedback_wrong">Leider falsch. Die Frage kommt am Ende noch einmal.</string>
     <string name="session_feedback_retry_wrong">Leider falsch. Die Frage kommt gleich noch einmal.</string>
     <string name="session_done_title">Geschafft!</string>
+    <string name="session_done_title_practice">Runde beendet</string>
+    <string name="session_again">Noch eine Runde</string>
+    <string name="session_abort_title">Tages-Session beenden?</string>
+    <string name="session_abort_text">Deine bisherigen Antworten bleiben gespeichert. Für deine Serie zählt die Tages-Session aber erst, wenn du sie abschließt.</string>
+    <string name="session_abort_confirm">Beenden</string>
     <string name="session_done_score" tools:ignore="PluralsCandidate">%1$d von %2$d Fragen beim ersten Versuch richtig.</string>
     <plurals name="session_done_mastered">
         <item quantity="one">%d Frage neu gemeistert</item>

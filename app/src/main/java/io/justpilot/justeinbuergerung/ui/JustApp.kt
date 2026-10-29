@@ -26,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.ui.catalog.CatalogScreen
 import io.justpilot.justeinbuergerung.ui.exam.ExamHistoryScreen
@@ -89,7 +90,14 @@ private fun MainNavigation() {
             }
             composable<SettingsRoute> { SettingsScreen() }
             composable<ExamSessionRoute> { ExamScreen(onClose = { navController.popBackStack() }) }
-            composable<SessionRoute> { SessionScreen(onClose = { navController.popBackStack() }) }
+            composable<SessionRoute> { entry ->
+                val route = entry.toRoute<SessionRoute>()
+                SessionScreen(
+                    onClose = { navController.popBackStack() },
+                    // A fresh screen with a fresh ViewModel picks the next questions.
+                    onRestart = { navController.navigate(route) { popUpTo<SessionRoute> { inclusive = true } } },
+                )
+            }
         }
     }
 }

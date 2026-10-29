@@ -6,6 +6,7 @@ import io.justpilot.justeinbuergerung.R
 import io.justpilot.justeinbuergerung.domain.model.Category
 import io.justpilot.justeinbuergerung.domain.model.FederalState
 import io.justpilot.justeinbuergerung.domain.model.Language
+import io.justpilot.justeinbuergerung.domain.model.Question
 
 @Composable
 fun Category.title(state: FederalState): String = when (this) {
@@ -14,6 +15,12 @@ fun Category.title(state: FederalState): String = when (this) {
     Category.SOCIETY -> stringResource(R.string.topic_society)
     Category.STATE -> stringResource(R.string.topic_state, state.germanName)
 }
+
+/** Catalog number of a question, e.g. "Frage 123" or "Bayern, Frage 4". */
+@Composable
+fun Question.label(): String =
+    state?.let { stringResource(R.string.question_label_state, it.germanName, number) }
+        ?: stringResource(R.string.question_label_general, number)
 
 @Composable
 fun Language.title(): String = when (this) {
