@@ -9,6 +9,7 @@
 The open-source trainer for the *Einbürgerungstest* and the *Leben in Deutschland* test.<br>
 No account, no ads, no tracking, not even an internet permission.
 
+[![CI](https://img.shields.io/github/actions/workflow/status/justpilot/just-einbuergerungstest/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/justpilot/just-einbuergerungstest/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square)](LICENSE)
 [![Android 12+](https://img.shields.io/badge/Android-12%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](#building)
 [![Kotlin](https://img.shields.io/badge/Kotlin-Compose-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](#tech-stack)
